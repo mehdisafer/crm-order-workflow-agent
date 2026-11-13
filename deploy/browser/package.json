@@ -1,0 +1,9 @@
+{
+  "name": "p06-operator-browser-check",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Development-only browser verification for the P06 operator interface",
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

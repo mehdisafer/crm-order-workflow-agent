@@ -1,0 +1,157 @@
+name: p06-crm-reference
+
+x-app: &app
+  build:
+    context: ..
+    dockerfile: Dockerfile
+  image: p06-crm-workflow:0.1.0
+  user: "${P06_UID:-1000}:${P06_GID:-1000}"
+  env_file: ../.local/demo.env
+  environment: &environment
+    P06_PROFILE: demo
+    P06_DATABASE_URL: ${P06_DATABASE_URL:?Run deploy/prepare_reference.py}
+    P06_AUTH_FILE: /run/secrets/principals.json
+    P06_TEMPORAL_ADDRESS: temporal:7233
+    P06_TEMPORAL_NAMESPACE: default
+    P06_WORKER_CONCURRENCY: "8"
+    P06_CRM_CONCURRENCY: "4"
+    P06_ERP_CONCURRENCY: "4"
+    P06_TEMPORAL_ACTIVITY_RATE_LIMIT: "20"
+  secrets:
+    - source: principals
+      target: principals.json
+  networks: [workflow]
+  read_only: true
+  tmpfs: [/tmp]
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
+  init: true
+  mem_limit: 512m
+  cpus: 1.0
+  pids_limit: 128
+  stop_grace_period: 60s
+  restart: unless-stopped
+
+services:
+  postgres:
+    image: postgres:17.12-bookworm
+    environment:
+      POSTGRES_USER: p06_owner
+      POSTGRES_DB: p06
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_owner_password
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    secrets: [postgres_owner_password, postgres_app_password]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres-init.sh:/docker-entrypoint-initdb.d/10-roles.sh:ro
+    networks: [workflow]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U p06_owner -d p06"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    mem_limit: 512m
+    cpus: 1.0
+    stop_grace_period: 60s
+    restart: unless-stopped
+
+  temporal:
+    image: temporalio/temporal:1.10.1
+    command: [server, start-dev, --ip, 0.0.0.0, --db-filename, /home/temporal/history.db, --log-format, json]
+    volumes: [temporal-data:/home/temporal]
+    networks: [workflow]
+    ports: ["127.0.0.1:8233:8233"]
+    healthcheck:
+      test: [CMD, temporal, operator, cluster, health, --address, "127.0.0.1:7233"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    mem_limit: 1536m
+    cpus: 2.0
+    stop_grace_period: 60s
+    restart: unless-stopped
+
+  migrate:
+    <<: *app
+    environment:
+      <<: *environment
+      P06_DATABASE_URL: ${P06_MIGRATION_DATABASE_URL:?Run deploy/prepare_reference.py}
+    command: [sh, -ec, "python -m crm_workflow.cli migrate && python -m crm_workflow.cli seed-demo"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: "no"
+
+  api:
+    <<: *app
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  worker:
+    <<: *app
+    command: [python, -m, crm_workflow.worker]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      temporal: {condition: service_healthy}
+
+  erp:
+    <<: *app
+    profiles: [erp-http]
+    command: [uvicorn, "crm_workflow.erp:app", --host, 0.0.0.0, --port, "8001", --no-access-log]
+    ports: ["127.0.0.1:8001:8001"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+
+  n8n:
+    profiles: [n8n]
+    image: docker.n8n.io/n8nio/n8n:2.47.5
+    environment:
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?Run deploy/prepare_reference.py}
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+      EXECUTIONS_DATA_SAVE_ON_ERROR: none
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: none
+      EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS: "false"
+      N8N_SECURE_COOKIE: "false"  # Loopback HTTP reference only; enable with TLS.
+    volumes: [n8n-data:/home/node/.n8n]
+    ports: ["127.0.0.1:5678:5678"]
+    networks: [workflow]
+    mem_limit: 512m
+    cpus: 1.0
+    restart: unless-stopped
+
+  prometheus:
+    profiles: [monitoring]
+    image: prom/prometheus:v3.16.0
+    user: "${P06_UID:-1000}:${P06_GID:-1000}"
+    command: [--config.file=/etc/prometheus/prometheus.yml, --storage.tsdb.path=/tmp/prometheus, --storage.tsdb.retention.time=1d]
+    secrets: [prometheus_token]
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts.yml:/etc/prometheus/alerts.yml:ro
+    tmpfs: [/tmp]
+    ports: ["127.0.0.1:9090:9090"]
+    networks: [workflow]
+    mem_limit: 256m
+    cpus: 0.5
+
+networks:
+  workflow:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  temporal-data:
+  n8n-data:
+
+secrets:
+  principals: {file: ../.local/principals.json}
+  postgres_owner_password: {file: ./secrets/postgres-owner-password}
+  postgres_app_password: {file: ./secrets/postgres-app-password}
+  prometheus_token: {file: ./secrets/prometheus-token}

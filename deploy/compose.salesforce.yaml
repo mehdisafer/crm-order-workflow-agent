@@ -1,0 +1,19 @@
+# Explicit provider profile. Supply secrets externally and use --profile erp-http.
+# The stock service remains the documented original synthetic ERP.
+services:
+  api:
+    environment:
+      P06_PROFILE: salesforce
+      P06_MULE_URL: ${P06_MULE_URL:?Supply the authorised HTTPS MuleSoft endpoint}
+      P06_MULE_TOKEN: ${P06_MULE_TOKEN:?Supply the external MuleSoft API token}
+      P06_ERP_URL: http://erp:8001
+    depends_on:
+      erp: {condition: service_started}
+  worker:
+    environment:
+      P06_PROFILE: salesforce
+      P06_MULE_URL: ${P06_MULE_URL:?Supply the authorised HTTPS MuleSoft endpoint}
+      P06_MULE_TOKEN: ${P06_MULE_TOKEN:?Supply the external MuleSoft API token}
+      P06_ERP_URL: http://erp:8001
+    depends_on:
+      erp: {condition: service_started}

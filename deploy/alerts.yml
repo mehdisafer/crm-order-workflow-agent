@@ -1,0 +1,31 @@
+groups:
+  - name: p06-workflow
+    rules:
+      - alert: P06MetricsUnavailable
+        expr: up{job="p06-operator"} == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: Operator metrics cannot be scraped
+          runbook: docs/operations.md#metrics-unavailable
+      - alert: P06DeadOutbox
+        expr: p06_outbox_dead > 0
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: Outbox delivery exhausted its retry budget
+          runbook: docs/operations.md#outbox-backlog-or-dead-events
+      - alert: P06OutboxBacklog
+        expr: p06_outbox_pending > 20
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: Workflow dispatch is not keeping up with intake
+          runbook: docs/operations.md#outbox-backlog-or-dead-events
+      - alert: P06ReconciliationRequired
+        expr: p06_cases{state="RECONCILIATION_REQUIRED"} > 0
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: An order case requires remote state reconciliation
+          runbook: docs/operations.md#uncertain-effect-or-compensation-conflict

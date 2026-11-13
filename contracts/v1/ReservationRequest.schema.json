@@ -1,0 +1,68 @@
+{
+  "$id": "urn:p06:v1:ReservationRequest",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approved_plan_hash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Approved Plan Hash",
+      "type": "string"
+    },
+    "effect_key": {
+      "maxLength": 150,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Effect Key",
+      "type": "string"
+    },
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "order_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Order Id",
+      "type": "string"
+    },
+    "quantity": {
+      "exclusiveMinimum": 0,
+      "maximum": 100000,
+      "title": "Quantity",
+      "type": "integer"
+    },
+    "sku": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Sku",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "effect_key",
+    "tenant_id",
+    "order_id",
+    "sku",
+    "quantity",
+    "expected_revision",
+    "approved_plan_hash",
+    "expires_at"
+  ],
+  "title": "ReservationRequest",
+  "type": "object"
+}

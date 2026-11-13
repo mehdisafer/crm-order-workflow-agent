@@ -1,0 +1,132 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**", "fix/**"]
+    paths-ignore: ["docs/**", "*.md"]
+  pull_request:
+    paths-ignore: ["docs/**", "*.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    name: Core contracts and security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.13.6"
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - name: Scan worktree and reachable Git history without exposing matches
+        run: uv run python deploy/check_secrets.py
+      - name: Unit, policy, API and adapter contracts
+        run: uv run pytest -m "not temporal and not vendor and not load" --junitxml=evidence-local/core.xml
+      - name: Check versioned contract drift
+        run: |
+          uv run python -m crm_workflow.cli export-contracts
+          git diff --exit-code -- contracts
+      - name: Check vendor source invariants without claiming runtime acceptance
+        run: uv run python integrations/vendor_validation/check_sources.py
+      - name: Dependency and licence inventory
+        run: |
+          uv export --no-dev --no-emit-project --format requirements.txt --output-file evidence-local/runtime-requirements.txt
+          uv run pip-licenses --format=json --with-authors --with-urls --output-file=evidence-local/components.json
+          uv run python scripts/check_licenses.py evidence-local/components.json
+          uv run pip-audit --require-hashes --disable-pip -r evidence-local/runtime-requirements.txt --format=json --output=evidence-local/audit.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: always()
+        with:
+          name: core-evidence-${{ github.sha }}
+          path: evidence-local/
+          retention-days: 14
+
+  temporal:
+    name: Temporal recovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.13.6"
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --locked
+      - name: Execute real Temporal server, replay and crash recovery tests
+        env:
+          RUN_TEMPORAL_TESTS: "1"
+        run: uv run pytest -m temporal --junitxml=evidence-local/temporal.xml
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: always()
+        with:
+          name: temporal-evidence-${{ github.sha }}
+          path: evidence-local/
+          retention-days: 14
+
+  deployment:
+    name: Reference container build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.13.6"
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Prepare isolated synthetic identities
+        run: |
+          uv run python -m crm_workflow.cli init-demo
+          uv run python deploy/prepare_reference.py
+      - name: Validate Compose configuration without printing credentials
+        run: docker compose --env-file .local/compose.env -f deploy/compose.yaml config --quiet
+      - name: Build application image
+        run: docker build --tag p06-crm-workflow:ci .
+      - name: Check packaged application imports
+        run: docker run --rm p06-crm-workflow:ci python -c "import crm_workflow.api, crm_workflow.worker"
+      - name: Start reference stack with PostgreSQL and HTTP ERP
+        run: docker compose --env-file .local/compose.env -f deploy/compose.yaml -f deploy/compose.erp-http.yaml --profile erp-http up --build --wait --wait-timeout 180
+      - name: Execute API, approvals, Temporal worker and remote readback
+        run: uv run python deploy/reference_smoke.py
+      - name: Install locked development-only browser tools
+        run: |
+          mkdir -p .local/browser-tools
+          cp deploy/browser/package.json deploy/browser/package-lock.json .local/browser-tools/
+          npm ci --prefix .local/browser-tools --ignore-scripts --no-audit --no-fund
+          .local/browser-tools/node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify actual desktop and mobile operator view
+        run: node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules --output evidence-local/browser
+      - name: Capture reference logs
+        if: always()
+        run: |
+          mkdir -p evidence-local
+          docker compose --env-file .local/compose.env -f deploy/compose.yaml -f deploy/compose.erp-http.yaml --profile erp-http logs --no-color > evidence-local/reference.log
+      - name: Stop isolated reference stack
+        if: always()
+        run: docker compose --env-file .local/compose.env -f deploy/compose.yaml -f deploy/compose.erp-http.yaml --profile erp-http down
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: always()
+        with:
+          name: reference-evidence-${{ github.sha }}
+          path: evidence-local/
+          retention-days: 14

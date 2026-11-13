@@ -1,0 +1,193 @@
+#%RAML 1.0
+title: P06 CRM System API
+version: v1
+baseUri: https://localhost:8443/v1
+mediaType: application/json
+protocols: [ HTTPS ]
+securitySchemes:
+  gatewayBearer:
+    type: Pass Through
+    describedBy:
+      headers:
+        Authorization:
+          type: string
+          description: Bearer token bound to one tenant. Provisioned outside Git.
+      responses:
+        401:
+        403:
+securedBy: [ gatewayBearer ]
+traits:
+  correlated:
+    headers:
+      X-Correlation-ID:
+        type: string
+        pattern: '^[A-Za-z0-9_.:-]{1,128}$'
+  scopedRead:
+    queryParameters:
+      tenant_id:
+        type: string
+        maxLength: 80
+types:
+  Customer:
+    type: object
+    properties:
+      customer_id: string
+      tenant_id: string
+      reference: string
+      name: string
+  Order:
+    type: object
+    properties:
+      order_id: string
+      tenant_id: string
+      customer_id: string
+      reference: string
+      sku: string
+      quantity: integer
+      requested_date: date-only
+      revision: integer
+      crm_url: string
+      last_effect_key: string | nil
+  Effect:
+    type: object
+    properties:
+      effect_key: string
+      order_id: string
+      before: Order
+      after: Order
+      replayed: boolean
+      observed_revision: integer
+      approved_plan_hash: string
+      request_hash: string
+  Change:
+    type: object
+    additionalProperties: false
+    properties:
+      tenant_id:
+        type: string
+        maxLength: 80
+      customer_id: string
+      effect_key:
+        type: string
+        pattern: '^[A-Za-z0-9_.:-]{1,128}$'
+      expected_revision:
+        type: integer
+        minimum: 1
+      operation:
+        enum: [ change_delivery_date, compensate_delivery_date ]
+      requested_date: date-only
+      approved_plan_hash:
+        type: string
+        pattern: '^[a-f0-9]{64}$'
+      expires_at: datetime
+      compensates_effect_key?: string
+  Failure:
+    type: object
+    properties:
+      error:
+        type: object
+        properties:
+          code: string
+          message: string
+          retryable: boolean
+      correlation_id?: string
+/capabilities:
+  get:
+    is: [ correlated ]
+    queryParameters:
+      tenant_id?: string
+    responses:
+      200:
+        body:
+          type: object
+          properties:
+            provider:
+              enum: [ salesforce ]
+            api_version: string
+            tenant_id: string
+            order_object: string
+            effect_object: string
+            can_execute: boolean
+            permission_test_performed: boolean
+/customers:
+  get:
+    is: [ correlated, scopedRead ]
+    queryParameters:
+      reference: string
+    responses:
+      200:
+        body:
+          type: object
+          properties:
+            items: Customer[]
+            truncated: boolean
+/orders:
+  get:
+    is: [ correlated, scopedRead ]
+    queryParameters:
+      customer_id: string
+      reference: string
+    responses:
+      200:
+        body:
+          type: object
+          properties:
+            items: Order[]
+            truncated: boolean
+  /{orderId}:
+    uriParameters:
+      orderId:
+        type: string
+        pattern: '^[A-Za-z0-9]{15}([A-Za-z0-9]{3})?$'
+    get:
+      is: [ correlated, scopedRead ]
+      responses:
+        200:
+          body:
+            type: Order
+        404:
+          body:
+            type: Failure
+    /effects:
+      post:
+        is: [ correlated ]
+        body:
+          type: Change
+        responses:
+          200:
+            description: Existing immutable request replayed; no second effect.
+            body:
+              type: Effect
+          201:
+            description: Order change and effect ledger committed in one Salesforce transaction.
+            body:
+              type: Effect
+          400:
+            body:
+              type: Failure
+          403:
+            body:
+              type: Failure
+          409:
+            body:
+              type: Failure
+          503:
+            headers:
+              Retry-After?: string
+            body:
+              type: Failure
+/effects:
+  /{effectKey}:
+    uriParameters:
+      effectKey:
+        type: string
+        pattern: '^[A-Za-z0-9_.:-]{1,128}$'
+    get:
+      is: [ correlated, scopedRead ]
+      responses:
+        200:
+          body:
+            type: Effect
+        404:
+          body:
+            type: Failure

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A service desk for approved order changes, observed effects and reconciliation.">
+    <title>Order resolution · Aster Works</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to work queue</a>
+    <aside class="sidebar" aria-label="Workspace navigation">
+      <a class="brand" href="/" aria-label="Aster Works order resolution home">
+        <span class="brand-mark" aria-hidden="true">aw</span>
+        <span>Aster Works<small>Fictional industrial group</small></span>
+      </a>
+      <span class="nav-label">Service operations</span>
+      <nav>
+        <button class="nav-item active" id="queue-nav" type="button" aria-current="page">
+          <span aria-hidden="true">▦</span> Work queue
+        </button>
+        <button class="nav-item" id="new-nav" type="button" disabled>
+          <span aria-hidden="true">＋</span> New request
+        </button>
+      </nav>
+      <div class="sidebar-note">
+        <span class="small-label">One case. An accountable trail.</span>
+        <p>Review the proposed change, the approval that permits it, and what the connected systems actually report.</p>
+      </div>
+      <div class="sidebar-footer">
+        <span class="pulse-dot" id="connection-dot" aria-hidden="true"></span>
+        <span id="connection-status">Disconnected</span>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="breadcrumb">Customer service <span aria-hidden="true">/</span> <strong>Order resolution</strong></div>
+        <span class="environment-badge" id="environment">Profile not connected</span>
+      </header>
+
+      <main id="main">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Exception management</p>
+            <h1>Order exception desk</h1>
+            <p class="page-description">Resolve a delivery request with a bounded approval and evidence from CRM and inventory.</p>
+          </div>
+          <button class="button primary" id="new-top" type="button" disabled><span aria-hidden="true">＋</span> New request</button>
+        </div>
+
+        <section class="connection-panel panel" aria-labelledby="connection-heading">
+          <div>
+            <h2 id="connection-heading">Connect your operator identity</h2>
+            <p id="identity-description">Use a locally issued credential. Your token stays in this tab’s memory and is cleared on disconnect.</p>
+            <div class="identity-tags" id="identity-tags" hidden></div>
+          </div>
+          <form id="connect-form" class="connect-form">
+            <label class="sr-only" for="access-token">Access token</label>
+            <input id="access-token" type="password" placeholder="Paste access token" autocomplete="off" spellcheck="false" required maxlength="4096">
+            <button class="button primary" id="connect-button" type="submit">Connect</button>
+            <button class="button secondary" id="disconnect-button" type="button" hidden>Disconnect</button>
+          </form>
+        </section>
+
+        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+        <section id="new-request-panel" class="panel request-panel" aria-labelledby="request-heading" hidden>
+          <div class="section-heading">
+            <div><p class="eyebrow">Intake</p><h2 id="request-heading">Request a delivery-date change</h2></div>
+            <button class="button quiet" id="close-request" type="button">Close</button>
+          </div>
+          <p class="subtle">The workflow checks identity, order and stock before proposing an action. A different person must approve it.</p>
+          <form id="request-form">
+            <div class="form-grid">
+              <label>Customer reference<input id="customer-reference" maxlength="100" placeholder="e.g. CUST-001" pattern="[A-Za-z0-9_.:-]+"></label>
+              <label>Order reference<input id="order-reference" maxlength="100" placeholder="e.g. ORD-1001" pattern="[A-Za-z0-9_.:-]+"></label>
+              <label>Requested delivery date<input id="requested-date" type="date"></label>
+              <label>Message ID<input id="message-id" maxlength="100" required pattern="[A-Za-z0-9_.:-]+" aria-describedby="message-id-help"></label>
+            </div>
+            <p class="field-help" id="message-id-help">Keep the same message ID when resending the same request. A changed request needs a new ID.</p>
+            <label>Request note <span class="optional">Optional · synthetic data only</span><textarea id="request-note" rows="3" maxlength="4000" placeholder="Describe the request. Missing or conflicting details lead to clarification."></textarea></label>
+            <div class="form-actions"><button class="button primary" id="submit-request" type="submit">Submit request</button><span class="subtle">Submission queues the workflow; it does not change an order.</span></div>
+          </form>
+        </section>
+
+        <section class="metric-grid" aria-label="Current case summary">
+          <div class="metric-card"><span>Active cases</span><strong id="metric-active">—</strong><small>Work in progress</small></div>
+          <div class="metric-card"><span>Awaiting approval</span><strong id="metric-approval">—</strong><small>Human decision required</small></div>
+          <div class="metric-card"><span>Needs attention</span><strong id="metric-attention">—</strong><small>Clarification or recovery</small></div>
+          <div class="metric-card"><span>Completed by readback</span><strong id="metric-complete">—</strong><small>State observed at completion</small></div>
+        </section>
+
+        <section class="panel queue-panel" aria-labelledby="queue-heading">
+          <div class="section-heading">
+            <div><h2 id="queue-heading">Work queue <span class="count-badge" id="case-count">0</span></h2><p class="subtle" id="queue-description">Connect to load cases for your tenant.</p></div>
+            <div class="queue-actions"><label class="sr-only" for="search">Search customer, order or case</label><input id="search" type="search" placeholder="Search cases" maxlength="100" disabled><button class="button secondary" id="refresh" type="button" disabled>Refresh</button></div>
+          </div>
+          <div class="filter-tabs" role="group" aria-label="Filter cases">
+            <button class="filter active" type="button" data-filter="all" aria-pressed="true">All cases</button>
+            <button class="filter" type="button" data-filter="approval" aria-pressed="false">Awaiting approval</button>
+            <button class="filter" type="button" data-filter="attention" aria-pressed="false">Needs attention</button>
+            <button class="filter" type="button" data-filter="complete" aria-pressed="false">Completed</button>
+          </div>
+          <div class="table-scroll">
+            <table class="case-table">
+              <caption class="sr-only">Cases returned by the authenticated service</caption>
+              <thead><tr><th scope="col">Customer / order</th><th scope="col">Requested delivery</th><th scope="col">State</th><th scope="col">Updated</th><th scope="col"><span class="sr-only">Open case</span></th></tr></thead>
+              <tbody id="case-rows"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="queue-empty"><span class="empty-icon" aria-hidden="true">▤</span><h3>No cases loaded</h3><p>Connect an identity to view its work queue.</p></div>
+          <div class="queue-footer"><span id="last-refreshed">No observations yet</span><span>Automatic refresh every 4 seconds while connected</span></div>
+        </section>
+
+        <section id="case-detail" aria-labelledby="case-heading" hidden>
+          <div class="detail-header"><div><p class="eyebrow">Case workspace</p><h2 id="case-heading">Case</h2><p class="subtle mono" id="case-identifiers"></p></div><div id="case-state"></div></div>
+          <p class="case-reason" id="case-reason" hidden></p>
+          <ol class="phase-track" id="phase-track" aria-label="Observed workflow milestones"></ol>
+          <div class="detail-grid">
+            <div class="detail-main">
+              <article class="panel plan-panel" aria-labelledby="plan-heading">
+                <div class="section-heading"><div><p class="eyebrow">Proposed resolution</p><h3 id="plan-heading">Change the delivery date</h3></div><span class="small-badge">One approved field</span></div>
+                <div id="plan-empty" class="inline-empty">A proposal appears after customer, order and stock checks.</div>
+                <div id="plan-content" hidden>
+                  <div class="change-card"><div><span>Current delivery</span><strong id="before-date">—</strong></div><span class="change-arrow" aria-hidden="true">→</span><div><span>Requested delivery</span><strong id="after-date">—</strong></div></div>
+                  <dl id="plan-facts" class="facts-grid"></dl>
+                  <div id="crm-link" class="crm-link"></div>
+                  <details class="technical-detail"><summary>Approved scope and plan fingerprint</summary><pre id="plan-json"></pre></details>
+                </div>
+              </article>
+
+              <article class="panel" aria-labelledby="effects-heading">
+                <div class="section-heading"><div><p class="eyebrow">Effect journal</p><h3 id="effects-heading">What the systems reported</h3></div></div>
+                <p class="subtle">Prepared and uncertain effects stay visible. A recorded intent is not evidence that the remote change happened.</p>
+                <div id="effects-list" class="effects-list"></div>
+              </article>
+
+              <article class="panel" aria-labelledby="readback-heading">
+                <div class="section-heading"><div><p class="eyebrow">Reconciliation</p><h3 id="readback-heading">Workflow and remote state</h3></div><button class="button secondary" id="reconcile" type="button" disabled>Read current state</button></div>
+                <p id="readback-description" class="subtle">Readback compares the current CRM object and inventory reservation with the case. It does not apply another change.</p>
+                <div id="readback-result" class="inline-empty">No independent reconciliation has been requested in this view.</div>
+              </article>
+            </div>
+            <aside class="detail-side" aria-label="Approval and history">
+              <article class="panel approval-panel" aria-labelledby="approval-heading">
+                <p class="eyebrow">Human decision</p><h3 id="approval-heading">Approval</h3>
+                <div id="approval-status"></div>
+                <p class="subtle" id="approval-help"></p>
+                <dl class="facts-list" id="approval-facts"></dl>
+                <div class="approval-actions"><button class="button primary" id="approve" type="button" disabled>Approve this plan</button><button class="button secondary" id="reject" type="button" disabled>Reject</button></div>
+              </article>
+              <article class="panel" aria-labelledby="request-detail-heading">
+                <h3 id="request-detail-heading">Original request</h3><dl class="facts-list" id="request-facts"></dl><p class="request-note" id="original-note"></p>
+              </article>
+              <article class="panel timeline-panel" aria-labelledby="timeline-heading"><h3 id="timeline-heading">Case history</h3><ol class="timeline" id="timeline"></ol></article>
+            </aside>
+          </div>
+        </section>
+        <footer class="page-footer"><span>CRM Order Workflow Agent · P06</span><span>Fictional orders only. No payment or customer notification.</span></footer>
+      </main>
+    </div>
+  </body>
+</html>

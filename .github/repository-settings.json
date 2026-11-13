@@ -1,0 +1,18 @@
+{
+  "status": "prepared_not_applied",
+  "repository": "mehdisafer/crm-order-workflow-agent",
+  "description": "Auditable order-exception workflows with Temporal, scoped approvals, Salesforce/MuleSoft adapters and recovery evidence.",
+  "topics": ["data-engineering", "temporal", "salesforce", "mulesoft", "workflow", "data-integration", "saga", "idempotency", "fastapi", "n8n", "portfolio"],
+  "visibility": "private",
+  "licence": "awaiting_explicit_maintainer_selection",
+  "protection_proposal": {
+    "default_branch": "main",
+    "prevent_force_push": true,
+    "prevent_deletion": true,
+    "require_pull_request": true,
+    "required_checks": ["Core contracts and security", "Temporal recovery", "Reference container build"],
+    "independent_approval": "not_asserted",
+    "availability": "verify against current private-repository plan; no plan upgrade authorised"
+  },
+  "note": "This file is a reviewable settings proposal, not a GitHub configuration API. Actual application and anonymous access checks require the publication decision and supported administration capability."
+}

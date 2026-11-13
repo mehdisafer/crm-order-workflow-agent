@@ -1,0 +1,260 @@
+{
+  "$defs": {
+    "Availability": {
+      "additionalProperties": false,
+      "properties": {
+        "available": {
+          "minimum": 0,
+          "title": "Available",
+          "type": "integer"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "sku": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Sku",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "sku",
+        "available",
+        "revision"
+      ],
+      "title": "Availability",
+      "type": "object"
+    },
+    "Customer": {
+      "additionalProperties": false,
+      "properties": {
+        "customer_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 200,
+          "title": "Name",
+          "type": "string"
+        },
+        "reference": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Reference",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "tenant_id",
+        "reference",
+        "name"
+      ],
+      "title": "Customer",
+      "type": "object"
+    },
+    "Order": {
+      "additionalProperties": false,
+      "properties": {
+        "crm_url": {
+          "maxLength": 500,
+          "title": "Crm Url",
+          "type": "string"
+        },
+        "customer_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "last_effect_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Effect Key"
+        },
+        "order_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Order Id",
+          "type": "string"
+        },
+        "quantity": {
+          "exclusiveMinimum": 0,
+          "maximum": 100000,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "reference": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Reference",
+          "type": "string"
+        },
+        "requested_date": {
+          "format": "date",
+          "title": "Requested Date",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "sku": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Sku",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "order_id",
+        "tenant_id",
+        "customer_id",
+        "reference",
+        "sku",
+        "quantity",
+        "requested_date",
+        "revision",
+        "crm_url"
+      ],
+      "title": "Order",
+      "type": "object"
+    }
+  },
+  "$id": "urn:p06:v1:ActionPlan",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "availability": {
+      "$ref": "#/$defs/Availability"
+    },
+    "case_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "compensation_allowed": {
+      "default": true,
+      "title": "Compensation Allowed",
+      "type": "boolean"
+    },
+    "customer": {
+      "$ref": "#/$defs/Customer"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "fields": {
+      "items": {
+        "const": "requested_date",
+        "type": "string"
+      },
+      "title": "Fields",
+      "type": "array"
+    },
+    "operation": {
+      "const": "change_delivery_date",
+      "default": "change_delivery_date",
+      "title": "Operation",
+      "type": "string"
+    },
+    "order": {
+      "$ref": "#/$defs/Order"
+    },
+    "policy_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "requested_date": {
+      "format": "date",
+      "title": "Requested Date",
+      "type": "string"
+    },
+    "requester_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Requester Id",
+      "type": "string"
+    },
+    "risk": {
+      "const": "controlled_order_change",
+      "default": "controlled_order_change",
+      "title": "Risk",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "tenant_id",
+    "requester_id",
+    "customer",
+    "order",
+    "availability",
+    "requested_date",
+    "expires_at"
+  ],
+  "title": "ActionPlan",
+  "type": "object"
+}

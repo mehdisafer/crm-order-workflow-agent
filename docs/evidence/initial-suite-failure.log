@@ -1,0 +1,268 @@
+....................................................F................... [ 80%]
+...............F.                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_observed_effect_cannot_be_downgraded_by_overlapping_attempt _______
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-36/test_observed_effect_cannot_be0')
+
+    def test_observed_effect_cannot_be_downgraded_by_overlapping_attempt(tmp_path):
+        from crm_workflow.errors import DomainError
+        from crm_workflow.store import Store
+    
+        store = Store(f"sqlite:///{tmp_path / 'effects.db'}")
+        try:
+>           store.prepare_effect("key", "case", "crm", "change_delivery_date", {"scope": "approved"})
+
+tests/test_dispatcher.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <crm_workflow.store.Store object at 0x7fadc948d190>, key = 'key'
+case_id = 'case', system = 'crm', operation = 'change_delivery_date'
+request = {'scope': 'approved'}
+
+    def prepare_effect(self, key: str, case_id: str, system: str, operation: str, request: dict):
+        digest = canonical_hash(request)
+        try:
+            with self.engine.begin() as db:
+                db.execute(
+                    insert(effects).values(
+                        effect_key=key,
+                        case_id=case_id,
+                        system=system,
+                        operation=operation,
+                        status="PREPARED",
+                        request_hash=digest,
+                        request=request,
+                        attempts=0,
+                    )
+                )
+                self._event(db, case_id, "effect.prepared", {"effect_key": key, "system": system})
+        except IntegrityError:
+            existing = self.effect(key)
+            if existing is None or existing["request_hash"] != digest or existing["case_id"] != case_id:
+>               raise DomainError(
+                    "EFFECT_KEY_CONFLICT", "Effect key was reused with a different payload"
+                ) from None
+E               crm_workflow.errors.DomainError: Effect key was reused with a different payload
+
+src/crm_workflow/store.py:318: DomainError
+________ test_process_crash_after_crm_commit_recovers_without_duplicate ________
+
+fut = <coroutine object WorkflowHandle.result at 0x7fadcabf69f0>, timeout = 25
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+    
+        Coroutine will be wrapped in Task.
+    
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+    
+        If the wait is cancelled, the task is also cancelled.
+    
+        If the task suppresses the cancellation and returns a value instead,
+        that value is returned.
+    
+        This function is a coroutine.
+        """
+        # The special case for timeout <= 0 is for the following case:
+        #
+        # async def test_waitfor():
+        #     func_started = False
+        #
+        #     async def func():
+        #         nonlocal func_started
+        #         func_started = True
+        #
+        #     try:
+        #         await asyncio.wait_for(func(), 0)
+        #     except asyncio.TimeoutError:
+        #         assert not func_started
+        #     else:
+        #         assert False
+        #
+        # asyncio.run(test_waitfor())
+    
+    
+        if timeout is not None and timeout <= 0:
+            fut = ensure_future(fut)
+    
+            if fut.done():
+                return fut.result()
+    
+            await _cancel_and_wait(fut)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise TimeoutError from exc
+    
+        async with timeouts.timeout(timeout):
+>           return await fut
+                   ^^^^^^^^^
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/tasks.py:520: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/temporalio/client/_workflow.py:248: in result
+    async for event in events:
+.venv/lib/python3.12/site-packages/temporalio/client/_workflow.py:1840: in __anext__
+    await self.fetch_next_page()
+.venv/lib/python3.12/site-packages/temporalio/client/_workflow.py:1797: in fetch_next_page
+    resp = await self._client.workflow_service.get_workflow_execution_history(
+.venv/lib/python3.12/site-packages/temporalio/bridge/services_generated.py:740: in get_workflow_execution_history
+    return await self._client._rpc_call(
+.venv/lib/python3.12/site-packages/temporalio/service.py:484: in _rpc_call
+    resp = await client.call(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <temporalio.bridge.client.Client object at 0x7fadc9426bd0>
+service = 'workflow', rpc = 'get_workflow_execution_history'
+req = namespace: "default"
+execution {
+  workflow_id: "case-b50b03d8-9754-4a13-a52a-9fe24d360e16"
+}
+wait_new_event: true
+history_event_filter_type: HISTORY_EVENT_FILTER_TYPE_CLOSE_EVENT
+skip_archival: true
+
+resp_type = <class 'temporalio.api.workflowservice.v1.request_response_pb2.GetWorkflowExecutionHistoryResponse'>
+retry = True, metadata = {}, timeout = None
+
+    async def call(
+        self,
+        *,
+        service: str,
+        rpc: str,
+        req: google.protobuf.message.Message,
+        resp_type: type[ProtoMessage],
+        retry: bool,
+        metadata: Mapping[str, str | bytes],
+        timeout: timedelta | None,
+    ) -> ProtoMessage:
+        """Make RPC call using SDK Core."""
+        # Prepare call
+        timeout_millis = round(timeout.total_seconds() * 1000) if timeout else None
+        call = RpcCall(rpc, req.SerializeToString(), retry, metadata, timeout_millis)
+    
+        # Do call (this throws an RPCError on failure)
+        if service == "workflow":
+            resp_fut = self._ref.call_workflow_service(call)
+        elif service == "operator":
+            resp_fut = self._ref.call_operator_service(call)
+        elif service == "cloud":
+            resp_fut = self._ref.call_cloud_service(call)
+        elif service == "test":
+            resp_fut = self._ref.call_test_service(call)
+        elif service == "health":
+            resp_fut = self._ref.call_health_service(call)
+        else:
+            raise ValueError(f"Unrecognized service {service}")
+    
+        # Convert response
+        resp = resp_type()
+>       resp.ParseFromString(await resp_fut)
+                             ^^^^^^^^^^^^^^
+E       asyncio.exceptions.CancelledError
+
+.venv/lib/python3.12/site-packages/temporalio/bridge/client.py:169: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-36/test_process_crash_after_crm_c0')
+
+    async def test_process_crash_after_crm_commit_recovers_without_duplicate(tmp_path):
+        env = await start_server(tmp_path / "temporal.db")
+        url = initialise(tmp_path / "business.db")
+        queue = f"p06-core-{uuid.uuid4()}"
+        address = env.client.service_client.config.target_host
+        runtime = build_runtime(settings_for(url, address, queue))
+        marker = tmp_path / "remote-committed.json"
+        process = None
+        try:
+            process = subprocess.Popen(
+                [
+                    sys.executable,
+                    str(Path(__file__).resolve()),
+                    "--crash-worker",
+                    url,
+                    address,
+                    queue,
+                    str(marker),
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            case = await create_case(runtime)
+            dispatcher = OutboxDispatcher(runtime.store, env.client, runtime.settings)
+            assert (await dispatcher.dispatch_once())["failed"] == 0
+            waiting = await await_case_state(runtime, case["id"], "AWAITING_APPROVAL")
+            await runtime.service.approve(
+                case["id"], ApprovalRequest(plan_hash=waiting["plan"]["hash"], decision="approve"), APPROVER
+            )
+            assert (await dispatcher.dispatch_once())["failed"] == 0
+    
+            async def crashed():
+                while process.poll() is None:
+                    await asyncio.sleep(0.03)
+    
+            await asyncio.wait_for(crashed(), timeout=15)
+            assert process.returncode == 86
+            assert json.loads(marker.read_text())["remote_committed"] is True
+            assert runtime.store.get_case(case["id"])["state"] == "APPROVED"
+            assert runtime.store.effect(f"{case['id']}:crm")["status"] == "UNKNOWN"
+            handle = env.client.get_workflow_handle(f"case-{case['id']}")
+            async with worker_for(env, runtime):
+>               assert (await asyncio.wait_for(handle.result(), timeout=25))["state"] == "COMPLETED"
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_temporal_core.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/tasks.py:519: in wait_for
+    async with timeouts.timeout(timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Timeout [expired]>
+exc_type = <class 'asyncio.exceptions.CancelledError'>
+exc_val = CancelledError(), exc_tb = <traceback object at 0x7fadc93ef480>
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Optional[bool]:
+        assert self._state in (_State.ENTERED, _State.EXPIRING)
+    
+        if self._timeout_handler is not None:
+            self._timeout_handler.cancel()
+            self._timeout_handler = None
+    
+        if self._state is _State.EXPIRING:
+            self._state = _State.EXPIRED
+    
+            if self._task.uncancel() <= self._cancelling and exc_type is exceptions.CancelledError:
+                # Since there are no new cancel requests, we're
+                # handling this.
+>               raise TimeoutError from exc_val
+E               TimeoutError
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/timeouts.py:115: TimeoutError
+----------------------------- Captured stdout call -----------------------------
+Temporal CLI 1.10.1 (Server 1.32.2, UI 2.56.4)
+
+Temporal Server:      localhost:39189
+Temporal Persistence: /tmp/pytest-of-agent/pytest-36/test_process_crash_after_crm_c0/temporal.db
+Temporal Metrics:     http://localhost:38667/metrics
+----------------------------- Captured stderr call -----------------------------
+time=2026-11-14T00:07:58.852 level=WARN msg="Fail to process task" shard-id=1 address=127.0.0.1:37173 component=transfer-queue-processor wf-namespace-id=01a1d72a-a8a1-742a-98a0-84065b35e769 wf-id=case-b50b03d8-9754-4a13-a52a-9fe24d360e16 wf-run-id=01a1d72a-a930-782b-a9ed-ac5c49924f09 queue-task-key="{FireTime:1970-01-01 00:00:00 +0000 UTC TaskID:1048663}" queue-task-type=TransferWorkflowTask queue-task="WorkflowTask{WorkflowKey: 01a1d72a-a8a1-742a-98a0-84065b35e769/case-b50b03d8-9754-4a13-a52a-9fe24d360e16/01a1d72a-a930-782b-a9ed-ac5c49924f09, VisibilityTimestamp: 2026-11-13 23:07:57.585593002 +0000 UTC, TaskID: 1048663, TaskQueue: p06-core-40891039-53d2-4995-9af2-91274162729f, ScheduledEventID: 28, Version: 0}" wf-history-event-id=28 error="context deadline exceeded" error-type=serviceerror.DeadlineExceeded attempt=2 unexpected-error-attempts=1 lifecycle=ProcessingFailed task-category=transfer
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/scratch/d1e42abd55b0/crm-order-workflow-agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_dispatcher.py::test_observed_effect_cannot_be_downgraded_by_overlapping_attempt
+FAILED tests/test_temporal_core.py::test_process_crash_after_crm_commit_recovers_without_duplicate
+2 failed, 87 passed, 1 warning in 46.30s

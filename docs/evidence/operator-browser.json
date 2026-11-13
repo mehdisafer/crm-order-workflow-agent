@@ -1,0 +1,14 @@
+{
+  "captured_at": "2026-11-13T23:04:39.720Z",
+  "status": "blocked",
+  "browser_version": null,
+  "node_version": "v24.22.1",
+  "playwright_version": "1.62.1",
+  "profile": "observed-local-operator-ui",
+  "provider_validation": false,
+  "page_errors": [],
+  "console_errors": [],
+  "screenshots": [],
+  "failure_code": "CHROMIUM_OS_PERMISSION_DENIED",
+  "failure_summary": "Chromium aborted before page creation: process_singleton_posix.cc socket() failed: Operation not permitted (1)."
+}

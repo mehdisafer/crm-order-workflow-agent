@@ -1,0 +1,1 @@
+{"status": "BLOCKED", "missing_environment": ["P06_SF_INSTANCE_URL", "P06_SF_ACCESS_TOKEN", "P06_MULE_URL", "P06_MULE_TOKEN", "P06_TENANT"]}

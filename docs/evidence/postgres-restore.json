@@ -1,0 +1,34 @@
+{
+  "case_state": "COMPLETED",
+  "dump_bytes": 19647,
+  "duplicate_deliveries": 16,
+  "executed_at": "2026-11-13T23:07:37.320666+00:00",
+  "helper": {
+    "name": "pgserver",
+    "version": "0.1.4"
+  },
+  "limits": "Helper PostgreSQL binary, not the pinned container version. Temporal history and provider state are not part of this logical dump.",
+  "logical_restore_seconds": 0.06840106300023763,
+  "postgres_version": "PostgreSQL 16.2 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 10.2.1 20210130 (Red Hat 10.2.1-11), 64-bit",
+  "profile": "isolated-loopback-postgresql",
+  "qualification_seconds": 0.389756118999685,
+  "restored_counts": {
+    "case_events": 11,
+    "cases": 1,
+    "demo_crm_effects": 1,
+    "demo_reservations": 1,
+    "effects": 2,
+    "outbox": 3
+  },
+  "restored_reconciliation_matches": true,
+  "source_counts": {
+    "case_events": 11,
+    "cases": 1,
+    "demo_crm_effects": 1,
+    "demo_reservations": 1,
+    "effects": 2,
+    "outbox": 3
+  },
+  "unique_cases": 1,
+  "vendor_validated": false
+}
