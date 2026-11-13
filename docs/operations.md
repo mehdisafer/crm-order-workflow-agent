@@ -4,7 +4,7 @@
 
 The deployment target is one Linux host with Docker Compose: a PostgreSQL business database, one persistent Temporal development server, an API and one or more workers. Synthetic inventory can run through its HTTP API. n8n and Prometheus are optional profiles. No Salesforce tenant, MuleSoft runtime, cloud account, public listener or paid resource is created by this repository.
 
-The container configuration is prepared and YAML-checked. Docker was unavailable in the authoring environment, so an unexecuted image build is not reported as a successful deployment. The `Reference container build` CI job builds the image and exercises the full Compose stack, including PostgreSQL and the HTTP ERP. Its observed result and artifacts are the deployment evidence when that job has run.
+The container configuration is prepared and YAML-checked. Docker was unavailable in the authoring environment, so an unexecuted image build is not reported as a successful deployment. The `Reference container build` CI job is configured to build the image and exercise the full Compose stack, including PostgreSQL and the HTTP ERP. The recorded GitHub runs failed before runner allocation, with no executed steps or job logs; [the CI observation](evidence/ci-observation.json) preserves that outcome. Read the owner-visible run annotations to establish the platform cause, without assuming a billing or runner-policy change is authorised. Actual build/deployment artifacts are still required.
 
 Python business-core and real Temporal recovery tests were executed separately; see [the runtime evidence](temporal-runtime.md). The local HTTP demonstration records its own actual result in [http-smoke.json](evidence/http-smoke.json). Neither proves a real Salesforce/MuleSoft path.
 

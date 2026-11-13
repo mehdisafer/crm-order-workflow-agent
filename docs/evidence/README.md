@@ -20,6 +20,8 @@ Evidence describes the system that actually ran. The source manifest identifies 
 
 The final evidence commit records the test counts and current CI links. A file listed here as a release deliverable must exist before the candidate is published. Generated `.local/` credentials, raw provider access tokens and actual private tenant payloads never belong in this directory.
 
+The qualified source is commit [`7777b75497d840a97e53d6693d1ab60177cde0d5`](https://github.com/mehdisafer/crm-order-workflow-agent/commit/7777b75497d840a97e53d6693d1ab60177cde0d5). Its [PR CI run](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43526218191) reproduces the startup failure recorded below. Later evidence-only documentation commits retain those code/configuration digests; they do not turn that run into a success.
+
 The final local suite completed **91 tests, zero failures and zero skips**, in 43.51 seconds, including two deployment-configuration regressions added after review. GitHub's initial PR run failed before job execution: all three jobs reported runner ID 0, an empty runner name and no steps. Job-log retrieval returned no stored log. The connector does not expose the job annotations needed to establish the platform-side reason; the separate browser has no signed-in access to this private repository. Billing, runner policy and account settings were not changed. The PR therefore remains open and the container/browser gates remain unqualified.
 
 ## Scope of observed measurements
