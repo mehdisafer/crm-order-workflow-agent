@@ -15,9 +15,12 @@ Evidence describes the system that actually ran. The source manifest identifies 
 | `licence-check.json` | Third-party licence metadata presence check; project licence remains an explicit decision |
 | `vendor-preflight.json` | Original blocked provider preflight; required environment was absent |
 | `operator-browser.json` | Browser execution status; local Chromium was blocked by the executor's socket policy |
+| `ci-observation.json` | GitHub run and job observations, including startup failures with no runner or executed steps; no CI success is inferred |
 | `source-manifest.json` | Source commit/tree, file digests, commands and qualification scope |
 
 The final evidence commit records the test counts and current CI links. A file listed here as a release deliverable must exist before the candidate is published. Generated `.local/` credentials, raw provider access tokens and actual private tenant payloads never belong in this directory.
+
+The final local suite completed **91 tests, zero failures and zero skips**, in 43.51 seconds, including two deployment-configuration regressions added after review. GitHub's initial PR run failed before job execution: all three jobs reported runner ID 0, an empty runner name and no steps. Job-log retrieval returned no stored log. The connector does not expose the job annotations needed to establish the platform-side reason; the separate browser has no signed-in access to this private repository. Billing, runner policy and account settings were not changed. The PR therefore remains open and the container/browser gates remain unqualified.
 
 ## Scope of observed measurements
 

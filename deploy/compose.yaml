@@ -6,7 +6,6 @@ x-app: &app
     dockerfile: Dockerfile
   image: p06-crm-workflow:0.1.0
   user: "${P06_UID:-1000}:${P06_GID:-1000}"
-  env_file: ../.local/demo.env
   environment: &environment
     P06_PROFILE: demo
     P06_DATABASE_URL: ${P06_DATABASE_URL:?Run deploy/prepare_reference.py}
@@ -46,7 +45,7 @@ services:
       - ./postgres-init.sh:/docker-entrypoint-initdb.d/10-roles.sh:ro
     networks: [workflow]
     healthcheck:
-      test: [CMD-SHELL, "pg_isready -U p06_owner -d p06"]
+      test: [CMD-SHELL, "pg_isready -h 127.0.0.1 -U p06_owner -d p06"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -83,6 +82,10 @@ services:
 
   api:
     <<: *app
+    environment:
+      <<: *environment
+      P06_WEBHOOK_SECRET: ${P06_WEBHOOK_SECRET:?Run deploy/prepare_reference.py}
+      P06_ERP_TOKEN: ${P06_ERP_TOKEN:?Run deploy/prepare_reference.py}
     ports: ["127.0.0.1:8000:8000"]
     depends_on:
       migrate: {condition: service_completed_successfully}
@@ -94,6 +97,9 @@ services:
 
   worker:
     <<: *app
+    environment:
+      <<: *environment
+      P06_ERP_TOKEN: ${P06_ERP_TOKEN:?Run deploy/prepare_reference.py}
     command: [python, -m, crm_workflow.worker]
     depends_on:
       migrate: {condition: service_completed_successfully}
@@ -101,6 +107,9 @@ services:
 
   erp:
     <<: *app
+    environment:
+      <<: *environment
+      P06_ERP_TOKEN: ${P06_ERP_TOKEN:?Run deploy/prepare_reference.py}
     profiles: [erp-http]
     command: [uvicorn, "crm_workflow.erp:app", --host, 0.0.0.0, --port, "8001", --no-access-log]
     ports: ["127.0.0.1:8001:8001"]

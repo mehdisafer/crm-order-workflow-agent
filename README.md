@@ -16,17 +16,17 @@ The engineering focus is durable execution, trustworthy approvals and honest rec
 | Local CRM and ERP | Explicitly synthetic implementations; duplicate messages, uncertain responses and compensation conflicts tested |
 | Salesforce through MuleSoft | Real adapter, Apex/metadata, Mule application, permissions and live acceptance harness prepared; **no tenant/runtime execution yet** |
 | n8n | Credential-free trigger export prepared; not imported into a running instance |
-| Container reference | Reproducible source and CI verification prepared; see the exact run status in [the evidence index](docs/evidence/README.md) |
+| Container reference | Source prepared; GitHub jobs failed before runner allocation, so container and browser qualification remain unexecuted; see [the evidence index](docs/evidence/README.md) |
 | Publication | Private repository; repository licence and public distribution await the maintainer's explicit decision |
 
 The local demonstration does **not** satisfy Salesforce/MuleSoft acceptance. [Issue #1](https://github.com/mehdisafer/crm-order-workflow-agent/issues/1) stays open for that milestone and the other documented gates. Detailed evidence and limits are in [acceptance.md](docs/acceptance.md).
 
 ## Run the smallest real workflow
 
-Requirements: Python 3.12 and [uv](https://docs.astral.sh/uv/). The first smoke run downloads the official Temporal CLI test-server binary if it is not cached.
+Requirements: Python 3.12 and [uv](https://docs.astral.sh/uv/). The first smoke run downloads the official Temporal CLI test-server binary if it is not cached. The candidate is on the reviewed implementation branch in [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2), while the CI gate remains open.
 
 ```bash
-git clone https://github.com/mehdisafer/crm-order-workflow-agent.git
+git clone --branch feat/p06-controlled-order-workflow https://github.com/mehdisafer/crm-order-workflow-agent.git
 cd crm-order-workflow-agent
 uv sync --locked
 uv run --locked python -m crm_workflow.cli smoke

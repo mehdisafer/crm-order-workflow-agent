@@ -37,6 +37,8 @@ def main() -> None:
     content = (
         f"P06_DATABASE_URL=postgresql+psycopg://p06_app:{app_password}@postgres:5432/p06\n"
         f"P06_MIGRATION_DATABASE_URL=postgresql+psycopg://p06_owner:{owner_password}@postgres:5432/p06\n"
+        f"P06_WEBHOOK_SECRET={values['P06_WEBHOOK_SECRET']}\n"
+        f"P06_ERP_TOKEN={values['P06_ERP_TOKEN']}\n"
         f"P06_UID={uid}\nP06_GID={gid}\n"
         f"N8N_ENCRYPTION_KEY={secrets.token_hex(32)}\n"
     )

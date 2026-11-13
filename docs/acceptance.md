@@ -25,8 +25,8 @@
 | Outbox, failure queue and controlled replay | Yes | Transaction rollback, duplicate dispatch, late failure-after-ACK and replay restrictions tested |
 | Load and additional workers | Yes | Bounded local load with two separate workers; no provider throughput or HA claim |
 | Restore | Yes for isolated data profile | Real PostgreSQL logical dump/restore and subsequent reconciliation; Temporal persistence restart tested separately |
-| Container deployment | Source and CI profile prepared | Check actual Actions result; local executor had no Docker runtime |
-| Operator browser rendering | Source implemented | Local Chromium blocked by OS socket policy; CI captures actual browser output when supported |
+| Container deployment | Source and CI profile prepared | Local executor had no Docker; GitHub jobs failed with runner ID 0 and no executed steps. Container qualification remains open |
+| Operator browser rendering | Source implemented | Local Chromium blocked by OS socket policy; GitHub runner allocation also failed. No screenshot or visual acceptance is claimed |
 | Monitoring and operational runbooks | Yes | Tenant-scoped API metrics tested; reference Prometheus/alerts prepared, on-call alert delivery unverified |
 | Dependency, secret and licence checks | Yes | Locked Python dependencies, audit output, component metadata and source/history scan; no certification |
 | Public release, licence and repository protections | Prepared decisions | No licence selected, no visibility change, no public release; settings require explicit publication decision and supported administration access |
@@ -51,7 +51,7 @@ With those inputs, run the checked-in install/preflight and bounded [real accept
 | P0 | Execute complete real provider scenario and original acceptance faults | One real business result, correctly invalidated approval, actual permission denial, response-loss recovery without a duplicate |
 | P1 | Import and run the authenticated n8n trigger | Credential-free export identity plus a correlated case received by the real API |
 | P1 | Qualify OAuth refresh, provider 429/timeouts and shared call budgets | Observed attempts and provider quota values, with the documented global bound respected |
-| P1 | Qualify the pinned reference container and rendered browser | CI/host build, deployment smoke, screenshots and zero relevant browser errors |
+| P1 | Resolve the GitHub runner-start failure and qualify the reference container/browser | Owner-visible run annotations, followed by actual build/deployment smoke, screenshots and zero relevant browser errors; no billing change is authorised implicitly |
 | P1 | Rehearse recovery on the chosen operational platform | PostgreSQL backup, compatible Temporal history, provider reconciliation and measured RPO/RTO |
 | P1 | Choose repository licence and public distribution | Explicit maintainer decision; third-party obligations retained |
 | P1 | Apply available metadata/protections and inspect anonymous access after any approved visibility change | Observed GitHub settings and access result; no purchase implied |

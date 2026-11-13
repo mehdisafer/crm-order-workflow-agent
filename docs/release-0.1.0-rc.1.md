@@ -18,7 +18,7 @@ The [evidence index](evidence/README.md) links the exact source identity, origin
 
 ## Release status
 
-Prepared candidate; **not a public GitHub release and not full P06 acceptance**. No version tag, licence grant, paid resource or visibility change is implied by this file. Actual Salesforce/MuleSoft execution, n8n runtime qualification and publication decisions remain open in [acceptance.md](acceptance.md).
+Prepared candidate on [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2); **not merged into main, not a public GitHub release and not full P06 acceptance**. GitHub jobs failed before runner allocation and any test step, so the container/browser gate remains open. No version tag, licence grant, paid resource or visibility change is implied by this file. Actual Salesforce/MuleSoft execution, n8n runtime qualification and publication decisions remain open in [acceptance.md](acceptance.md).
 
 ## Upgrade and rollback
 

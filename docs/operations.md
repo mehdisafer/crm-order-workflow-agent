@@ -22,6 +22,8 @@ docker compose --env-file .local/compose.env -f deploy/compose.yaml up --build -
 
 The identity and secret setup commands refuse to overwrite existing credentials. If they have already run, continue from the Compose command. Do not print `docker compose config` without `--quiet`: expanded environment values contain credentials.
 
+If a previous revision generated `compose.env` before it contained the webhook and ERP variables, preserve the existing credentials and pass `--env-file .local/demo.env --env-file .local/compose.env` instead. These files provide interpolation values; only the variables explicitly listed for each service are injected into its container.
+
 The operator view is at `http://127.0.0.1:8000`; use the requester, approver and operator tokens from the local token file. Temporal UI is at `http://127.0.0.1:8233`. These ports bind only to loopback. Database and gRPC ports are not published. The internal bridge permits the deliberately configured vendor endpoints in a later provider profile; it does not publish a business service.
 
 For the synthetic ERP HTTP boundary, start with the overlay:
@@ -59,7 +61,9 @@ An explicitly provided `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` selects an already 
 
 `init-demo` generates bearer tokens, a webhook secret and the ERP token. `prepare_reference.py` generates the application database password and n8n encryption key. Generated files live only in ignored local paths. The image excludes those paths, the Git directory, local databases and evidence artifacts.
 
-The PostgreSQL bootstrap identity owns migrations. A separate `p06_app` identity receives table DML and sequence privileges through default grants; it does not receive schema creation or role administration rights. API and worker containers use that application identity. The one-shot `migrate` service completes before either starts, preventing concurrent schema creation. Containers run without added capabilities and with a read-only application filesystem.
+The PostgreSQL bootstrap identity owns migrations. A separate `p06_app` identity receives table DML and sequence privileges through default grants; it does not receive schema creation or role administration rights. API, worker and ERP containers use that application identity. Compose explicitly selects their environment variables: the owner database URL belongs only to `migrate`, the webhook secret only to the API, and the ERP token to API, worker and ERP. It does not import the complete local secret file into these containers. The n8n encryption key belongs only to n8n, and no LLM credentials are injected.
+
+The PostgreSQL health check connects over TCP so its temporary, socket-only bootstrap server cannot admit migrations before role creation and default grants finish. The one-shot `migrate` service completes before consumers start, preventing concurrent schema creation. Containers run without added capabilities and with a read-only application filesystem.
 
 Local principal files retain mode 0600. Compose runs application processes with the UID/GID captured by `prepare_reference.py`, allowing the exact mounted principal file to be read without broadening host access. Database secret files are readable inside their narrowly mounted containers; their host directory is private. On a target host, use an external secret manager and rotate each technical identity independently.
 

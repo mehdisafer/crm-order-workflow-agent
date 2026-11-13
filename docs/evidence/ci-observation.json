@@ -1,0 +1,68 @@
+{
+  "observation_version": 1,
+  "repository": "mehdisafer/crm-order-workflow-agent",
+  "source_commit": "9182d7e7d238de6f25827400ce5c0b2c10f4d0fe",
+  "status": "failed_before_runner_execution",
+  "run": {
+    "id": 43525678188,
+    "url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43525678188",
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-13T23:14:59Z",
+    "updated_at": "2026-11-13T23:15:03Z"
+  },
+  "jobs": [
+    {
+      "id": 132230706922,
+      "name": "Core contracts and security",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-13T23:15:00Z",
+      "completed_at": "2026-11-13T23:15:02Z",
+      "runner_id": 0,
+      "runner_name": "",
+      "steps": [],
+      "html_url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43525678188/job/132230706922"
+    },
+    {
+      "id": 132230707238,
+      "name": "Reference container build",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-13T23:15:00Z",
+      "completed_at": "2026-11-13T23:15:03Z",
+      "runner_id": 0,
+      "runner_name": "",
+      "steps": [],
+      "html_url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43525678188/job/132230707238"
+    },
+    {
+      "id": 132230707287,
+      "name": "Temporal recovery",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-13T23:15:00Z",
+      "completed_at": "2026-11-13T23:15:03Z",
+      "runner_id": 0,
+      "runner_name": "",
+      "steps": [],
+      "html_url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43525678188/job/132230707287"
+    }
+  ],
+  "job_log_retrieval": {
+    "job_id": 132230707238,
+    "result": "404 BlobNotFound"
+  },
+  "annotation_access": {
+    "result": "connector endpoint unsupported; unauthenticated cloud browser cannot view this private repository"
+  },
+  "underlying_platform_reason": "not_verified",
+  "gates": {
+    "ci": "OPEN",
+    "container": "NOT_EXECUTED",
+    "browser": "NOT_EXECUTED_IN_CI",
+    "provider_acceptance": "OPEN"
+  },
+  "billing_or_runner_configuration_changed": false
+}
