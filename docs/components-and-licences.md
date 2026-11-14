@@ -1,6 +1,6 @@
 # Component inventory and licence status
 
-The repository's own licence is intentionally undecided. The maintainer must select it explicitly before public distribution. Package metadata does not grant a licence to this project's source.
+The repository's own licence is intentionally undecided and requires an explicit maintainer selection. Public source publication has been authorized; changing GitHub visibility does not itself select an open-source licence. Package metadata does not grant a licence to this project's source. The [publication record](publication.md) tracks the separate decisions and observed settings.
 
 `uv.lock` pins the Python dependency graph and distribution hashes. [components.json](evidence/components.json) records the observed installed development environment, including test/audit tooling, package versions, authors, URLs and declared licences. [dependency-audit.json](evidence/dependency-audit.json) separately audits the locked runtime subset. An inventory or a clean current advisory lookup is not a certification and does not cover deployed Salesforce/MuleSoft permissions.
 

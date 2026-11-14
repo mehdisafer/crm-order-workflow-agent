@@ -498,7 +498,7 @@ async def qualify(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--n8n-binary", default=".local/n8n-runtime/node_modules/.bin/n8n")
-    parser.add_argument("--output", default="docs/evidence/n8n-qualification.json")
+    parser.add_argument("--output", default="evidence-local/n8n-qualification.json")
     parser.add_argument("--timeout", type=int, default=420)
     args = parser.parse_args()
     if not 60 <= args.timeout <= 600:

@@ -58,6 +58,8 @@ uv run --locked pytest -q integrations/n8n/test_qualify_local.py
 
 The [harness review record](../../docs/evidence/n8n-qualification.harness-review.json) contains the SHA-256 captured from the executed harness before that patch, the final harness digest, and the passing cancellation check. The n8n business scenario was not rerun after this cancellation-only correction.
 
+Publication preparation subsequently changed only the default `--output` destination to `evidence-local/n8n-qualification.json`, so a reader's new execution does not overwrite the published report. This output-routing change has static/CLI checks and is recorded separately in [publication readiness](../../docs/evidence/publication-readiness.json). The earlier harness digests remain historical values for the versions they describe.
+
 ## Limits and official references
 
 This qualifies the three-node HTTP intake path on the local npm runtime. The startup log reports an unavailable Python task runner; the workflow has no Python or Code node. Docker-image operation, external task runners, hosted n8n, provider credentials, Salesforce/MuleSoft behavior and production capacity are outside this result. See [vendor installation and qualification](../../docs/vendor-integration.md) for those boundaries.

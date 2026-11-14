@@ -23,7 +23,7 @@ const tokens = JSON.parse(await fs.readFile(options["--tokens"] || ".local/token
 for (const role of exercise ? ["requester", "approver", "operator"] : ["operator"]) {
   if (typeof tokens[role] !== "string" || tokens[role].length < 24) throw new Error(`Missing local ${role} credential`);
 }
-const output = options["--output"] || (engine === "chromium" ? "docs/evidence" : `docs/evidence/${engine}-ui`);
+const output = options["--output"] || (engine === "chromium" ? "evidence-local/browser" : `evidence-local/${engine}-ui`);
 await fs.mkdir(output, { recursive: true });
 const redact = (value) => Object.values(tokens).reduce((text, secret) => text.replaceAll(secret, "[REDACTED]"), String(value));
 const report = {

@@ -26,6 +26,8 @@ The same continuation qualified the actual n8n 2.47.5 trigger: inactive export i
 
 Prepared candidate on [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2); **not merged into main, not a public GitHub release and not full P06 acceptance**. GitHub jobs failed before runner allocation and any test step, so the reference-container and CI Chromium gates remain open. The successful local Firefox profile is identified separately. No version tag, licence grant, paid resource or visibility change is implied by this file. Actual Salesforce/MuleSoft execution and the remaining qualification/publication decisions are tracked in [acceptance.md](acceptance.md).
 
+The maintainer subsequently authorized public source publication and retained the interface-only settings work. The last observed repository visibility is private. The README-only [PR #3](https://github.com/mehdisafer/crm-order-workflow-agent/pull/3) has been merged into `main`, providing a project overview, original screenshot and direct candidate/evidence links while the application remains in PR #2. [Publication status](publication.md) identifies the remaining settings, CI and application-merge steps. Historical manifests retain the visibility observed when they were recorded.
+
 ## Upgrade and rollback
 
 This is schema version 1 with no prior application release. Run the migration once, seed only the explicit demo profile and keep API/worker schema versions aligned. Future changes must preserve existing workflow histories and effect identities. Roll back compatible application code after stopping new intake and accounting for in-flight effects; do not delete the outbox or reset keys. Database and remote-state recovery follow [operations.md](operations.md).

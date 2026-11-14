@@ -29,7 +29,7 @@
 | Operator browser rendering | Implemented and exercised in Firefox | Desktop form, distinct approval, Temporal completion and readback; completed-case desktop/narrow-viewport rendering, six final screenshots and zero relevant browser errors or horizontal overflow. Chromium remains blocked locally; CI browser profile remains unexecuted |
 | Monitoring and operational runbooks | Yes | Tenant-scoped API metrics tested; reference Prometheus/alerts prepared, on-call alert delivery unverified |
 | Dependency, secret and licence checks | Yes | Locked Python dependencies, audit output, component metadata and source/history scan; no certification |
-| Public release, licence and repository protections | Prepared decisions | No licence selected, no visibility change, no public release; settings require explicit publication decision and supported administration access |
+| Public source publication, licence and repository protections | Public distribution authorized; settings prepared | Last observed visibility remains private; no licence selected or public release issued. The maintainer handles interface-only settings, and the default-branch/CI gate remains open |
 
 ## Original execution evidence
 
@@ -52,11 +52,13 @@ With those inputs, run the checked-in install/preflight and bounded [real accept
 | P1 | Qualify OAuth refresh, provider 429/timeouts and shared call budgets | Observed attempts and provider quota values, with the documented global bound respected |
 | P1 | Resolve the GitHub runner-start failure and qualify the reference container and its Chromium profile | Owner-visible run annotations, followed by actual image build, PostgreSQL/HTTP smoke and CI browser artifacts. Local Firefox already has separate evidence; no billing change is authorised implicitly |
 | P1 | Rehearse recovery on the chosen operational platform | PostgreSQL backup, compatible Temporal history, provider reconciliation and measured RPO/RTO |
-| P1 | Choose repository licence and public distribution | Explicit maintainer decision; third-party obligations retained |
-| P1 | Apply available metadata/protections and inspect anonymous access after any approved visibility change | Observed GitHub settings and access result; no purchase implied |
+| P1 | Select the repository licence | Explicit maintainer choice of the actual licence; third-party obligations retained |
+| P1 | Complete the authorized public publication, metadata/protections and anonymous access check | Public visibility observed, implementation delivered to the default branch after its merge gate, and direct anonymous content checks; no purchase implied |
 | P2 | Evaluate an explicitly supplied local model | Structured extraction accuracy, abstention, latency and observed resources on a labelled synthetic set |
 | P2 | Extend to another approved business operation or source mapping | Versioned contract, reviewed field mapping, new policy and end-to-end evidence |
 
 New business operations are additions to this delivered delivery-date slice. Provider acceptance is part of the existing scope, not an optional enhancement.
 
 The n8n local trigger milestone was closed by original runtime evidence on 14 November 2026. Deploying that trigger on the eventual operational platform remains part of its separate deployment/recovery qualification. The initial registration and proxy-routing failures are retained alongside the passing run.
+
+Public source publication was explicitly authorized on 14 November 2026. The maintainer handles operations that require the GitHub interface; account sign-in through an automated browser is not needed. Publishing the source with its documented limits is distinct from closing the original actual-provider acceptance gate. The concrete publication sequence and default-branch limitation are in [publication.md](publication.md).

@@ -6,6 +6,7 @@ The optional helper supplies test binaries only; it is not the deployment image.
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 import importlib.metadata
 import json
@@ -17,7 +18,6 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date, timedelta
 from pathlib import Path
 
-import pgserver
 import psycopg
 from sqlalchemy import func, select, text
 
@@ -30,7 +30,7 @@ from crm_workflow.service import CaseService
 from crm_workflow.store import Store, cases, effects, events, outbox
 
 
-async def qualify(uri, binaries, directory):
+async def qualify(uri, binaries, directory, output):
     store = Store(uri.replace("postgresql://", "postgresql+psycopg://"))
     seed_demo(store)
     requester = Actor(actor_id="pg-requester", tenant_id="demo-industrial", roles=["requester"])
@@ -116,13 +116,23 @@ async def qualify(uri, binaries, directory):
             "vendor_validated": False,
             "limits": "Helper PostgreSQL binary, not the pinned container version. Temporal history and provider state are not part of this logical dump.",
         }
-        write_json("docs/evidence/postgres-restore.json", record)
+        write_json(output, record)
         print(json.dumps(record))
     finally:
         store.close()
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--output",
+        default="evidence-local/postgres-restore.json",
+        help="Write this execution's JSON report (default: %(default)s).",
+    )
+    args = parser.parse_args()
+
+    import pgserver
+
     # Public helper wrappers carry their binary path; do not change machine services.
     binaries = Path(pgserver.pg_ctl.__globals__["POSTGRES_BIN_PATH"])
     with tempfile.TemporaryDirectory(prefix="p06-postgres-") as directory:
@@ -175,7 +185,7 @@ def main():
                         time.sleep(0.1)
                 else:
                     raise RuntimeError("Isolated PostgreSQL startup deadline exceeded")
-                asyncio.run(qualify(uri, binaries, directory))
+                asyncio.run(qualify(uri, binaries, directory, args.output))
             finally:
                 process.terminate()
                 try:

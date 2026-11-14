@@ -17,7 +17,7 @@ The engineering focus is durable execution, trustworthy approvals and honest rec
 | Salesforce through MuleSoft | Real adapter, Apex/metadata, permissions and live acceptance harness prepared; Mule package built for 4.9.24 with resolved dependencies and retained warnings; **no tenant/runtime execution yet** |
 | n8n | Actual 2.47.5 import and authenticated trigger exercised through Temporal completion; missing/wrong credentials refused, duplicate delivery produces one case |
 | Container reference | Source prepared; GitHub jobs failed before runner allocation, so container qualification remains open. The local Firefox observation is a separate profile; see [the evidence index](docs/evidence/README.md) |
-| Publication | Private repository; repository licence and public distribution await the maintainer's explicit decision |
+| Publication | Public source publication is authorized; the last observed GitHub visibility is still private, and PR #2 has not been merged. The repository licence remains undecided; see [publication status](docs/publication.md) |
 
 The local demonstration does **not** satisfy Salesforce/MuleSoft acceptance. [Issue #1](https://github.com/mehdisafer/crm-order-workflow-agent/issues/1) stays open for that milestone and the other documented gates. Detailed evidence and limits are in [acceptance.md](docs/acceptance.md).
 
@@ -116,7 +116,7 @@ RUN_TEMPORAL_TESTS=1 uv run --locked pytest -m temporal
 uv run --locked python scripts/load_profile.py --cases 24 --workers 2 --concurrency 4
 
 # Optional isolated PostgreSQL transaction + logical restore exercise
-uv run --locked --with pgserver==0.1.4 python scripts/postgres_profile.py
+uv run --locked --with pgserver==0.1.4 python scripts/postgres_profile.py --output evidence-local/postgres-restore.json
 
 # Source invariants, separate from the recorded Maven package build
 uv run --locked python integrations/vendor_validation/check_sources.py
@@ -153,4 +153,4 @@ All application code and fixtures were created for this repository. No client co
 
 Python dependencies are pinned with hashes in `uv.lock`. The [component inventory](docs/evidence/components.json) records observed package metadata; [vendor sources](docs/vendor-sources.md) identify vendor terms and version references. These are inventories, not security or legal certifications.
 
-The repository licence is **pending explicit maintainer selection**. No open-source licence is inferred from dependency licences. Third-party software retains its own terms.
+Public source publication is the intended distribution. The repository licence is **pending explicit maintainer selection**, so no open-source licence is inferred from dependency licences. Third-party software retains its own terms. [Publication status](docs/publication.md) separates the visibility setting, delivery to the default branch, licence decision and actual-provider acceptance.
