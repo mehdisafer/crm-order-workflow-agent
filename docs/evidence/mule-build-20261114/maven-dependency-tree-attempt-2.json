@@ -1,0 +1,23 @@
+{
+  "status": "DEPENDENCY_TREE_CREATED",
+  "exit_code": 0,
+  "duration_seconds": 117.368,
+  "argv": [
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/apache-maven-3.10.0/bin/mvn",
+    "--batch-mode",
+    "--no-transfer-progress",
+    "--errors",
+    "--update-snapshots",
+    "--settings",
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/isolated-settings-dependency-tree-attempt-2.xml",
+    "--global-settings",
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/isolated-settings-dependency-tree-attempt-2.xml",
+    "-Dmaven.repo.local=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/m2-repository",
+    "-DP06_RUNTIME_CONFIG=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/mule-attempt-1/runtime.yaml.example",
+    "-Dstyle.color=never",
+    "dependency:tree",
+    "-DoutputFile=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/mule-dependency-tree.txt"
+  ],
+  "provider_acceptance": "OPEN",
+  "reason_for_second_attempt": "First inventory command reused an expired per-execution network proxy. This attempt uses the current executor-provided proxy and preserves the original failure."
+}

@@ -10,13 +10,13 @@ The engineering focus is durable execution, trustworthy approvals and honest rec
 
 | Area | Current evidence |
 | --- | --- |
-| Operator API and case view | Implemented; authenticated intake, approval, tenant separation and remote reconciliation exercised |
+| Operator API and case view | Actual Firefox desktop form, separate approval, Temporal completion and readback exercised; completed-case desktop and narrow-viewport screenshots retained |
 | Temporal workflow | Real Temporal execution, history replay, process crash recovery and persistent server restart exercised |
 | Transactional store and outbox | SQLite local profile and isolated PostgreSQL business/restore exercises executed |
 | Local CRM and ERP | Explicitly synthetic implementations; duplicate messages, uncertain responses and compensation conflicts tested |
-| Salesforce through MuleSoft | Real adapter, Apex/metadata, Mule application, permissions and live acceptance harness prepared; **no tenant/runtime execution yet** |
-| n8n | Credential-free trigger export prepared; not imported into a running instance |
-| Container reference | Source prepared; GitHub jobs failed before runner allocation, so container and browser qualification remain unexecuted; see [the evidence index](docs/evidence/README.md) |
+| Salesforce through MuleSoft | Real adapter, Apex/metadata, permissions and live acceptance harness prepared; Mule package built for 4.9.24 with resolved dependencies and retained warnings; **no tenant/runtime execution yet** |
+| n8n | Actual 2.47.5 import and authenticated trigger exercised through Temporal completion; missing/wrong credentials refused, duplicate delivery produces one case |
+| Container reference | Source prepared; GitHub jobs failed before runner allocation, so container qualification remains open. The local Firefox observation is a separate profile; see [the evidence index](docs/evidence/README.md) |
 | Publication | Private repository; repository licence and public distribution await the maintainer's explicit decision |
 
 The local demonstration does **not** satisfy Salesforce/MuleSoft acceptance. [Issue #1](https://github.com/mehdisafer/crm-order-workflow-agent/issues/1) stays open for that milestone and the other documented gates. Detailed evidence and limits are in [acceptance.md](docs/acceptance.md).
@@ -61,6 +61,10 @@ uv run --locked uvicorn crm_workflow.api:create_app --factory --host 127.0.0.1 -
 Open `http://127.0.0.1:8000`. Sign in with the requester token, create a request for `CUST-001` / `ORD-1001`, and choose a future delivery date different from the order's current date. Switch to the separate approver token to inspect and approve the bound plan. Tokens stay in browser memory and disappear on refresh or sign-out.
 
 The case view shows the proposal, decision, actual effect journal, CRM object link, event timeline and fresh reconciliation result. A later human change is shown as drift even if the historical workflow completed successfully. See the [operator guide](docs/operator-guide.md).
+
+![Actual Firefox capture of the completed synthetic order case, its approved delivery-date change and observed effects](docs/evidence/firefox-ui/final-run/operator-desktop-detail.png)
+
+This is an actual local Firefox capture, using fictional data. The browser submitted the request, switched to a distinct approver, waited for the real Temporal workflow and requested a fresh readback. [The browser evidence](docs/evidence/firefox-ui/README.md) includes the mobile view, original failures and exact limits. Automated fixture interactions do not measure real human response time.
 
 For a container reference with PostgreSQL, persistent Temporal history and external secret files, follow [operations.md](docs/operations.md). Ports bind to loopback. Optional ERP HTTP, n8n and monitoring profiles are explicit.
 
@@ -114,7 +118,7 @@ uv run --locked python scripts/load_profile.py --cases 24 --workers 2 --concurre
 # Optional isolated PostgreSQL transaction + logical restore exercise
 uv run --locked --with pgserver==0.1.4 python scripts/postgres_profile.py
 
-# Vendor source checks; these do not compile or execute Apex/Mule
+# Source invariants, separate from the recorded Maven package build
 uv run --locked python integrations/vendor_validation/check_sources.py
 ```
 
@@ -125,6 +129,10 @@ On PowerShell, set `$env:RUN_TEMPORAL_TESTS = '1'` before the Temporal command. 
 The Salesforce integration uses a dedicated `P06_Order__c` custom object and an immutable `P06_Effect__c` ledger, plus standard Account. It does not assume access to standard Order, Commerce, CPQ or any particular edition entitlement. An actual org preflight must confirm custom objects, Apex, API access, users and permissions.
 
 The repository includes deployment source, an HTTPS Mule system API, an inactive n8n export and a real-provider acceptance harness. That harness drives the running API and Temporal, deliberately loses a response **after a real successful upstream write**, checks the Salesforce ledger, exercises a real reader refusal and rejects a stale approval. It needs an explicitly authorized sandbox/Developer Edition, separate provider identities and an existing licensed Mule runtime. [Installation and qualification](docs/vendor-integration.md) provides the steps and effective version/permission checks.
+
+The [Mule package build](docs/evidence/mule-build-20261114/README.md) resolved the exact HTTP and OAuth connector artifacts and generated an application archive. External configuration, TLS and stream-validation warnings remain visible. Packaging does not establish deployed OAuth behavior, Salesforce permissions or the required real business result.
+
+The [n8n qualification](integrations/n8n/README.md) imported the exact inactive export into a disposable 2.47.5 instance, bound separate inbound and requester credentials outside Git, then observed the real webhook-to-case-to-Temporal path. Its final readback used the synthetic CRM and separate HTTP ERP. This qualifies the peripheral trigger in that local profile; it does not extend provider acceptance.
 
 ## Repository map
 

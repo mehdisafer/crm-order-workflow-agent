@@ -4,7 +4,10 @@ Evidence describes the system that actually ran. The source manifest identifies 
 
 | File | Observation |
 | --- | --- |
-| `tests.xml` and `tests.log` | Original full-suite output; inspect the tests/skips/failures and execution command |
+| `tests.xml` and `tests.log` | Original baseline full-suite output; inspect the tests/skips/failures and execution command |
+| `continuation-tests.xml` and `.log` | Full local suite rerun after the continuation's source changes; kept separately from the baseline output |
+| `continuation-checks.json` | Observed Ruff, formatting, JavaScript syntax, vendor source and contract-drift results |
+| `continuation-review.json` | Source/history secret scan, local links and digests; original Maven log whitespace findings are preserved and separated from the passing source/document diff check |
 | `initial-suite-failure.xml` and `.log` | Retained first consolidated run: an outdated orphan-effect fixture and an undersized recovery harness deadline; corrected before delivery, then rerun |
 | `local-smoke.json` | Real Temporal workflow, synthetic CRM/ERP, distinct approval and final readback |
 | `http-smoke.json` | Actual loopback API, worker, Temporal and ERP HTTP service; duplicate intake, denied requester approval, successful separate approval and reread |
@@ -14,15 +17,32 @@ Evidence describes the system that actually ran. The source manifest identifies 
 | `components.json` | Observed package versions, authors, URLs and declared licence metadata, including the repository's intentionally undecided licence |
 | `licence-check.json` | Third-party licence metadata presence check; project licence remains an explicit decision |
 | `vendor-preflight.json` | Original blocked provider preflight; required environment was absent |
-| `operator-browser.json` | Browser execution status; local Chromium was blocked by the executor's socket policy |
+| `operator-browser.json` | Historical Chromium attempt, blocked by the executor's socket policy; preserved unchanged |
+| [`firefox-ui/README.md`](firefox-ui/README.md) | Actual browser journey and independent Temporal/HTTP ERP observation; six final desktop/mobile screenshots, original failed runs and capture/source digests |
+| [`mule-build-20261114/README.md`](mule-build-20261114/README.md) | Actual Mule package build, exact toolchain, resolved dependency tree, bundled artifact inventory and unresolved warnings; server/provider execution remains open |
+| `n8n-qualification.json` and `.log` | Actual n8n 2.47.5 import and authenticated trigger-to-Temporal completion; synthetic business systems only |
+| `n8n-qualification.initial.*`, `.proxy-failure.*` and `.install*` | Original registration, proxy-routing and installation attempts retained with the final result |
+| `n8n-qualification.harness-review.json` | Executed/final harness digests and the separate process-cancellation regression; full n8n scenario was not rerun after that cleanup-only patch |
 | `ci-observation.json` | GitHub run and job observations, including startup failures with no runner or executed steps; no CI success is inferred |
-| `source-manifest.json` | Source commit/tree, file digests, commands and qualification scope |
+| `source-manifest.json` | Historical baseline source commit/tree, file digests, commands and qualification scope |
+| `continuation-manifest.json` | Continuation source commit/tree, evidence digests, actual rerun scope and explicitly identified post-execution harness changes |
+| `continuation-ci-observation.json` | Latest source/PR workflow status; recorded independently from local checks |
 
 The final evidence commit records the test counts and current CI links. A file listed here as a release deliverable must exist before the candidate is published. Generated `.local/` credentials, raw provider access tokens and actual private tenant payloads never belong in this directory.
 
-The qualified source is commit [`7777b75497d840a97e53d6693d1ab60177cde0d5`](https://github.com/mehdisafer/crm-order-workflow-agent/commit/7777b75497d840a97e53d6693d1ab60177cde0d5). Its [PR CI run](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43526218191) reproduces the startup failure recorded below. Later evidence-only documentation commits retain those code/configuration digests; they do not turn that run into a success.
+The original qualified source is commit [`7777b75497d840a97e53d6693d1ab60177cde0d5`](https://github.com/mehdisafer/crm-order-workflow-agent/commit/7777b75497d840a97e53d6693d1ab60177cde0d5). Its [PR CI run](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43526218191) reproduces the startup failure recorded below. The continuation changes the Mule packaging inputs, browser UI/capture and qualification helpers. Its separate manifest binds the delivered source and new observations; the baseline manifest is not presented as proof for those changes.
 
-The final local suite completed **91 tests, zero failures and zero skips**, in 43.51 seconds, including two deployment-configuration regressions added after review. GitHub's initial PR run failed before job execution: all three jobs reported runner ID 0, an empty runner name and no steps. Job-log retrieval returned no stored log. The connector does not expose the job annotations needed to establish the platform-side reason; the separate browser has no signed-in access to this private repository. Billing, runner policy and account settings were not changed. The PR therefore remains open and the container/browser gates remain unqualified.
+The baseline local suite completed **91 tests, zero failures and zero skips**, in 43.51 seconds, including two deployment-configuration regressions added after review. GitHub's initial PR run failed before job execution: all three jobs reported runner ID 0, an empty runner name and no steps. Job-log retrieval returned no stored log. The connector does not expose the job annotations needed to establish the platform-side reason; the separate browser has no signed-in access to this private repository. Billing, runner policy and account settings were not changed. The PR remains open; the reference-container and CI Chromium gates remain unqualified.
+
+## Continuation observations
+
+The continuation's full local suite completed **91 tests, zero failures and zero skips**, in **27.65 seconds**. This is a new execution with original XML/log output, including the real Temporal profiles. One existing Starlette TestClient deprecation warning remains visible; it is not a test failure or a claim about future dependency compatibility.
+
+Firefox 153.0 and locked Playwright 1.62.1 exercised the actual request form, separate approval, Temporal completion and operator readback. The final run has zero page/console/HTTP/request errors and zero horizontal page overflow at both recorded viewport widths. UI/capture source digests and all six final PNG digests agree. A later environment-isolation change in the Python supervisor was checked statically and is explicitly distinguished from the executed capture.
+
+Mule Maven plugin 4.10.4, Maven 3.10.0 and Corretto 17.0.21 generated the application package for target 4.9.24, including the exact HTTP/OAuth connectors and 12 bundled JARs. The unresolved external-config/TLS and skipped stream-validation warnings remain in the original log. Packaging is observed; no Mule server or Salesforce org was exercised.
+
+The real n8n 2.47.5 runtime refused missing/wrong inbound credentials with 403 and accepted the authenticated trigger with 202. Duplicate delivery mapped to one case. The application refused requester self-approval; a separate approver led to a completed Temporal workflow, two `APPLIED` effects with one attempt each, and matching readback. The recorded 1.177-second trigger-to-completion interval used an automated approval fixture, not a real human delay. All child services were stopped afterward. The versioned workflow export remained unchanged, inactive and credential-free.
 
 ## Scope of observed measurements
 

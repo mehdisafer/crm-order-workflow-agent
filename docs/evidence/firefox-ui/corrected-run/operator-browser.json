@@ -1,0 +1,224 @@
+{
+  "captured_at": "2026-11-14T12:16:04.696Z",
+  "status": "passed",
+  "browser_engine": "firefox",
+  "browser_version": "153.0",
+  "node_version": "v24.22.1",
+  "playwright_version": "1.62.1",
+  "profile": "observed-local-operator-ui",
+  "provider_validation": false,
+  "exercise_requested": true,
+  "source_files_sha256": {
+    "deploy/capture_operator.mjs": "f2000f0b2d505ba034485918a4acdfb87f0de589297fa0f787bb404cbb0abf99",
+    "deploy/qualify_operator.py": "26dd28455e2b0206cfb55687c4b09fa09ed2b8908b331ddfa6337ed90e88bd66",
+    "src/crm_workflow/static/index.html": "627aaef39dd407e3a6ac48d8e035a1988b25d77f7ef268a09cadf8de98f448a2",
+    "src/crm_workflow/static/styles.css": "cfa5a6f55e4c18ec31c38a29fdc189a5eac2dc8ae01e549d3e749b7de8077466",
+    "src/crm_workflow/static/app.js": "44f1ca7c4ef89f25afc8ba175bf243bd6f747a72eac5462564642b33147eac95"
+  },
+  "page_errors": [],
+  "console_errors": [],
+  "http_errors": [],
+  "failed_requests": [],
+  "external_requests_blocked": [],
+  "screenshots": [
+    {
+      "name": "desktop",
+      "section": "overview",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "file": "docs/evidence/firefox-ui/corrected-run/operator-desktop-overview.png",
+      "sha256": "0066b33eb09bb13b2c9198644172e9ff647032adee7cecafe5150b9799cbe1af",
+      "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+      "horizontal_overflow": false,
+      "document_width": 1440,
+      "viewport_width": 1440,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [],
+      "cookies": 0
+    },
+    {
+      "name": "desktop",
+      "section": "detail",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "file": "docs/evidence/firefox-ui/corrected-run/operator-desktop-detail.png",
+      "sha256": "aa5886dca4bcc34e334a4bf7c4dd2727f9387a36f60649868e34c825a30588f5",
+      "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+      "horizontal_overflow": false,
+      "document_width": 1440,
+      "viewport_width": 1440,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [],
+      "cookies": 0
+    },
+    {
+      "name": "desktop",
+      "section": "readback",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "file": "docs/evidence/firefox-ui/corrected-run/operator-desktop-readback.png",
+      "sha256": "61c516460d9c4dd252fd6e3b1e9887710b133d5d292c817d3fb1966bd39bdce5",
+      "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+      "horizontal_overflow": false,
+      "document_width": 1440,
+      "viewport_width": 1440,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [],
+      "cookies": 0
+    },
+    {
+      "name": "mobile",
+      "section": "overview",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "docs/evidence/firefox-ui/corrected-run/operator-mobile-overview.png",
+      "sha256": "4ded0d4a3239b69aaf9bdfc6af1b7b4f68ee9b161c8e27b693f16a44050aaf55",
+      "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+      "horizontal_overflow": false,
+      "document_width": 390,
+      "viewport_width": 390,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "width": 1
+        }
+      ],
+      "cookies": 0
+    },
+    {
+      "name": "mobile",
+      "section": "detail",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "docs/evidence/firefox-ui/corrected-run/operator-mobile-detail.png",
+      "sha256": "932d635924793241dcf15012f839a029301d4f3f627bad39366f805ecd6986ad",
+      "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+      "horizontal_overflow": false,
+      "document_width": 390,
+      "viewport_width": 390,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "width": 1
+        }
+      ],
+      "cookies": 0
+    },
+    {
+      "name": "mobile",
+      "section": "readback",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "docs/evidence/firefox-ui/corrected-run/operator-mobile-readback.png",
+      "sha256": "69af508952953682408c9eab16a48ad023a5917d552b10ab93b1919e50442fce",
+      "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+      "horizontal_overflow": false,
+      "document_width": 390,
+      "viewport_width": 390,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "width": 1
+        }
+      ],
+      "cookies": 0
+    }
+  ],
+  "base_source_commit": "06ace725336bfd62e38bfb8cbb8f4a173c7652e0",
+  "exercise": {
+    "performed": true,
+    "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+    "message_id": "browser-98cf36c2-52e3-4591-b5ef-bc37ef2324c9",
+    "requester_id": "requester",
+    "approver_id": "approver",
+    "operator_id": "operator",
+    "form_submission_http_status": 202,
+    "invalid_reference_rejected_by_browser": true,
+    "requester_approval_button_disabled": true,
+    "separate_approver": true,
+    "browser_approval_http_status": 202,
+    "browser_reconciliation_http_status": 200,
+    "approved_plan_hash": "576332bdf04bead9bdcd00ecb8a34ffd147d44b5a9ce475901ebbf441c49495b",
+    "before_date": "2026-11-21",
+    "requested_date": "2026-11-24",
+    "state": "COMPLETED",
+    "effects": [
+      {
+        "system": "crm",
+        "status": "APPLIED",
+        "attempts": 1
+      },
+      {
+        "system": "erp",
+        "status": "APPLIED",
+        "attempts": 1
+      }
+    ],
+    "remote_readback_matches": true,
+    "event_types": [
+      "request.accepted",
+      "proposal.structured",
+      "case.awaiting_approval",
+      "case.approved",
+      "effect.prepared",
+      "effect.observed",
+      "case.crm_applied",
+      "effect.prepared",
+      "effect.observed",
+      "case.stock_reserved",
+      "case.completed",
+      "reconciliation.observed"
+    ],
+    "duration_seconds": 7.977,
+    "human_wait_note": "Requester and approver interactions were automated through the actual UI; no real human waiting time was measured."
+  },
+  "disconnect_clears_case_view": true
+}

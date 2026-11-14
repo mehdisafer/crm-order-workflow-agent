@@ -377,7 +377,11 @@
         fact(facts, "Revision before", effect.before?.revision);
         fact(facts, "Revision after", effect.after?.revision);
       }
-      if (effect.after?.quantity) fact(facts, "Reserved quantity", effect.after.quantity);
+      if (effect.after?.quantity) {
+        const quantityLabel = effect.system === "erp" ? "Reserved quantity"
+          : effect.system === "crm" ? "Order quantity" : "Quantity";
+        fact(facts, quantityLabel, effect.after.quantity);
+      }
       card.append(facts, jsonDetails("Inspect effect intent and observed snapshots", effect));
       target.append(card);
     }

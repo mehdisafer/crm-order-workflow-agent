@@ -2,7 +2,11 @@
 
 ## Current status
 
-The repository contains original Salesforce metadata and Apex, a Mule application, a RAML system API contract, a credential-free n8n workflow, and a bounded real-vendor qualification harness. These are prepared integration components. **No authorized Salesforce org, MuleSoft runtime or n8n instance was supplied for this delivery. Salesforce compilation, Apex tests, Mule packaging/deployment and n8n execution remain unverified.** Parsing source files does not change that status.
+The repository contains original Salesforce metadata and Apex, a Mule application, a RAML system API contract, a credential-free n8n workflow, and a bounded real-vendor qualification harness. **Mule Maven packaging succeeded on 14 November 2026**, with the configured 4.9.24 target and Java 17. The original output, unresolved configuration warnings, archive inventory and dependency tree are retained in [the packaging evidence](evidence/mule-build-20261114/README.md).
+
+An isolated official **n8n 2.47.5** instance also imported and executed the trigger against the local API, real Temporal and synthetic CRM/HTTP ERP. Missing/wrong inbound credentials returned 403; the valid trigger returned 202, duplicate delivery preserved one case, and separate approval led to a completed workflow and matching readback. [The n8n qualification](../integrations/n8n/README.md) identifies the exact source and retained failures.
+
+**No authorized Salesforce org or running MuleSoft server was supplied. Salesforce compilation, Apex tests and Mule runtime/deployment remain unverified.** A successful package build does not establish runtime configuration, authentication, remote permissions or business effects against those providers.
 
 The runnable local profile uses explicitly identified synthetic services. It is useful for the business demonstration and recovery tests; it does not satisfy the Salesforce/MuleSoft acceptance gate.
 
@@ -32,13 +36,13 @@ Versions were checked against the official references in [vendor-sources.md](ven
 | Component | Source/configuration target | Verification in this environment |
 | --- | --- | --- |
 | Salesforce metadata and Apex | API 65.0, explicit `WITH USER_MODE` / user-mode DML | Source review and XML parse; no org compilation |
-| Mule runtime | 4.9.24, Java 17 | Official compatibility checked; no runtime supplied |
-| Mule Maven plugin | 4.10.4, Maven 3.9–3.10 | POM parsed; packaging not run |
-| HTTP connector | 1.12.2 | Declared dependency; artifact resolution not run |
-| OAuth module | 1.1.30 | Declared dependency; token lifecycle not run |
-| n8n | 2.47.5 | Export parsed; import and execution not run |
+| Mule runtime | 4.9.24, Java 17 | Explicit packaging target and generated descriptor; no server execution |
+| Mule Maven plugin | 4.10.4, Maven 3.9–3.10 | Package build succeeded with Maven 3.10.0 / Corretto 17.0.21, with retained warnings |
+| HTTP connector | 1.12.2 | Exact JAR resolved and included in the generated archive; runtime unverified |
+| OAuth module | 1.1.30 | Exact JAR resolved and included in the generated archive; token lifecycle unverified |
+| n8n | 2.47.5 | Actual import and authenticated trigger-to-Temporal completion observed in an isolated synthetic profile; operational deployment unverified |
 
-Direct Maven dependencies and the plugin are pinned. A resolved Maven transitive dependency inventory must be retained with the first successful package build. The source POM alone is not a resolved dependency lock or an SBOM. Runtime, connectors, SaaS access and n8n keep their own licensing terms. No vendor binary or license file is redistributed by this repository. The repository's own license remains a separate maintainer decision.
+Direct Maven dependencies and the plugin are pinned. The successful build has a retained dependency tree and an inventory of the JARs actually bundled in the archive. This is observed dependency evidence, not a comprehensive SBOM or vulnerability assessment. Runtime, connectors, SaaS access and n8n keep their own licensing terms. No vendor binary or license file is redistributed by this repository. The repository's own license remains a separate maintainer decision.
 
 ## Install into an already authorized environment
 
@@ -78,14 +82,22 @@ A reader is not an approver. Application requester/approver/operator credentials
 
 ### 3. Package and install MuleSoft
 
-Use the exact target Java and Maven versions, plus authorized access to the Mule dependencies/runtime. Do not add license files or artifact repository credentials to the POM.
+Packaging is an independently executable check: it needs Java 17, Maven 3.9.0–3.10.0 and access to the declared artifacts. It does not require a running Salesforce org or a deployed Mule server. Deployment and live provider qualification have additional prerequisites below. Keep artifact repository credentials outside the POM.
+
+The POM explicitly passes `mule.runtime.version` into the plugin's `runtimeVersion` setting. Declaring a property or `minMuleVersion` alone does not select the Mule framework used during packaging. The public dependency repositories are Anypoint Exchange v3, MuleSoft Releases and MuleSoft Public, following the [official Mule 4.9 Maven reference](https://docs.mulesoft.com/mule-runtime/4.9/maven-reference). Successful resolution of the complete dependency graph must still be observed. A protected enterprise artifact requires existing authorized access; adding a repository URL does not grant that access.
+
+With `JAVA_HOME` and `PATH` selecting the reviewed Java 17/Maven installations, run from the repository root:
 
 ```bash
-mvn -f integrations/mulesoft/pom.xml clean package
+mvn --batch-mode --no-transfer-progress -f integrations/mulesoft/pom.xml \
+  -DP06_RUNTIME_CONFIG="$PWD/integrations/mulesoft/runtime.yaml.example" \
+  clean package
 mvn -f integrations/mulesoft/pom.xml dependency:tree -DoutputFile=target/dependency-tree.txt
 ```
 
-Record the full packaging result and dependency inventory with the delivered commit. A package build does not prove deployed connector behavior. In the isolated delivery environment, Maven and the Salesforce CLI were absent; Java 21 was present, while this Mule target requires Java 17. A bounded download check against the official Maven distribution endpoint timed out. No successful build is asserted.
+The example configuration contains property names without provider credentials. Supplying its path does not prove that the Maven parser or runtime resolves the external configuration: the observed build retained warnings for `${P06_RUNTIME_CONFIG}` and `${gateway.tlsKeyStore}`. It also skipped unconsumed-stream validation because its configuration/metadata services were unavailable. These warnings were preserved; no artificial configuration, private key or credential was bundled to suppress them. Use the protected deployment configuration for runtime startup and verify those settings in the actual server. `-DlightweightPackage` produces a source archive without the dependencies needed for deployment and does not satisfy the package-build gate.
+
+Record the full packaging result, source digests, JDK/Maven versions and dependency inventory with the delivered commit. A package build does not prove deployed connector behavior. The 13 November delivery had no Maven or Salesforce CLI and only Java 21. On 14 November, an isolated Maven 3.10.0 and Amazon Corretto 17.0.21 were acquired from their official public distributions with verified SHA-512 and SHA-256 checksums respectively. Maven reported `BUILD SUCCESS` in 3 minutes 24 seconds. The archive contains a generated Mule AST and 12 bundled JARs. The first dependency-tree command failed after reusing an expired executor proxy; its original failure and the successful rerun with the current configured proxy are both retained. See [the complete evidence and limits](evidence/mule-build-20261114/README.md). Live Salesforce/MuleSoft acceptance remains open.
 
 Copy `integrations/mulesoft/runtime.yaml.example` to a protected file **outside the checkout**. Provide its path as `P06_RUNTIME_CONFIG`. Supply a PKCS#12 HTTPS server certificate/private key, a random gateway bearer token, the exact Salesforce My Domain host, OAuth token endpoint and client credentials. Use private routing. The sample binds to loopback and cannot authenticate with empty secrets. A second instance using the reader's Salesforce app is required for permission testing.
 
@@ -94,6 +106,8 @@ Install the produced application archive into the existing licensed runtime thro
 ```bash
 integrations/mulesoft/scripts/launch.sh console
 ```
+
+The exact server distribution remains a separate access gate. On 14 November 2026, the official standalone/patching documentation directed Enterprise distributions to the customer portal or account representative; the anonymous public Kernel catalog did not list 4.9.24 and its exact ZIP path returned 404. No anonymous exact-version server distribution was established, and no other version was substituted. Supply an authorized 4.9.24 distribution with applicable usage rights before this startup step; see the [bounded access-check evidence and primary sources](evidence/mule-build-20261114/README.md#exact-server-access-check--14-november-2026).
 
 The launcher sets real JVM arguments `-M-Dmule.http.client.maxRetries=0` and `-M-Dmule.http.client.retryOnAllMethods=false`. These are not YAML application settings. It also passes the external configuration path as a JVM property and refuses a non-Java-17 installation. Existing wrapper or service configuration can still introduce conflicting JVM flags, so inspect the **running** selected process before qualification:
 

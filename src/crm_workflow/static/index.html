@@ -75,10 +75,10 @@
           <p class="subtle">The workflow checks identity, order and stock before proposing an action. A different person must approve it.</p>
           <form id="request-form">
             <div class="form-grid">
-              <label>Customer reference<input id="customer-reference" maxlength="100" placeholder="e.g. CUST-001" pattern="[A-Za-z0-9_.:-]+"></label>
-              <label>Order reference<input id="order-reference" maxlength="100" placeholder="e.g. ORD-1001" pattern="[A-Za-z0-9_.:-]+"></label>
+              <label>Customer reference<input id="customer-reference" maxlength="100" placeholder="e.g. CUST-001" pattern="[A-Za-z0-9_.:\-]+"></label>
+              <label>Order reference<input id="order-reference" maxlength="100" placeholder="e.g. ORD-1001" pattern="[A-Za-z0-9_.:\-]+"></label>
               <label>Requested delivery date<input id="requested-date" type="date"></label>
-              <label>Message ID<input id="message-id" maxlength="100" required pattern="[A-Za-z0-9_.:-]+" aria-describedby="message-id-help"></label>
+              <label>Message ID<input id="message-id" maxlength="100" required pattern="[A-Za-z0-9_.:\-]+" aria-describedby="message-id-help"></label>
             </div>
             <p class="field-help" id="message-id-help">Keep the same message ID when resending the same request. A changed request needs a new ID.</p>
             <label>Request note <span class="optional">Optional · synthetic data only</span><textarea id="request-note" rows="3" maxlength="4000" placeholder="Describe the request. Missing or conflicting details lead to clarification."></textarea></label>
@@ -125,7 +125,7 @@
                 <div class="section-heading"><div><p class="eyebrow">Proposed resolution</p><h3 id="plan-heading">Change the delivery date</h3></div><span class="small-badge">One approved field</span></div>
                 <div id="plan-empty" class="inline-empty">A proposal appears after customer, order and stock checks.</div>
                 <div id="plan-content" hidden>
-                  <div class="change-card"><div><span>Current delivery</span><strong id="before-date">—</strong></div><span class="change-arrow" aria-hidden="true">→</span><div><span>Requested delivery</span><strong id="after-date">—</strong></div></div>
+                  <div class="change-card"><div><span>Delivery at proposal</span><strong id="before-date">—</strong></div><span class="change-arrow" aria-hidden="true">→</span><div><span>Requested delivery</span><strong id="after-date">—</strong></div></div>
                   <dl id="plan-facts" class="facts-grid"></dl>
                   <div id="crm-link" class="crm-link"></div>
                   <details class="technical-detail"><summary>Approved scope and plan fingerprint</summary><pre id="plan-json"></pre></details>

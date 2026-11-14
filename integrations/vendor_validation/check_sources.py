@@ -61,6 +61,25 @@ def main() -> None:
     assert 'refreshTokenWhen="#[attributes.statusCode == 401]"' in mule
     assert 'protocol="HTTPS"' in mule
     assert 'insecure="true"' not in mule
+    pom = ET.parse(integrations / "mulesoft/pom.xml")
+    maven_ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+    runtime_target = pom.findtext("m:properties/m:mule.runtime.version", namespaces=maven_ns)
+    artifact = json.loads((integrations / "mulesoft/mule-artifact.json").read_text())
+    assert runtime_target == artifact["minMuleVersion"]
+    plugin = pom.find("m:build/m:plugins/m:plugin[m:artifactId='mule-maven-plugin']", maven_ns)
+    assert plugin is not None
+    assert (
+        plugin.findtext("m:configuration/m:runtimeVersion", namespaces=maven_ns) == "${mule.runtime.version}"
+    ), "The declared runtime target must select the packaging runtime"
+    repositories = {
+        node.findtext("m:url", namespaces=maven_ns)
+        for node in pom.findall("m:repositories/m:repository", maven_ns)
+    }
+    assert {
+        "https://maven.anypoint.mulesoft.com/api/v3/maven",
+        "https://repository.mulesoft.org/releases/",
+        "https://repository.mulesoft.org/nexus/content/repositories/public/",
+    } <= repositories, "The documented public dependency repositories must be available to Maven"
     print(
         json.dumps(
             {
@@ -69,7 +88,8 @@ def main() -> None:
                 "json_files_parsed": len(json_files),
                 "python_files_parsed": len(python_files),
                 "n8n_credentials_in_export": False,
-                "vendor_compilation": "NOT_EXECUTED",
+                "mule_packaging_runtime_target": runtime_target,
+                "vendor_compilation": "NOT_PERFORMED_BY_THIS_COMMAND",
                 "vendor_runtime_tests": "NOT_EXECUTED",
                 "provider_acceptance": "OPEN",
                 "mule_jvm_retry_properties": "NOT_OBSERVED",

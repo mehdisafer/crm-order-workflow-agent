@@ -1,0 +1,21 @@
+{
+  "status": "DEPENDENCY_TREE_FAILED",
+  "exit_code": 1,
+  "duration_seconds": 6.251,
+  "argv": [
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/apache-maven-3.10.0/bin/mvn",
+    "--batch-mode",
+    "--no-transfer-progress",
+    "--errors",
+    "--settings",
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/isolated-settings.xml",
+    "--global-settings",
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/isolated-settings.xml",
+    "-Dmaven.repo.local=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/m2-repository",
+    "-DP06_RUNTIME_CONFIG=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/mule-attempt-1/runtime.yaml.example",
+    "-Dstyle.color=never",
+    "dependency:tree",
+    "-DoutputFile=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/mule-dependency-tree.txt"
+  ],
+  "provider_acceptance": "OPEN"
+}

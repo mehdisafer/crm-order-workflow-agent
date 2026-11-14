@@ -1,0 +1,226 @@
+{
+  "captured_at": "2026-11-14T12:18:00.773Z",
+  "status": "passed",
+  "browser_engine": "firefox",
+  "browser_version": "153.0",
+  "node_version": "v24.22.1",
+  "playwright_version": "1.62.1",
+  "profile": "observed-local-operator-ui",
+  "provider_validation": false,
+  "exercise_requested": true,
+  "source_files_sha256": {
+    "deploy/capture_operator.mjs": "b3edf585c6e9c1b2d62549564b68279e6dcb8b030a8d91261aa29467610b66cd",
+    "deploy/qualify_operator.py": "26dd28455e2b0206cfb55687c4b09fa09ed2b8908b331ddfa6337ed90e88bd66",
+    "src/crm_workflow/static/index.html": "bd4628d78a26ee6f1597b2ebdda765f16365e9ae203c9c3e973decf69182a4e5",
+    "src/crm_workflow/static/styles.css": "cfa5a6f55e4c18ec31c38a29fdc189a5eac2dc8ae01e549d3e749b7de8077466",
+    "src/crm_workflow/static/app.js": "36d0538b539a8dcd0f436dc731418c779590353c7c6de30e6a1ac173d5ce8307"
+  },
+  "page_errors": [],
+  "console_errors": [],
+  "http_errors": [],
+  "failed_requests": [],
+  "external_requests_blocked": [],
+  "screenshots": [
+    {
+      "name": "desktop",
+      "section": "overview",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "file": "docs/evidence/firefox-ui/final-run/operator-desktop-overview.png",
+      "sha256": "e21ab88abc6cb511a494ebc1e2d6e003c5c70771a486155aee0f4969c244e923",
+      "case_id": "fc20b632-8f66-4970-891d-b2e2fc291af9",
+      "horizontal_overflow": false,
+      "document_width": 1440,
+      "viewport_width": 1440,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [],
+      "cookies": 0
+    },
+    {
+      "name": "desktop",
+      "section": "detail",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "file": "docs/evidence/firefox-ui/final-run/operator-desktop-detail.png",
+      "sha256": "e27b660df9c04ca60455323b4d1bd2d74863570b9838d64b63a87600b15327db",
+      "case_id": "fc20b632-8f66-4970-891d-b2e2fc291af9",
+      "horizontal_overflow": false,
+      "document_width": 1440,
+      "viewport_width": 1440,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [],
+      "cookies": 0
+    },
+    {
+      "name": "desktop",
+      "section": "readback",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "file": "docs/evidence/firefox-ui/final-run/operator-desktop-readback.png",
+      "sha256": "fbfdec7d13102fe411549a1ebc81a207ec4e8a4840e7c1f41b9b74d5c1510571",
+      "case_id": "fc20b632-8f66-4970-891d-b2e2fc291af9",
+      "horizontal_overflow": false,
+      "document_width": 1440,
+      "viewport_width": 1440,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [],
+      "cookies": 0
+    },
+    {
+      "name": "mobile",
+      "section": "overview",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "docs/evidence/firefox-ui/final-run/operator-mobile-overview.png",
+      "sha256": "4ded0d4a3239b69aaf9bdfc6af1b7b4f68ee9b161c8e27b693f16a44050aaf55",
+      "case_id": "fc20b632-8f66-4970-891d-b2e2fc291af9",
+      "horizontal_overflow": false,
+      "document_width": 390,
+      "viewport_width": 390,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "width": 1
+        }
+      ],
+      "cookies": 0
+    },
+    {
+      "name": "mobile",
+      "section": "detail",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "docs/evidence/firefox-ui/final-run/operator-mobile-detail.png",
+      "sha256": "fed13e708d71a6e8d2704aac13b95dc8e79c2fb27fa8e2012232c315c14cccd2",
+      "case_id": "fc20b632-8f66-4970-891d-b2e2fc291af9",
+      "horizontal_overflow": false,
+      "document_width": 390,
+      "viewport_width": 390,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "width": 1
+        }
+      ],
+      "cookies": 0
+    },
+    {
+      "name": "mobile",
+      "section": "readback",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "docs/evidence/firefox-ui/final-run/operator-mobile-readback.png",
+      "sha256": "e7b14c2208437b107a90a486f456bbf5c0249f0563f7662fed580bd57c912006",
+      "case_id": "fc20b632-8f66-4970-891d-b2e2fc291af9",
+      "horizontal_overflow": false,
+      "document_width": 390,
+      "viewport_width": 390,
+      "password_input_empty": true,
+      "token_present_in_dom": false,
+      "local_storage_keys": 0,
+      "session_storage_keys": 0,
+      "case_state": "Completed",
+      "environment_label": "Synthetic reference · demo",
+      "overflow_elements": [
+        {
+          "tag": "SPAN",
+          "id": "",
+          "width": 1
+        }
+      ],
+      "cookies": 0
+    }
+  ],
+  "base_source_commit": "06ace725336bfd62e38bfb8cbb8f4a173c7652e0",
+  "exercise": {
+    "performed": true,
+    "case_id": "fc20b632-8f66-4970-891d-b2e2fc291af9",
+    "message_id": "browser-ead7177d-b3cf-4f1a-ab27-9a7e2fc9031e",
+    "requester_id": "requester",
+    "approver_id": "approver",
+    "operator_id": "operator",
+    "form_submission_http_status": 202,
+    "invalid_reference_rejected_by_browser": true,
+    "requester_approval_button_disabled": true,
+    "separate_approver": true,
+    "browser_approval_http_status": 202,
+    "browser_reconciliation_http_status": 200,
+    "approved_plan_hash": "387ea008e034bbc462020a61dee3088e43d49099ca8a23d635ebd746ebfbf4b3",
+    "before_date": "2026-11-21",
+    "requested_date": "2026-11-24",
+    "state": "COMPLETED",
+    "effects": [
+      {
+        "system": "crm",
+        "status": "APPLIED",
+        "attempts": 1
+      },
+      {
+        "system": "erp",
+        "status": "APPLIED",
+        "attempts": 1
+      }
+    ],
+    "remote_readback_matches": true,
+    "proposal_snapshot_label_verified": true,
+    "crm_and_reserved_quantities_distinguished": true,
+    "event_types": [
+      "request.accepted",
+      "proposal.structured",
+      "case.awaiting_approval",
+      "case.approved",
+      "effect.prepared",
+      "effect.observed",
+      "case.crm_applied",
+      "effect.prepared",
+      "effect.observed",
+      "case.stock_reserved",
+      "case.completed",
+      "reconciliation.observed"
+    ],
+    "duration_seconds": 8.057,
+    "human_wait_note": "Requester and approver interactions were automated through the actual UI; no real human waiting time was measured."
+  },
+  "disconnect_clears_case_view": true
+}

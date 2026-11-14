@@ -45,6 +45,8 @@ A provider deployment should issue only the necessary roles. An n8n intake ident
 
 The queue refreshes every four seconds while the tab is visible and connected. It displays the bounded set returned by the service. Counts in the UI describe that returned set. Prometheus case gauges use database aggregates instead.
 
+**Delivery at proposal** is the original plan snapshot, including after the workflow completes. Read the CRM effect's **After** value and the latest reconciliation for the observed result. **Order quantity** belongs to the CRM order; **Reserved quantity** appears on the inventory effect and refers to its observed reservation.
+
 ## Read the state accurately
 
 | State | Meaning and operator response |
@@ -144,6 +146,10 @@ uv run --locked pytest tests/test_erp.py tests/test_review_regressions.py -q
 node --check src/crm_workflow/static/app.js
 ```
 
-The API suite uses the actual service and database with the explicitly synthetic CRM and ERP. It exercises duplicate intake, cross-tenant refusal, self-approval refusal, stale approval scope, the core execution/readback flow, later human-edit drift, signed webhook tampering, streamed size limits, error redaction and scoped metrics. The ERP suite runs the HTTPERP adapter against the actual ASGI service and a separate transactional store; it checks receipt replay and scope/expiry/CAS refusal without a local fallback. Review regressions cover compensated readback, foreign response rejection, unknown stock outcomes, approval/expiry races and bounded HTTP response consumption. These tests invoke service steps directly and do not stand in for the separately executed Temporal suite or real vendor acceptance. Browser screenshots, when supplied, must come from an actual run of this desk.
+The API suite uses the actual service and database with the explicitly synthetic CRM and ERP. It exercises duplicate intake, cross-tenant refusal, self-approval refusal, stale approval scope, the core execution/readback flow, later human-edit drift, signed webhook tampering, streamed size limits, error redaction and scoped metrics. The ERP suite runs the HTTPERP adapter against the actual ASGI service and a separate transactional store; it checks receipt replay and scope/expiry/CAS refusal without a local fallback. Review regressions cover compensated readback, foreign response rejection, unknown stock outcomes, approval/expiry races and bounded HTTP response consumption. These tests invoke service steps directly and do not stand in for the separately executed Temporal suite or real vendor acceptance.
+
+The [Firefox qualification](evidence/firefox-ui/README.md) executed the actual requester form, switched to a distinct approver, waited for the real Temporal workflow to complete, and requested operator reconciliation through the UI. Its [browser report](evidence/firefox-ui/final-run/operator-browser.json) records Firefox 153.0, Playwright 1.62.1, zero page/console/HTTP errors, no horizontal page overflow, empty credential inputs and no browser storage or cookies. The [runtime report](evidence/firefox-ui/final-run/runtime.json) separately observes the completed Temporal history and the ERP HTTP receipt. The six screenshots show the completed case at desktop and narrow viewport sizes; they are original browser output with synthetic data.
+
+This qualifies the recorded Firefox interactions and views. It does not qualify Chromium, a physical mobile device, the container deployment or Salesforce/MuleSoft. The initial failed attempts and the exact source hashes are retained. See [the browser reproduction instructions](operations.md#browser-demonstration) for the isolated local command and its scope.
 
 Implementation references: [FastAPI lifespan](https://fastapi.tiangolo.com/advanced/events/), [FastAPI security dependencies](https://fastapi.tiangolo.com/reference/security/), [FastAPI lifespan testing](https://fastapi.tiangolo.com/advanced/testing-events/) and [Starlette ASGI middleware](https://www.starlette.io/middleware/). Dependency versions are resolved in `uv.lock`; the repository's execution evidence records the versions actually tested.

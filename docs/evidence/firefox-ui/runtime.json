@@ -1,0 +1,26 @@
+{
+  "captured_at": "2026-11-14T12:14:44.170444+00:00",
+  "status": "failed",
+  "profile": "demo",
+  "provider_validation": false,
+  "topology": "Browser, API, HTTP ERP, worker and real Temporal are children of one loopback-only orchestration command.",
+  "crm": "Original synthetic CRM in the application SQLite database",
+  "erp": "Authenticated HTTP ERP with a separate transactional SQLite database",
+  "api_url": "http://127.0.0.1:56833",
+  "erp_url": "http://127.0.0.1:34349",
+  "temporal_sdk_version": "1.36.0",
+  "browser_engine_requested": "firefox",
+  "runtime_command": "python deploy/qualify_operator.py",
+  "temporal_address": "127.0.0.1:41135",
+  "temporal_server_version": "1.32.2",
+  "browser_exit_code": 1,
+  "browser_status": "failed",
+  "failure_type": "HTTPStatusError",
+  "failure_summary": "Client error '404 Not Found' for url 'http://127.0.0.1:34349/v1/reservations/8f550cac-ffbc-486f-a6a3-ff602b8a1cd0:erp?tenant_id=demo-industrial'",
+  "process_exit_codes": {
+    "erp": -15,
+    "api": -15,
+    "worker": 0,
+    "browser": 1
+  }
+}

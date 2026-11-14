@@ -1,0 +1,15 @@
+{
+  "source_head": "06ace725336bfd62e38bfb8cbb8f4a173c7652e0",
+  "source_pom_modified_for_runtime_and_public_repositories": true,
+  "sha256": {
+    "README.md": "a2a51f3b3cfc4d53682b0b3ca6f943d40e1afe8b948fb1d9209a6c2a07536055",
+    "mule-artifact.json": "bc7fae8fdea63687e6abd16743e791ab8106495ab3dcaa59d82191d47c673817",
+    "pom.xml": "57d31f8cb70056bf76c5a16b9be3e4400ccb8782488a78cc0605245391e95e87",
+    "runtime.yaml.example": "626f0b4cc72c5a0333174d02819ad3dc6ef9c44528ad7536dbc4f931f9aaa02d",
+    "scripts/launch.sh": "59936c525e79c1e3290860e82f08a958150f0b044ce500bff26c5d02f470c262",
+    "scripts/verify_runtime.py": "a0680a051abd537534f965ec1335de3e05f38bbb30bd52b3f4de98acdb0319ec",
+    "src/main/api/crm-system-api.raml": "eefabb6ac8a671c97448f689143226dc2d18b92526d1090b2d89111edec661c2",
+    "src/main/mule/crm-system-api.xml": "6a0346ad3b0106234ebf5c0cb0552846d1966a3556b4371a7c9a24d35697d946",
+    "src/main/resources/log4j2.xml": "6a5b26064d0446837c22b2d4730e8f4d09777bec0568c86230c040764709a6c6"
+  }
+}

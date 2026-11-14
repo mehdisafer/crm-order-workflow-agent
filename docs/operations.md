@@ -41,21 +41,33 @@ The base profile uses the original synthetic CRM and ERP implementations in the 
 
 ### Browser demonstration
 
-`deploy/capture_operator.mjs` opens the actual operator view, authenticates with the local operator credential, selects a real case, and captures 1440×1100 and 390×844 detail views. It rejects non-loopback targets before reading credentials, clears the login field through normal UI behaviour, and records JavaScript errors and horizontal overflow. It never inserts fabricated case data into the page.
+`deploy/capture_operator.mjs` opens the actual operator view and captures the overview, case detail and reconciliation at 1440×1100 and 390×844. Its default mode authenticates an operator and selects an existing case. `--exercise true` also creates a synthetic request through the real form, switches to the separate approver credential, approves the displayed plan, waits for completion and requests current readback through the UI. No request, API response or page data is mocked.
 
-The authoring environment blocked Chromium's required socket operation before any page was created. [The original browser report](evidence/operator-browser.json) records `blocked` and contains no screenshots. The deployment CI job installs the development-only Playwright 1.62.1 package from `deploy/browser/package-lock.json`, installs its supported Chromium, and produces actual screenshots plus the report as build artifacts. Until that job succeeds, visual validation remains open.
+The script permits only loopback demo endpoints, uses normal headless browser launches, and records the selected engine, source hashes, screenshot hashes, page/console/network errors, horizontal overflow, credential-input clearing and empty browser storage. `--engine chromium` is the default; `--engine firefox` and `--engine webkit` explicitly select distinct rendering engines. An explicitly provided `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` selects an already installed Chromium. No sandbox-disabling launch flags are added.
 
-To reproduce on an authorised local host with Node and the reference stack running:
+The [final Firefox run](evidence/firefox-ui/README.md) passed the recorded form/approval/readback scenario with Firefox 153.0 and Playwright 1.62.1. Six original screenshots and an independent Temporal/HTTP ERP observation are retained. The original Chromium attempt remains [blocked by the executor's socket policy](evidence/operator-browser.json). The deployment CI job still targets Chromium; its container and Chromium qualification remain open until an actual successful run. Firefox evidence does not change those gates or qualify a real vendor tenant.
+
+To reproduce the complete synthetic scenario without requiring a pre-existing stack:
 
 ```bash
 mkdir -p .local/browser-tools
 cp deploy/browser/package.json deploy/browser/package-lock.json .local/browser-tools/
-npm ci --prefix .local/browser-tools --ignore-scripts
-.local/browser-tools/node_modules/.bin/playwright install chromium
-node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules
+npm ci --prefix .local/browser-tools --ignore-scripts --no-audit --no-fund
+.local/browser-tools/node_modules/.bin/playwright install firefox
+uv run --locked python deploy/qualify_operator.py \
+  --engine firefox --output evidence-local/browser-firefox
 ```
 
-An explicitly provided `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` selects an already installed browser. Playwright is not included in the production Python image.
+`qualify_operator.py` creates fresh credentials and separate application/ERP SQLite databases in a private ignored session directory. It starts a real Temporal development server, API, HTTP ERP, worker and browser as children of one command, all on loopback, and stops its children when the bounded exercise ends. It ignores inherited `P06_*` settings before constructing its explicit demo environment; ordinary proxy/download settings are retained. This placement also works in executors that isolate loopback between commands. It does not overwrite existing local identities. Private session logs and databases stay outside the evidence directory.
+
+To capture an already running reference stack, install the intended browser engine and run:
+
+```bash
+node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules \
+  --engine firefox --output evidence-local/browser-existing
+```
+
+Add `--exercise true` only when a new synthetic request and automated separate approval are intended. The exercise uses `CUST-001` / `ORD-1001` and defaults to a date ten days ahead; `--requested-date YYYY-MM-DD` selects another permitted future date for an existing fixture. Playwright and browser binaries are development tools and are not included in the production Python image. The evidence index records the small harness-only environment filtering change made after the final captured UI run.
 
 ## Secrets and privileges
 

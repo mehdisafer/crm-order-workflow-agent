@@ -21,6 +21,9 @@
         <artifactId>mule-maven-plugin</artifactId>
         <version>${mule.maven.plugin.version}</version>
         <extensions>true</extensions>
+        <configuration>
+          <runtimeVersion>${mule.runtime.version}</runtimeVersion>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -40,8 +43,20 @@
   </dependencies>
   <repositories>
     <repository>
+      <id>anypoint-exchange</id>
+      <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
+    <repository>
       <id>mulesoft-releases</id>
       <url>https://repository.mulesoft.org/releases/</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
+    <repository>
+      <id>mulesoft-public</id>
+      <url>https://repository.mulesoft.org/nexus/content/repositories/public/</url>
       <releases><enabled>true</enabled></releases>
       <snapshots><enabled>false</enabled></snapshots>
     </repository>
