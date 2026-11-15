@@ -28,6 +28,7 @@ Evidence describes the system that actually ran. The source manifest identifies 
 | `continuation-manifest.json` | Continuation source commit/tree, evidence digests, actual rerun scope and explicitly identified post-execution harness changes |
 | `continuation-ci-observation.json` | Continuation source/PR workflow status at capture time; recorded independently from local checks |
 | `publication-readiness.json` | Subsequent publication authorization, observed main overview merge, preserved raw evidence and exact output-routing/source differences; no additional business-runtime result |
+| `publication-recheck-20261115.json` | Connector rerun accepted, attempt 2 still without a runner or steps; observed publication settings and the separate required-check trigger correction |
 
 Each evidence record identifies its source and observation scope. A file listed here as a release deliverable must exist before the candidate is published. Generated `.local/` credentials, raw provider access tokens and actual private tenant payloads never belong in this directory.
 

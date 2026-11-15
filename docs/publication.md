@@ -10,7 +10,18 @@ The source is suitable for review as an explicitly qualified local candidate: re
 
 ## Interface operations
 
-The connected repository tools can update code, issues and pull requests and perform a merge. They do not expose an administration mutation for visibility, About metadata or branch protection. The following settings are prepared for the maintainer.
+The available GitHub connector was inspected again on **15 November 2026**. The following boundary separates an unavailable administration operation from a source change that the connector can perform.
+
+| Operation | Available route |
+| --- | --- |
+| Update source, documentation, branches, issues and PRs | GitHub connector |
+| Add the repository's `LICENSE` and align package metadata | GitHub connector, once this repository's licence has been selected |
+| Re-run failed Actions jobs | GitHub connector; an actual rerun was accepted on 15 November |
+| Merge PR #2 after its execution gate is satisfied | GitHub connector; no browser sign-in is needed |
+| Change visibility, About description/topics or branch protections | Maintainer's GitHub interface; no administration mutation is exposed by this connector |
+| Read the startup failure annotation text | Maintainer's interface; the connector's allowed endpoints do not expose these check-run details |
+
+The following settings are prepared for the maintainer.
 
 ### 1. Make the exact repository public
 
@@ -20,7 +31,9 @@ No source-history deletion, account upgrade, billing change or paid service is p
 
 ### 2. Inspect the CI startup annotations
 
-Open the latest **CI** run for PR #2 and inspect its annotations. The last recorded delivery run is [43595327515](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43595327515): all three jobs failed before runner allocation, with no executed steps. The reason has not been established. This is not evidence that the tests themselves failed, and no billing or policy change should be inferred from the empty jobs.
+Open the [Checks tab of PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2/checks) to select the latest run and inspect its annotations. The recorded 15 November recheck is [run 43602410931, attempt 2](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43602410931/attempts/2), for source `0c5357eebb8275df20db64346e158de1a38ea132`. GitHub accepted the rerun, but all three jobs again failed with runner ID 0, an empty runner name and no executed steps. Retrieval of the core job log returned `404 BlobNotFound`. The earlier run `43595327515` remains historical evidence, not the latest delivery.
+
+The [separate recheck record](evidence/publication-recheck-20261115.json) retains these observations. The platform reason has not been established. This is not evidence that the tests themselves failed, and no billing or policy change should be inferred from the empty jobs.
 
 The useful diagnostic is the non-secret annotation text and the run URL. Once the cause is known and the authorized runner path is available, execute the existing CI. The required jobs are **Core contracts and security**, **Temporal recovery** and **Reference container build**. The container job must actually build and run the PostgreSQL/HTTP ERP stack and its Chromium checks. Do not count a skipped or never-started job as success.
 
@@ -38,9 +51,9 @@ Leave the website field empty until an actual authorized deployment exists. The 
 
 ### 4. Deliver the implementation to the default branch
 
-After the CI gate is satisfied, merge PR #2 at its reviewed head. The source and evidence are already committed, so this does not require rebuilding the project from another directory. Verify the resulting `main` README, source, guides and screenshot links. Preserve issue #1 for the remaining actual-provider and operational acceptance work.
+After the CI gate is satisfied, merge PR #2 at its reviewed head through the GitHub connector. The source and evidence are already committed, so this does not require rebuilding the project from another directory or signing in through a browser. Verify the resulting `main` README, source, guides and screenshot links. Preserve issue #1 for the remaining actual-provider and operational acceptance work.
 
-Apply the available branch protections after checking their exact settings: require the PR path and the three named checks, prevent force pushes/deletion and preserve review conversations. Do not invent an independent human approval or purchase a plan to satisfy a proposed setting.
+Apply the available branch protections after checking their exact settings: require the PR path and the three named checks, prevent force pushes/deletion and preserve review conversations. The CI workflow now triggers for every pull request, including documentation-only changes, so these required checks are not omitted by a path filter. The push trigger retains its documentation filter. GitHub documents why [skipping a required workflow by path leaves its checks pending](https://github.com/github/docs/blob/main/data/reusables/actions/workflows/triggering-a-workflow-paths2.md). This configuration correction does not establish that a runner can start. Do not invent an independent human approval or purchase a plan to satisfy a proposed setting.
 
 ## Licence and release identity
 
