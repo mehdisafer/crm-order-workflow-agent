@@ -42,7 +42,7 @@ Versions were checked against the official references in [vendor-sources.md](ven
 | OAuth module | 1.1.30 | Exact JAR resolved and included in the generated archive; token lifecycle unverified |
 | n8n | 2.47.5 | Actual import and authenticated trigger-to-Temporal completion observed in an isolated synthetic profile; operational deployment unverified |
 
-Direct Maven dependencies and the plugin are pinned. The successful build has a retained dependency tree and an inventory of the JARs actually bundled in the archive. This is observed dependency evidence, not a comprehensive SBOM or vulnerability assessment. Runtime, connectors, SaaS access and n8n keep their own licensing terms. No vendor binary or license file is redistributed by this repository. The repository's own license remains a separate maintainer decision.
+Direct Maven dependencies and the plugin are pinned. The successful build has a retained dependency tree and an inventory of the JARs actually bundled in the archive. This is observed dependency evidence, not a comprehensive SBOM or vulnerability assessment. Runtime, connectors, SaaS access and n8n keep their own licensing terms. No vendor binary or license file is redistributed by this repository. The repository's original source and fixtures are now licensed under [Apache-2.0](../LICENSE), explicitly selected by the maintainer. This does not change Salesforce/MuleSoft/n8n runtime terms or permit redistribution of vendor binaries.
 
 ## Install into an already authorized environment
 
