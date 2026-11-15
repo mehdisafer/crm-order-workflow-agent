@@ -1,0 +1,9 @@
+{
+  "orgName": "P06 Synthetic CRM Demo",
+  "edition": "Developer",
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    }
+  }
+}

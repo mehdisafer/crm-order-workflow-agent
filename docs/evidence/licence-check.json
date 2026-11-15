@@ -1,0 +1,8 @@
+{
+  "check": "third_party_licence_metadata_presence",
+  "components_observed": 62,
+  "unknown_third_party_licences": [],
+  "project_licence": "pending_explicit_maintainer_decision",
+  "status": "metadata_present",
+  "limitation": "Metadata presence is not licence compatibility or redistribution certification"
+}

@@ -1,0 +1,69 @@
+### erp
+INFO:     Started server process [96]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:36941 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [96]
+
+
+### api
+INFO:     Started server process [97]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:36639 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [97]
+
+
+### worker
+{"timestamp": "2026-11-14T12:17:09.634630+00:00", "level": "INFO", "logger": "temporalio.worker._worker", "event": "Beginning worker shutdown, will wait 0:00:25 before cancelling activities"}
+
+
+### n8n
+Initializing n8n process
+n8n ready on 127.0.0.1, port 55139
+n8n Task Broker ready on 127.0.0.1, port 45085
+Failed to start Python task runner in internal mode. because its virtual environment is missing from this system. Launching a Python runner in internal mode is intended only for debugging and is not recommended for production. Users are encouraged to deploy in external mode. See: https://docs.n8n.io/hosting/configuration/task-runners/#setting-up-external-mode
+
+There are deprecations related to your n8n setup. Please take the recommended actions to update your configuration:
+ - N8N_UNVERIFIED_PACKAGES_ENABLED -> The default for this variable will change to `false` in a future version. Set it to `true` explicitly to keep installing unverified community packages.
+ - N8N_RUNNERS_MODE -> Internal task runner mode is deprecated and will be removed in a future version. For isolation and scaling, run the task runner launcher as a separate process, set this variable to `external` and share `N8N_RUNNERS_AUTH_TOKEN` with the launcher. See https://docs.n8n.io/deploy/host-n8n/configure-n8n/set-up-task-runners
+ - N8N_RUNNERS_TASK_TIMEOUT -> The default for this variable will be reduced from 300 (5 minutes) to 60 (1 minute) in a future version. Set it explicitly to keep your current task timeout.
+ - N8N_COMPRESSION_NODE_MAX_DECOMPRESSED_SIZE_BYTES -> The default for this variable will be reduced from 2 GiB to 256 MiB in a future version. Set it explicitly to keep your current limit.
+ - N8N_COMPRESSION_NODE_MAX_ZIP_ENTRIES -> The default for this variable will be reduced from 5000 to 1000 in a future version. Set it explicitly to keep your current limit.
+ - Running n8n outside a container is deprecated. Future versions will require running n8n via the official Docker image. See https://docs.n8n.io/deploy/host-n8n
+
+Automatic license renewal is disabled. The license will not renew automatically, and access to licensed features may be lost!
+[license SDK] Skipping renewal on init: renewOnInit is disabled in config
+[license SDK] Skipping renewal on init: autoRenewEnabled is disabled in config
+[license SDK] Skipping renewal on init: license cert is not initialized
+Registered runner "JS Task Runner" (0heGzQ-XzVlkdKhnUc8XB) 
+Seeded the system trusted source
+Generated new OAuth access-token signing key
+Instance registered
+Cluster aligned on version 2.47.5
+Discovered 4 cluster checks
+Recorded version change: (none) -> 2.47.5
+Generated new instance OAuth JWE key pair
+Sandbox: enabled=false provider=n8n-sandbox (from env)
+Version: 2.47.5
+Building workflow dependency index...
+Scheduler started
+
+Editor is now accessible via:
+http://127.0.0.1:55139
+Finished building workflow dependency index. Processed 0 draft workflows, 1 published workflows, 0 unpublished workflows.
+Received request for unknown webhook: The requested webhook "POST p06-order-intake" is not registered.
+404 The requested webhook "POST p06-order-intake" is not registered.
+Received SIGTERM. Shutting down...
+Scheduler stopped
+[runner:js] Received SIGTERM signal, shutting down...
+[runner:js] Task runner stopped
+
+Stopping n8n...
+

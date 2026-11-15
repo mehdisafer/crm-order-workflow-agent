@@ -1,0 +1,18 @@
+# Copy to an external mode-0600 file, then inject its absolute path as P06_RUNTIME_CONFIG.
+# This file is not usable as credentials and must never contain real secrets in Git.
+gateway:
+  host: "127.0.0.1"
+  port: "8443"
+  maxConcurrency: "4"
+  tenant: "demo-industrial"
+  authToken: ""
+  tlsKeyStore: "/run/secrets/p06-gateway.p12"
+  tlsKeyStorePassword: ""
+  tlsKeyPassword: ""
+salesforce:
+  host: "REPLACE.my.salesforce.com"
+  tokenUrl: "https://REPLACE.my.salesforce.com/services/oauth2/token"
+  clientId: ""
+  clientSecret: ""
+  responseTimeoutMs: "10000"
+  maxConnections: "4"

@@ -1,0 +1,27 @@
+{
+  "profile": "local-reference-http",
+  "captured_at": "2026-11-13T22:58:56.718149+00:00",
+  "provider_validation": false,
+  "case_id": "074e985a-f2d6-4fc5-b7f5-44cb8505dbf0",
+  "state": "COMPLETED",
+  "duplicate_delivery_same_case": true,
+  "requester_approval_http_status": 403,
+  "separate_approver": true,
+  "effects": [
+    {
+      "system": "crm",
+      "status": "APPLIED",
+      "attempts": 1
+    },
+    {
+      "system": "erp",
+      "status": "APPLIED",
+      "attempts": 1
+    }
+  ],
+  "remote_readback_matches": true,
+  "case_duration_seconds": 1.3131592579998141,
+  "approval_to_completion_seconds": 0.6473710269999629,
+  "human_wait_seconds": 0,
+  "human_wait_note": "Approval was automated by the synthetic test fixture; no real human latency measured."
+}

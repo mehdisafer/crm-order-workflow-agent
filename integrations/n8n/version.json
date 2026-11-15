@@ -1,0 +1,11 @@
+{
+  "target_version": "2.47.5",
+  "source": "https://github.com/n8n-io/n8n/releases/tag/n8n%402.47.5",
+  "checked_on": "2026-11-14",
+  "execution_status": "passed_local_npm_import_authenticated_trigger_and_business_readback",
+  "runtime": "official npm n8n@2.47.5 on Node 24.22.1",
+  "required_node": ">=24.0.0",
+  "provider_validation": false,
+  "evidence": "docs/evidence/n8n-qualification.json",
+  "export_sha256": "44cb703071296ee4f20e16fcbd62178e5345baa4430dc4860cffd7d0e4534455"
+}

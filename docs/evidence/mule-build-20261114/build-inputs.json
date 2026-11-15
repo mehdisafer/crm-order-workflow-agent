@@ -1,0 +1,14 @@
+{
+  "base_head": "06ace725336bfd62e38bfb8cbb8f4a173c7652e0",
+  "pom_modified_since_base_head": true,
+  "packaging_inputs_sha256": {
+    "mule-artifact.json": "bc7fae8fdea63687e6abd16743e791ab8106495ab3dcaa59d82191d47c673817",
+    "pom.xml": "57d31f8cb70056bf76c5a16b9be3e4400ccb8782488a78cc0605245391e95e87",
+    "runtime.yaml.example": "626f0b4cc72c5a0333174d02819ad3dc6ef9c44528ad7536dbc4f931f9aaa02d",
+    "src/main/api/crm-system-api.raml": "eefabb6ac8a671c97448f689143226dc2d18b92526d1090b2d89111edec661c2",
+    "src/main/mule/crm-system-api.xml": "6a0346ad3b0106234ebf5c0cb0552846d1966a3556b4371a7c9a24d35697d946",
+    "src/main/resources/log4j2.xml": "6a5b26064d0446837c22b2d4730e8f4d09777bec0568c86230c040764709a6c6"
+  },
+  "final_checkout_matches_built_inputs": true,
+  "source_commit_after_fix": "not_committed_by_build_agent"
+}

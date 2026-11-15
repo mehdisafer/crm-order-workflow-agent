@@ -1,0 +1,16 @@
+{
+  "status": "installation_input_required",
+  "type": "Salesforce External Client App",
+  "flow": "client_credentials",
+  "scopes": ["api"],
+  "run_as_user": "explicit authorized technical user; one tenant per identity",
+  "required_policies": [
+    "Admin-approved access",
+    "Dedicated non-admin executor with P06_Executor permission set",
+    "User.P06_Tenant__c populated by an administrator and read-only to executor",
+    "Private P06_Order__c and P06_Effect__c sharing; synthetic records explicitly owned/shared",
+    "Dedicated reader app/user with P06_Reader for live denial qualification"
+  ],
+  "secrets": "Generated and stored by the authorized org administrator outside Git",
+  "connected_app_creation": "Not assumed; Salesforce restricts new Connected Apps from Spring 2026"
+}

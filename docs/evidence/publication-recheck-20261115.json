@@ -1,0 +1,115 @@
+{
+  "record_version": 1,
+  "recorded_at": "2026-11-15T19:51:12Z",
+  "repository": "mehdisafer/crm-order-workflow-agent",
+  "scope": "GitHub publication recheck and one CI trigger correction. No new business-runtime, container or provider execution is asserted.",
+  "inspected_source_commit": "0c5357eebb8275df20db64346e158de1a38ea132",
+  "inspected_source_tree": "8578d7672a541c38e62af30cfc4a3d669e5fc206",
+  "publication": {
+    "authorized": true,
+    "observed_visibility": "private",
+    "observed_description": null,
+    "observed_topics": [],
+    "observed_licence": null,
+    "main_overview_commit": "53314f0fc1160992c04aba4f4be98c825ba976ef",
+    "main_overview_pr": 3,
+    "application_pr": 2,
+    "application_pr_merged": false,
+    "anonymous_access_verified": false,
+    "interface_operations_owner": "maintainer",
+    "browser_account_access_used": false
+  },
+  "ci_recheck": {
+    "rerun_tool": "github_rerun_failed_workflow_run_jobs",
+    "rerun_request_accepted": true,
+    "run_id": 43602410931,
+    "run_attempt": 2,
+    "head_sha": "0c5357eebb8275df20db64346e158de1a38ea132",
+    "run_url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43602410931/attempts/2",
+    "status": "completed",
+    "conclusion": "failure",
+    "updated_at": "2026-11-15T19:47:17Z",
+    "jobs": [
+      {
+        "id": 132935064481,
+        "name": "Core contracts and security",
+        "status": "completed",
+        "conclusion": "failure",
+        "runner_id": 0,
+        "runner_name": "",
+        "steps": []
+      },
+      {
+        "id": 132935064677,
+        "name": "Temporal recovery",
+        "status": "completed",
+        "conclusion": "failure",
+        "runner_id": 0,
+        "runner_name": "",
+        "steps": []
+      },
+      {
+        "id": 132935064701,
+        "name": "Reference container build",
+        "status": "completed",
+        "conclusion": "failure",
+        "runner_id": 0,
+        "runner_name": "",
+        "steps": []
+      }
+    ],
+    "core_log_read": {
+      "job_id": 132935064481,
+      "http_status": 404,
+      "storage_error": "BlobNotFound"
+    },
+    "check_run_detail_read": {
+      "supported_by_connector": false,
+      "http_status": 400,
+      "reason": "GitHub Fetch URL is not an allowed public GitHub repository or search endpoint."
+    },
+    "platform_reason": "not_established",
+    "billing_or_runner_policy_changed": false
+  },
+  "workflow_correction": {
+    "path": ".github/workflows/ci.yml",
+    "finding": "The planned branch protection requires three CI job statuses, but pull_request.paths-ignore omitted those statuses for documentation-only pull requests.",
+    "change": "Remove only pull_request.paths-ignore. Keep push filtering, all jobs, permissions and concurrency unchanged.",
+    "existing_pre_runner_failure_explained_by_this_change": false,
+    "official_reference": "https://github.com/github/docs/blob/main/data/reusables/actions/workflows/triggering-a-workflow-paths2.md",
+    "verification": {
+      "yaml_parser": "PyYAML 6.0.3 BaseLoader",
+      "yaml_parsed": true,
+      "pull_request_has_no_path_filter": true,
+      "push_filter_unchanged": true,
+      "all_job_definitions_unchanged": true,
+      "permissions_and_concurrency_unchanged": true,
+      "before_blob": "7eef8539e35f6b40cfd6cc12ceba9ee9a51948f3",
+      "after_blob": "f441dbdd79ed4559db52173042fd69753d199d22",
+      "diff": "--- a/.github/workflows/ci.yml\n+++ b/.github/workflows/ci.yml\n@@ -5,7 +5,6 @@\n     branches: [main, \"feat/**\", \"fix/**\"]\n     paths-ignore: [\"docs/**\", \"*.md\"]\n   pull_request:\n-    paths-ignore: [\"docs/**\", \"*.md\"]\n   workflow_dispatch:\n \n permissions:\n"
+    },
+    "hosted_execution_of_corrected_workflow": "not_observed_at_recording"
+  },
+  "changed_markdown_link_check": {
+    "changed_markdown_files": 2,
+    "relative_targets_checked": 6,
+    "missing": []
+  },
+  "connector_capabilities": {
+    "source_pr_issue_updates": true,
+    "merge_after_ci_gate": true,
+    "failed_job_rerun_observed": true,
+    "visibility_administration": false,
+    "about_metadata_administration": false,
+    "branch_protection_administration": false,
+    "licence_file_update": "available_after_this_repositorys_licence_is_selected"
+  },
+  "preservation": {
+    "prior_evidence_files_rewritten": false,
+    "application_code_changed": false,
+    "business_runtime_scenarios_reexecuted": false,
+    "full_local_suite_reexecuted": false,
+    "historical_evidence": "Existing baseline, continuation and publication-readiness records retain their original source identities and bytes."
+  },
+  "full_p06_acceptance": "OPEN"
+}

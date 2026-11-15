@@ -1,0 +1,66 @@
+{
+  "captured_at": "2026-11-14T12:16:02.793993+00:00",
+  "status": "passed",
+  "profile": "demo",
+  "provider_validation": false,
+  "topology": "Browser, API, HTTP ERP, worker and real Temporal are children of one loopback-only orchestration command.",
+  "crm": "Original synthetic CRM in the application SQLite database",
+  "erp": "Authenticated HTTP ERP with a separate transactional SQLite database",
+  "api_url": "http://127.0.0.1:43763",
+  "erp_url": "http://127.0.0.1:47933",
+  "temporal_sdk_version": "1.36.0",
+  "browser_engine_requested": "firefox",
+  "runtime_command": "python deploy/qualify_operator.py",
+  "temporal_address": "127.0.0.1:38587",
+  "temporal_server_version": "1.32.2",
+  "browser_exit_code": 0,
+  "browser_status": "passed",
+  "backend_observation": {
+    "case_id": "890719de-438e-46f7-802a-7270f628d5f9",
+    "workflow_status": "COMPLETED",
+    "workflow_result_state": "COMPLETED",
+    "history_events": 41,
+    "history_event_counts": {
+      "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED": 1,
+      "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED": 7,
+      "EVENT_TYPE_WORKFLOW_TASK_STARTED": 7,
+      "EVENT_TYPE_WORKFLOW_TASK_COMPLETED": 7,
+      "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED": 5,
+      "EVENT_TYPE_ACTIVITY_TASK_STARTED": 5,
+      "EVENT_TYPE_ACTIVITY_TASK_COMPLETED": 5,
+      "EVENT_TYPE_TIMER_STARTED": 1,
+      "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED": 1,
+      "EVENT_TYPE_TIMER_CANCELED": 1,
+      "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED": 1
+    },
+    "scheduled_activity_types": [
+      "case.prepare",
+      "case.prepare",
+      "case.execute_crm",
+      "case.reserve_stock",
+      "case.verify"
+    ],
+    "api_state": "COMPLETED",
+    "api_readback_matches": true,
+    "erp_receipt_http_status": 200,
+    "erp_receipt": {
+      "effect_key": "890719de-438e-46f7-802a-7270f628d5f9:stock",
+      "tenant_id": "demo-industrial",
+      "order_id": "order-1001",
+      "sku": "SKU-001",
+      "quantity": 10,
+      "expected_revision": 1,
+      "approved_plan_hash": "576332bdf04bead9bdcd00ecb8a34ffd147d44b5a9ce475901ebbf441c49495b",
+      "expires_at": "2026-11-14T12:31:07.809153Z",
+      "status": "reserved",
+      "revision": 2,
+      "replayed": false
+    }
+  },
+  "process_exit_codes": {
+    "erp": -15,
+    "api": -15,
+    "worker": 0,
+    "browser": 0
+  }
+}

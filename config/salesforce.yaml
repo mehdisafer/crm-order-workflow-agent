@@ -1,0 +1,13 @@
+profile: salesforce
+auth_file: /run/secrets/principals.json
+temporal_address: temporal:7233
+temporal_namespace: default
+temporal_task_queue: p06-order-exceptions-v1
+worker_concurrency: 4
+crm_concurrency: 2
+erp_concurrency: 2
+retry_max_attempts: 3
+approval_ttl_seconds: 900
+proposer: rules
+# P06_DATABASE_URL, P06_MULE_URL, P06_MULE_TOKEN, P06_ERP_URL and
+# P06_ERP_TOKEN are injected by the deployment; no credentials in Git.

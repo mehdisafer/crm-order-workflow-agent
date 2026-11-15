@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:oauth="http://www.mulesoft.org/schema/mule/oauth"
+      xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/oauth http://www.mulesoft.org/schema/mule/oauth/current/mule-oauth.xsd
+        http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+  <!-- Supply this read-only mounted file outside the source tree. No fallback secret. -->
+  <configuration-properties file="${P06_RUNTIME_CONFIG}"/>
+  <http:listener-config name="Gateway">
+    <http:listener-connection host="${gateway.host}" port="${gateway.port}" protocol="HTTPS">
+      <tls:context enabledProtocols="TLSv1.2,TLSv1.3">
+        <tls:key-store path="${gateway.tlsKeyStore}" type="PKCS12"
+                       password="${gateway.tlsKeyStorePassword}" keyPassword="${gateway.tlsKeyPassword}"/>
+      </tls:context>
+    </http:listener-connection>
+  </http:listener-config>
+  <http:request-config name="Salesforce" basePath="/services/apexrest/p06"
+                       responseTimeout="${salesforce.responseTimeoutMs}">
+    <http:request-connection protocol="HTTPS" host="${salesforce.host}" port="443"
+                             maxConnections="${salesforce.maxConnections}">
+      <http:authentication>
+        <oauth:client-credentials-grant-type clientId="${salesforce.clientId}"
+          clientSecret="${salesforce.clientSecret}" tokenUrl="${salesforce.tokenUrl}"
+          encodeClientCredentialsInBody="true"
+          responseExpiresIn="#[payload.expires_in default 600]"
+          refreshTokenWhen="#[attributes.statusCode == 401]"/>
+      </http:authentication>
+    </http:request-connection>
+  </http:request-config>
+
+  <flow name="p06-crm-system-api" maxConcurrency="${gateway.maxConcurrency}">
+    <http:listener config-ref="Gateway" path="/v1/*" allowedMethods="GET,POST">
+      <http:response statusCode="#[vars.status default 200]">
+        <http:headers>#[{'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Correlation-ID': vars.trace default correlationId} ++ (vars.outHeaders default {})]</http:headers>
+      </http:response>
+      <http:error-response statusCode="#[vars.status default 503]">
+        <http:body>#[payload]</http:body>
+        <http:headers>#[{'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Correlation-ID': vars.trace default correlationId}]</http:headers>
+      </http:error-response>
+    </http:listener>
+    <set-variable variableName="trace" value="#[attributes.headers.'x-correlation-id' default correlationId]"/>
+    <set-variable variableName="path" value="#[attributes.requestPath]"/>
+    <set-variable variableName="method" value="#[attributes.method]"/>
+    <set-variable variableName="query" value="#[attributes.queryParams]"/>
+    <choice>
+      <when expression="#[sizeOf(Mule::p('gateway.authToken')) &lt; 32 or (attributes.headers.authorization default '') != ('Bearer ' ++ Mule::p('gateway.authToken'))]">
+        <raise-error type="P06:UNAUTHORIZED" description="Gateway authentication required."/>
+      </when>
+    </choice>
+    <choice>
+      <when expression="#[not ((vars.trace as String) matches /^[A-Za-z0-9_.:-]{1,128}$/)]">
+        <raise-error type="P06:INVALID" description="Invalid correlation identifier."/>
+      </when>
+      <when expression="#[not ((vars.method == 'GET' and vars.path matches /^\/v1\/(capabilities|customers|orders|orders\/[A-Za-z0-9]{15,18}|effects\/[A-Za-z0-9_.:%-]{1,384})$/) or (vars.method == 'POST' and vars.path matches /^\/v1\/orders\/[A-Za-z0-9]{15,18}\/effects$/))]">
+        <raise-error type="P06:NOT_FOUND" description="Endpoint is not allowlisted."/>
+      </when>
+      <when expression="#[vars.method == 'GET' and vars.path != '/v1/capabilities' and (vars.query.tenant_id default '') != Mule::p('gateway.tenant')]">
+        <raise-error type="P06:FORBIDDEN" description="Tenant is outside this gateway binding."/>
+      </when>
+      <when expression="#[vars.method == 'POST' and ((payload.tenant_id default '') != Mule::p('gateway.tenant') or sizeOf(write(payload, 'application/json')) &gt; 8192)]">
+        <raise-error type="P06:FORBIDDEN" description="Mutation is outside this gateway binding."/>
+      </when>
+    </choice>
+    <!-- No until-successful, n8n retry, HTTP client retry, or second saga. Temporal owns business retry. -->
+    <http:request config-ref="Salesforce" method="#[vars.method]" path="#[vars.path]">
+      <http:headers>#[{'Content-Type': 'application/json', 'X-Correlation-ID': vars.trace}]</http:headers>
+      <http:query-params>#[vars.query filterObject ((value, key) -&gt; ['tenant_id','customer_id','reference'] contains (key as String))]</http:query-params>
+      <http:response-validator><http:success-status-code-validator values="200..599"/></http:response-validator>
+    </http:request>
+    <set-variable variableName="status" value="#[attributes.statusCode]"/>
+    <set-variable variableName="outHeaders" value="#[if ((attributes.headers.'retry-after' default null) != null) {'Retry-After': attributes.headers.'retry-after'} else {}]"/>
+    <logger level="INFO" message="#[write({event: 'crm_request_completed', correlation_id: vars.trace, status: vars.status, integration: 'salesforce-apex-rest'}, 'application/json', {indent: false})]"/>
+    <error-handler>
+      <on-error-continue type="P06:UNAUTHORIZED" logException="false">
+        <set-variable variableName="status" value="401"/>
+        <set-payload value='#[{error: {code: "gateway_unauthorized", message: "Gateway authentication required.", retryable: false}}]' mimeType="application/json"/>
+      </on-error-continue>
+      <on-error-continue type="P06:FORBIDDEN" logException="false">
+        <set-variable variableName="status" value="403"/>
+        <set-payload value='#[{error: {code: "tenant_denied", message: "Request is outside the configured tenant scope.", retryable: false}}]' mimeType="application/json"/>
+      </on-error-continue>
+      <on-error-continue type="P06:NOT_FOUND" logException="false">
+        <set-variable variableName="status" value="404"/>
+        <set-payload value='#[{error: {code: "not_found", message: "Endpoint is not allowlisted.", retryable: false}}]' mimeType="application/json"/>
+      </on-error-continue>
+      <on-error-continue type="P06:INVALID,MULE:EXPRESSION" logException="false">
+        <set-variable variableName="status" value="400"/>
+        <set-payload value='#[{error: {code: "invalid_request", message: "Request does not match the contract.", retryable: false}}]' mimeType="application/json"/>
+      </on-error-continue>
+      <on-error-continue type="ANY" logException="false">
+        <set-variable variableName="status" value="503"/>
+        <set-variable variableName="outHeaders" value="#[{'Retry-After': '2'}]"/>
+        <set-payload value='#[{error: {code: "remote_result_uncertain", message: "CRM response unavailable. Reconcile the effect before repeating a write.", retryable: true}}]' mimeType="application/json"/>
+        <logger level="WARN" message="#[write({event: 'crm_request_unavailable', correlation_id: vars.trace, status: 503}, 'application/json', {indent: false})]"/>
+      </on-error-continue>
+    </error-handler>
+  </flow>
+</mule>

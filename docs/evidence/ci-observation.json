@@ -1,0 +1,80 @@
+{
+  "observation_version": 1,
+  "repository": "mehdisafer/crm-order-workflow-agent",
+  "source_commit": "7777b75497d840a97e53d6693d1ab60177cde0d5",
+  "status": "failed_before_runner_execution",
+  "run": {
+    "id": 43526218191,
+    "url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43526218191",
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-13T23:19:15Z",
+    "updated_at": "2026-11-13T23:19:20Z"
+  },
+  "jobs": [
+    {
+      "id": 132232518946,
+      "name": "Temporal recovery",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-13T23:19:16Z",
+      "completed_at": "2026-11-13T23:19:19Z",
+      "runner_id": 0,
+      "runner_name": "",
+      "steps": [],
+      "html_url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43526218191/job/132232518946"
+    },
+    {
+      "id": 132232519418,
+      "name": "Core contracts and security",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-13T23:19:16Z",
+      "completed_at": "2026-11-13T23:19:19Z",
+      "runner_id": 0,
+      "runner_name": "",
+      "steps": [],
+      "html_url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43526218191/job/132232519418"
+    },
+    {
+      "id": 132232519700,
+      "name": "Reference container build",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-13T23:19:16Z",
+      "completed_at": "2026-11-13T23:19:19Z",
+      "runner_id": 0,
+      "runner_name": "",
+      "steps": [],
+      "html_url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43526218191/job/132232519700"
+    }
+  ],
+  "job_log_retrieval": {
+    "job_id": 132230707238,
+    "result": "404 BlobNotFound",
+    "note": "Observed on initial run; latest jobs also contain zero steps and no runner"
+  },
+  "annotation_access": {
+    "result": "connector endpoint unsupported; unauthenticated cloud browser cannot view this private repository"
+  },
+  "underlying_platform_reason": "not_verified",
+  "gates": {
+    "ci": "OPEN",
+    "container": "NOT_EXECUTED",
+    "browser": "NOT_EXECUTED_IN_CI",
+    "provider_acceptance": "OPEN"
+  },
+  "billing_or_runner_configuration_changed": false,
+  "previous_runs": [
+    {
+      "id": 43525678188,
+      "url": "https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43525678188",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-13T23:14:59Z",
+      "updated_at": "2026-11-13T23:15:03Z"
+    }
+  ]
+}

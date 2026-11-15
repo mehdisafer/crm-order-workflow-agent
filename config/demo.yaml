@@ -1,0 +1,12 @@
+profile: demo
+database_url: sqlite:///.local/workflow.db
+auth_file: .local/principals.json
+temporal_address: 127.0.0.1:7233
+temporal_namespace: default
+temporal_task_queue: p06-order-exceptions-v1
+worker_concurrency: 8
+crm_concurrency: 4
+erp_concurrency: 4
+retry_max_attempts: 4
+approval_ttl_seconds: 900
+proposer: rules

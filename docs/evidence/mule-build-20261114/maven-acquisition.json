@@ -1,0 +1,8 @@
+{
+  "status": "ACQUIRED",
+  "component": "Apache Maven 3.10.0",
+  "sha512": "908b1501bfb420bf7c8affb855534a9c407fd6099367bfb9f2f2dcb8e9799102bffb84518cde74c679bd76870247c6528683abdd620581bffa90f95d92d175aa",
+  "source_url": "https://dlcdn.apache.org/maven/maven-3/3.10.0/binaries/apache-maven-3.10.0-bin.tar.gz",
+  "directory": "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/apache-maven-3.10.0",
+  "seconds": 7.08
+}

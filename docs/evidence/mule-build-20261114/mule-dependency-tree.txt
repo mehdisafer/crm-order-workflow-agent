@@ -1,0 +1,11 @@
+io.github.mehdisafer:p06-crm-system-api:mule-application:0.1.0
++- org.mule.connectors:mule-http-connector:jar:mule-plugin:1.12.2:compile
+|  +- org.mule.connectors:mule-sockets-connector:jar:mule-plugin:1.2.9:compile
+|  +- org.mule.modules:mule-module-cors-kernel:jar:1.1.2:compile
+|  +- com.sun.activation:jakarta.activation:jar:1.2.2:compile
+|  +- commons-io:commons-io:jar:2.20.0:compile
+|  +- org.apache.commons:commons-lang3:jar:3.18.0:compile
+|  +- org.mule.sdk:mule-sdk-compatibility-api:jar:1.0.0:compile
+|  \- org.mule.sdk:mule-sdk-api:jar:1.0.0:compile
+\- org.mule.modules:mule-oauth-module:jar:mule-plugin:1.1.30:compile
+   \- commons-codec:commons-codec:jar:1.22.0:compile

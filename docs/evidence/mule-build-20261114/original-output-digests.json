@@ -1,0 +1,16 @@
+{
+  "original_outputs_copied_without_changes": {
+    "maven-package-attempt-1.log": "97bf953ae58ec92c9bffd921293394685692c66f6194cee0ac693942d8a12a45",
+    "maven-package-attempt-1.json": "fe16ef04d31677693e77c3e3ef2eaada682051975ee30f33ec20265f527a0361",
+    "maven-version.txt": "23fbd4e9482cd25afa758e19a46290ea4a7da8e12b3f836d8c469f7ba7a00ab5",
+    "maven-acquisition.json": "e198e6a1580fc28433d037e01bd6918f7262f5fdc2e272b94838f82348b1ac2c",
+    "jdk17-acquisition.json": "c24452c7e8f0f6631112f611801a5388259a23e03fcc8a7b18c9e74345709c4d",
+    "attempt-1-source-manifest.json": "a140d9478433a8e3566bc08f101e0186a2ada07dfcfe6cd6ba0800765240f0dd",
+    "package-inspection.json": "de6668a269ffcc6f2cb39cbda7ee7d61e7acfe1e67faf9cfd46612c53124edc1",
+    "maven-dependency-tree.log": "1366ce7d0d4a900fce5053c1d3c9ba672941e059e156c56e0ddcc518e05738d3",
+    "maven-dependency-tree.json": "44c62dd57e1425a9854e9df750ec965c5636b1efa1cafe8559dd093edc3e061e",
+    "maven-dependency-tree-attempt-2.log": "be070b33f9d53bd08ed1d61e3d2f025582ebfeb6465df6a6cdc7afe7dad5eea5",
+    "maven-dependency-tree-attempt-2.json": "441fcebda92a8ad79725c46fecb5e3206a11c182e8e5d7e02c50a580e89ae4cc",
+    "mule-dependency-tree.txt": "8277eff44ba502b2427ff072cfef334ecb7e93855ef0db0397820df882bb29a7"
+  }
+}

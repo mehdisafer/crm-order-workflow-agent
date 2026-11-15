@@ -1,0 +1,311 @@
+{
+  "case": {
+    "api_calls": 12,
+    "approval": {
+      "actor_id": "smoke-approver",
+      "approved_at": "2026-11-13T23:07:31.641669+00:00",
+      "decision": "approve",
+      "plan_hash": "8935bda980b5bf72cd9f365e5115780e2cda173fee0610526e34a825a18a8730",
+      "tenant_id": "demo-industrial"
+    },
+    "correlation_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+    "created_at": "2026-11-13T23:07:31.516106+00:00",
+    "effects": [
+      {
+        "after": {
+          "crm_url": "demo://orders/order-1001",
+          "customer_id": "customer-001",
+          "last_effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:crm",
+          "order_id": "order-1001",
+          "quantity": 10,
+          "reference": "ORD-1001",
+          "requested_date": "2026-11-24",
+          "revision": 2,
+          "sku": "SKU-001",
+          "tenant_id": "demo-industrial"
+        },
+        "attempts": 1,
+        "before": {
+          "crm_url": "demo://orders/order-1001",
+          "customer_id": "customer-001",
+          "last_effect_key": null,
+          "order_id": "order-1001",
+          "quantity": 10,
+          "reference": "ORD-1001",
+          "requested_date": "2026-11-21",
+          "revision": 1,
+          "sku": "SKU-001",
+          "tenant_id": "demo-industrial"
+        },
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:crm",
+        "operation": "change_delivery_date",
+        "request": {
+          "approved_plan_hash": "8935bda980b5bf72cd9f365e5115780e2cda173fee0610526e34a825a18a8730",
+          "customer_id": "customer-001",
+          "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:crm",
+          "expected_revision": 1,
+          "expires_at": "2026-11-13T23:22:31.577737Z",
+          "operation": "change_delivery_date",
+          "requested_date": "2026-11-24",
+          "tenant_id": "demo-industrial"
+        },
+        "request_hash": "75a6c136c000f4535d4e9565059c162dece74f087e7c097f86a9b65edbd00c94",
+        "status": "APPLIED",
+        "system": "crm"
+      },
+      {
+        "after": {
+          "approved_plan_hash": "8935bda980b5bf72cd9f365e5115780e2cda173fee0610526e34a825a18a8730",
+          "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:stock",
+          "expected_revision": 1,
+          "expires_at": "2026-11-13T23:22:31.577737Z",
+          "order_id": "order-1001",
+          "quantity": 10,
+          "replayed": false,
+          "revision": 2,
+          "sku": "SKU-001",
+          "status": "reserved",
+          "tenant_id": "demo-industrial"
+        },
+        "attempts": 1,
+        "before": {
+          "available": 100,
+          "revision": 1,
+          "sku": "SKU-001",
+          "tenant_id": "demo-industrial"
+        },
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:stock",
+        "operation": "reserve_stock",
+        "request": {
+          "approved_plan_hash": "8935bda980b5bf72cd9f365e5115780e2cda173fee0610526e34a825a18a8730",
+          "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:stock",
+          "expected_revision": 1,
+          "expires_at": "2026-11-13T23:22:31.577737Z",
+          "order_id": "order-1001",
+          "quantity": 10,
+          "sku": "SKU-001",
+          "tenant_id": "demo-industrial"
+        },
+        "request_hash": "4f62e8af083227262da69798b24773377e7f8aef7e3b5a4a4913f71f041bfa44",
+        "status": "APPLIED",
+        "system": "erp"
+      }
+    ],
+    "events": [
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.517292+00:00",
+        "event_type": "request.accepted",
+        "id": "eecf1a1c-0a46-410e-9e9a-621a034cebc7",
+        "payload": {
+          "actor_id": "smoke-requester"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.577942+00:00",
+        "event_type": "proposal.structured",
+        "id": "61b8b7ea-bc07-4e4c-96bc-5aba7636985d",
+        "payload": {
+          "intent": {
+            "customer_reference": "CUST-001",
+            "order_reference": "ORD-1001",
+            "requested_date": "2026-11-24"
+          },
+          "provider": "structured-fields-and-rules",
+          "request_hash": "3103a040c1dc9e87afbe60e6da0997836fdda894564199f346508b013ec5b498"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.578833+00:00",
+        "event_type": "case.awaiting_approval",
+        "id": "41c7cc0b-1c60-4023-ab91-9487856f7da1",
+        "payload": {
+          "reason": "A separate approver must authorise this exact plan",
+          "state": "AWAITING_APPROVAL"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.642184+00:00",
+        "event_type": "case.approved",
+        "id": "b3def9e4-7f8f-4433-be7f-0801b61214e5",
+        "payload": {
+          "reason": "Decision recorded by a separate authorised approver",
+          "state": "APPROVED"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.671441+00:00",
+        "event_type": "effect.prepared",
+        "id": "07c38cca-a11b-4d74-a9f2-ab5fc4200e2c",
+        "payload": {
+          "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:crm",
+          "system": "crm"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.688186+00:00",
+        "event_type": "effect.observed",
+        "id": "4eb5b462-c564-4319-bebd-e28b5bdf7430",
+        "payload": {
+          "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:crm",
+          "status": "APPLIED",
+          "system": "crm"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.688779+00:00",
+        "event_type": "case.crm_applied",
+        "id": "fc681a60-5b1b-4c0a-a20a-15c237829c5a",
+        "payload": {
+          "reason": "CRM effect was observed and matched the approved plan",
+          "state": "CRM_APPLIED"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.703341+00:00",
+        "event_type": "effect.prepared",
+        "id": "4ac9c162-f119-4a61-a9bf-9c70a7096a35",
+        "payload": {
+          "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:stock",
+          "system": "erp"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.708576+00:00",
+        "event_type": "effect.observed",
+        "id": "fc10be21-8531-43f6-b094-5316a34c1d45",
+        "payload": {
+          "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:stock",
+          "status": "APPLIED",
+          "system": "erp"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.709084+00:00",
+        "event_type": "case.stock_reserved",
+        "id": "d4073f79-b6bb-43f8-afc0-c490c19f0e8f",
+        "payload": {
+          "reason": "ERP reservation was observed against its idempotency key",
+          "state": "STOCK_RESERVED"
+        }
+      },
+      {
+        "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+        "created_at": "2026-11-13T23:07:31.724798+00:00",
+        "event_type": "case.completed",
+        "id": "3f959474-0d09-4197-b496-d373cb9ed08c",
+        "payload": {
+          "reason": "CRM and ERP rereads match the approved effects",
+          "state": "COMPLETED"
+        }
+      }
+    ],
+    "id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+    "plan": {
+      "availability": {
+        "available": 100,
+        "revision": 1,
+        "sku": "SKU-001",
+        "tenant_id": "demo-industrial"
+      },
+      "case_id": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348",
+      "compensation_allowed": true,
+      "customer": {
+        "customer_id": "customer-001",
+        "name": "Fictional Industrial Components",
+        "reference": "CUST-001",
+        "tenant_id": "demo-industrial"
+      },
+      "expires_at": "2026-11-13T23:22:31.577737Z",
+      "fields": [
+        "requested_date"
+      ],
+      "hash": "8935bda980b5bf72cd9f365e5115780e2cda173fee0610526e34a825a18a8730",
+      "operation": "change_delivery_date",
+      "order": {
+        "crm_url": "demo://orders/order-1001",
+        "customer_id": "customer-001",
+        "last_effect_key": null,
+        "order_id": "order-1001",
+        "quantity": 10,
+        "reference": "ORD-1001",
+        "requested_date": "2026-11-21",
+        "revision": 1,
+        "sku": "SKU-001",
+        "tenant_id": "demo-industrial"
+      },
+      "policy_version": "1.0",
+      "requested_date": "2026-11-24",
+      "requester_id": "smoke-requester",
+      "risk": "controlled_order_change",
+      "schema_version": "1.0",
+      "tenant_id": "demo-industrial"
+    },
+    "reason": "CRM and ERP rereads match the approved effects",
+    "reconciliation": {
+      "checked_at": "2026-11-13T23:07:31.724421+00:00",
+      "crm_order": {
+        "crm_url": "demo://orders/order-1001",
+        "customer_id": "customer-001",
+        "last_effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:crm",
+        "order_id": "order-1001",
+        "quantity": 10,
+        "reference": "ORD-1001",
+        "requested_date": "2026-11-24",
+        "revision": 2,
+        "sku": "SKU-001",
+        "tenant_id": "demo-industrial"
+      },
+      "differences": [],
+      "expected_outcome": "fulfilled",
+      "matches": true,
+      "profile": "demo",
+      "provider_acceptance": "not_asserted",
+      "reservation": {
+        "approved_plan_hash": "8935bda980b5bf72cd9f365e5115780e2cda173fee0610526e34a825a18a8730",
+        "effect_key": "ea3abd01-c4b9-4acb-b5db-ff0a18dcc348:stock",
+        "expected_revision": 1,
+        "expires_at": "2026-11-13T23:22:31.577737Z",
+        "order_id": "order-1001",
+        "quantity": 10,
+        "replayed": false,
+        "revision": 2,
+        "sku": "SKU-001",
+        "status": "reserved",
+        "tenant_id": "demo-industrial"
+      }
+    },
+    "request": {
+      "customer_reference": "CUST-001",
+      "message": "",
+      "message_id": "smoke-1",
+      "order_reference": "ORD-1001",
+      "requested_date": "2026-11-24",
+      "schema_version": "1.0"
+    },
+    "requester_id": "smoke-requester",
+    "schema_version": "1.0",
+    "state": "COMPLETED",
+    "tenant_id": "demo-industrial",
+    "updated_at": "2026-11-13T23:07:31.724597+00:00"
+  },
+  "command": "uv run --locked python -m crm_workflow.cli smoke",
+  "executed_at": "2026-11-13T23:07:31.741530+00:00",
+  "outbox": {
+    "dead": 0,
+    "pending": 0
+  },
+  "profile": "isolated-synthetic-with-real-temporal",
+  "vendor_validated": false
+}

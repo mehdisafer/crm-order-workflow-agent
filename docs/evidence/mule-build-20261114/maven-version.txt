@@ -1,0 +1,5 @@
+Apache Maven 3.10.0 (c43a36b8d67be7e0805a411bc0898af1a51f5472)
+Maven home: /workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/apache-maven-3.10.0
+Java version: 17.0.21, vendor: Amazon.com Inc., runtime: /workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/corretto17/amazon-corretto-17.0.21.0.11-linux-x64
+Default locale: en, platform encoding: UTF-8, time zone: Europe/Paris
+OS name: "linux", version: "6.18.57", arch: "amd64", family: "unix"

@@ -1,0 +1,9 @@
+{
+  "probe": "installed proxy-from-env selector, no HTTP request made",
+  "before": {
+    "loopback_proxy_selected": true
+  },
+  "after": {
+    "loopback_proxy_selected": false
+  }
+}

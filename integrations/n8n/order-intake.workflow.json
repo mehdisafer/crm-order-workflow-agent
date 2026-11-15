@@ -1,0 +1,120 @@
+{
+  "name": "P06 \u2014 Authenticated synthetic order intake",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "p06-order-intake",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "4150a2b2-497b-44c3-a576-10e7bc9306f1",
+      "name": "Authenticated intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        260
+      ],
+      "webhookId": "4150a2b2-497b-44c3-a576-10e7bc9306f1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/v1/cases",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "f227258a-ff35-427c-9c1d-0cb50bda03de",
+      "name": "Submit once to workflow authority",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        260
+      ],
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "7f724dae-2b9a-4de7-96f4-a2a885fa7f6c",
+      "name": "Return durable intake receipt",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        780,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "Bind two independent Header Auth credentials after import: inbound X-P06-Intake-Key; outbound Authorization: Bearer <requester token>. No credential IDs or secrets are exported. Keep the HTTP URL a trusted literal. message_id comes from the source and must survive retries. Temporal owns the business state; this workflow only submits an intake request. Use synthetic data only.",
+        "height": 220,
+        "width": 760
+      },
+      "id": "2995ec92-4bf0-4ada-b5f3-11dd27db28df",
+      "name": "Installation contract",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -20
+      ]
+    }
+  ],
+  "connections": {
+    "Authenticated intake": {
+      "main": [
+        [
+          {
+            "node": "Submit once to workflow authority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit once to workflow authority": {
+      "main": [
+        [
+          {
+            "node": "Return durable intake receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveExecutionProgress": false,
+    "saveManualExecutions": false,
+    "executionTimeout": 30
+  },
+  "pinData": {},
+  "tags": []
+}

@@ -1,0 +1,49 @@
+{
+  "record_version": 1,
+  "recorded_date": "2026-11-15",
+  "repository": "mehdisafer/crm-order-workflow-agent",
+  "scope": "Apache-2.0 selection and isolated source-check rehearsal; not a full application test, container qualification or provider acceptance.",
+  "selection": {
+    "selected_by": "maintainer",
+    "spdx": "Apache-2.0",
+    "github_main_pr": 4,
+    "github_main_merge_commit": "18920871022446f6bf284e22d8b071c26c93572b",
+    "github_license_detection": "Apache-2.0",
+    "source_reference": "spdx/license-list-data text/Apache-2.0.txt",
+    "source_blob_sha": "137069b823873b8bcf42979bcf8e9371052d26a2"
+  },
+  "application_source": {
+    "tested_source_commit": "3c9d4d9a478d74f9e2bf90f24b57620b9c26c158",
+    "script_blob_sha": "95918023a2a3eb61ba0f2bede5cd490db67efbbc",
+    "unit_test_blob_sha": "0a9e0d83662ea6baba2f4adc986a38bc8021281a",
+    "pyproject_blob_sha": "f7163595b514c7275074cfa3e0c4e8f4bee6a695",
+    "root_license_blob_sha": "137069b823873b8bcf42979bcf8e9371052d26a2"
+  },
+  "isolated_rehearsal": {
+    "script_and_test_git_blob_hashes_matched": true,
+    "python_version": "3.13.5",
+    "exact_script_source": true,
+    "exact_unit_test_source": true,
+    "project_fixture": "Reduced project metadata containing exact licence declarations; not the full repository dependency graph",
+    "licence_fixture": "Locally normalized /usr/share/common-licenses/Apache-2.0, not byte-identical to the repository licence",
+    "third_party_inventory_fixture": "Synthetic inventory with one MIT dependency and one project entry",
+    "checker_status": "metadata_present",
+    "pytest": "1 passed in 0.04s",
+    "negative_test": "When the licence fixture was removed, checker exited nonzero and reported missing or incomplete Apache-2.0 LICENSE text",
+    "limitation": "This exercises checker logic; the full Python suite, uv --locked, Docker, hosted CI and provider endpoints were not executed on this source commit."
+  },
+  "github_current_head_ci": {
+    "run_id": 43764852235,
+    "head_sha": "3c9d4d9a478d74f9e2bf90f24b57620b9c26c158",
+    "jobs": "all three failed before runner assignment",
+    "runner_id": 0,
+    "steps": 0,
+    "passing_ci_claim": false
+  },
+  "source_and_evidence_integrity": {
+    "original_runtime_evidence_rewritten": false,
+    "application_logic_modified": false,
+    "historical_records_reused_only_with_their_original_scope": true
+  },
+  "acceptance": "OPEN"
+}

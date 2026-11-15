@@ -1,0 +1,3 @@
+# Preserve original test reports, including whitespace emitted by pytest.
+docs/evidence/*.log -whitespace
+docs/evidence/*.xml -whitespace

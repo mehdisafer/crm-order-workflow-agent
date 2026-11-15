@@ -1,0 +1,64 @@
+[INFO] Error stacktraces are turned on.
+[INFO] Scanning for projects...
+[INFO] Loaded 24479 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to mulesoft-private (https://repository.mulesoft.org/nexus/content/repositories/private/): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[INFO] Loaded 24479 auto-discovered prefixes for remote repository sonatype-releases (prefixes-sonatype-releases.txt)
+[WARNING] Failed to retrieve plugin descriptor for org.mule.tools.maven:exchange-mule-maven-plugin:0.1.7: Plugin org.mule.tools.maven:exchange-mule-maven-plugin:0.1.7 or one of its dependencies could not be resolved:
+	The following artifacts could not be resolved: org.mule.tools.maven:exchange-mule-maven-plugin:pom:0.1.7 (absent): Could not transfer artifact org.mule.tools.maven:exchange-mule-maven-plugin:pom:0.1.7 from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-deploy-plugin:3.1.4: Plugin org.apache.maven.plugins:maven-deploy-plugin:3.1.4 or one of its dependencies could not be resolved:
+	The following artifacts could not be resolved: org.apache.maven.plugins:maven-deploy-plugin:pom:3.1.4 (absent): Could not transfer artifact org.apache.maven.plugins:maven-deploy-plugin:pom:3.1.4 from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-site-plugin:4.0.0-M16: Plugin org.apache.maven.plugins:maven-site-plugin:4.0.0-M16 or one of its dependencies could not be resolved:
+	The following artifacts could not be resolved: org.apache.maven.plugins:maven-site-plugin:pom:4.0.0-M16 (absent): Could not transfer artifact org.apache.maven.plugins:maven-site-plugin:pom:4.0.0-M16 from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-install-plugin:3.1.4: Plugin org.apache.maven.plugins:maven-install-plugin:3.1.4 or one of its dependencies could not be resolved:
+	The following artifacts could not be resolved: org.apache.maven.plugins:maven-install-plugin:pom:3.1.4 (absent): Could not transfer artifact org.apache.maven.plugins:maven-install-plugin:pom:3.1.4 from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+
+[WARNING] Could not transfer metadata org.mule.tools.maven/maven-metadata.xml from/to mulesoft-releases (https://repository.mulesoft.org/releases/): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] Could not transfer metadata org.mule.tools.maven/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] Could not transfer metadata org.apache.maven.plugins/maven-metadata.xml from/to mulesoft-releases (https://repository.mulesoft.org/releases/): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] Could not transfer metadata org.apache.maven.plugins/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] Could not transfer metadata org.codehaus.mojo/maven-metadata.xml from/to mulesoft-releases (https://repository.mulesoft.org/releases/): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] Could not transfer metadata org.codehaus.mojo/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] org.mule.tools.maven/maven-metadata.xml failed to transfer from https://repository.mulesoft.org/releases/ during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of mulesoft-releases has elapsed or updates are forced. Original error: Could not transfer metadata org.mule.tools.maven/maven-metadata.xml from/to mulesoft-releases (https://repository.mulesoft.org/releases/): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] org.mule.tools.maven/maven-metadata.xml failed to transfer from https://repo.maven.apache.org/maven2 during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of central has elapsed or updates are forced. Original error: Could not transfer metadata org.mule.tools.maven/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] org.apache.maven.plugins/maven-metadata.xml failed to transfer from https://repository.mulesoft.org/releases/ during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of mulesoft-releases has elapsed or updates are forced. Original error: Could not transfer metadata org.apache.maven.plugins/maven-metadata.xml from/to mulesoft-releases (https://repository.mulesoft.org/releases/): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] org.apache.maven.plugins/maven-metadata.xml failed to transfer from https://repo.maven.apache.org/maven2 during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of central has elapsed or updates are forced. Original error: Could not transfer metadata org.apache.maven.plugins/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] org.codehaus.mojo/maven-metadata.xml failed to transfer from https://repository.mulesoft.org/releases/ during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of mulesoft-releases has elapsed or updates are forced. Original error: Could not transfer metadata org.codehaus.mojo/maven-metadata.xml from/to mulesoft-releases (https://repository.mulesoft.org/releases/): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[WARNING] org.codehaus.mojo/maven-metadata.xml failed to transfer from https://repo.maven.apache.org/maven2 during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of central has elapsed or updates are forced. Original error: Could not transfer metadata org.codehaus.mojo/maven-metadata.xml from/to central (https://repo.maven.apache.org/maven2): Connect to 127.0.0.1:39153 [/127.0.0.1] failed: Connection refused
+[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.504 s
+[INFO] Finished at: 2026-11-14T13:11:47+01:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] No plugin found for prefix 'dependency' in the current project and in the plugin groups [org.mule.tools.maven, org.apache.maven.plugins, org.codehaus.mojo] available from the repositories [local (/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/m2-repository), mulesoft-releases (https://repository.mulesoft.org/releases/), central (https://repo.maven.apache.org/maven2)] -> [Help 1]
+org.apache.maven.plugin.prefix.NoPluginFoundForPrefixException: No plugin found for prefix 'dependency' in the current project and in the plugin groups [org.mule.tools.maven, org.apache.maven.plugins, org.codehaus.mojo] available from the repositories [local (/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/m2-repository), mulesoft-releases (https://repository.mulesoft.org/releases/), central (https://repo.maven.apache.org/maven2)]
+    at org.apache.maven.plugin.prefix.internal.DefaultPluginPrefixResolver.resolve (DefaultPluginPrefixResolver.java:131)
+    at org.apache.maven.lifecycle.internal.MojoDescriptorCreator.findPluginForPrefix (MojoDescriptorCreator.java:249)
+    at org.apache.maven.lifecycle.internal.MojoDescriptorCreator.getMojoDescriptor (MojoDescriptorCreator.java:211)
+    at org.apache.maven.lifecycle.internal.DefaultLifecycleTaskSegmentCalculator.calculateTaskSegments (DefaultLifecycleTaskSegmentCalculator.java:97)
+    at org.apache.maven.lifecycle.internal.DefaultLifecycleTaskSegmentCalculator.calculateTaskSegments (DefaultLifecycleTaskSegmentCalculator.java:79)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:87)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:267)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:179)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:1017)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:299)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:219)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:77)
+    at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:569)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:362)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+[ERROR] 
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/NoPluginFoundForPrefixException

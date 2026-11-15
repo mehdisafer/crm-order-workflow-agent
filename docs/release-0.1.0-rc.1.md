@@ -1,0 +1,39 @@
+# Release candidate 0.1.0-rc.1
+
+## Business result
+
+This candidate introduces a complete local order-exception desk: authenticated intake, customer/order resolution, typed delivery-date plan, independent approval, durable CRM/ERP saga, conditional compensation and observed-state reconciliation.
+
+## Included
+
+- Real Temporal orchestration with explicit activity budgets, persisted outbox dispatch and restart recovery.
+- Transactional business evidence, tenant isolation, stable effect keys and conflict-aware compensation.
+- Operator API and interface, signed direct webhooks, a synthetic ERP HTTP service and an optional constrained local-model interpreter.
+- Salesforce custom objects/Apex/permission source, MuleSoft system API, inactive n8n export and a bounded actual-provider validation harness.
+- Locked Python environment, container reference, CI checks, monitoring, operational procedures and original local qualification results.
+
+## Verification
+
+The [evidence index](evidence/README.md) links the exact source identity, original tests, local HTTP demonstration, load measurement, isolated PostgreSQL restore and dependency scan. The killed-worker test exits the process after the persistent synthetic CRM commit and before its response, then verifies one CRM effect and one reservation after replacement. This is a real durability test with an explicitly synthetic source system.
+
+The original source commit is [`7777b75497d840a97e53d6693d1ab60177cde0d5`](https://github.com/mehdisafer/crm-order-workflow-agent/commit/7777b75497d840a97e53d6693d1ab60177cde0d5). Its local suite contained 91 passing tests, zero failures and zero skips. `docs/evidence/source-manifest.json` preserves that historical scope. The continuation's full local suite again passed 91 tests with zero failures/skips in 27.65 seconds. Its source is [`ea0f914dcf3a6cbf9a7d2c941a2369644bbad932`](https://github.com/mehdisafer/crm-order-workflow-agent/commit/ea0f914dcf3a6cbf9a7d2c941a2369644bbad932); the separate continuation manifest binds the rerun and original evidence without silently rebinding the historical manifest.
+
+The 14 November continuation adds actual Firefox qualification and a successful Mule Maven package build. The browser exposed an invalid HTML identifier pattern and misleading historical-date/quantity labels; these were corrected and exercised through the actual interface. Six final desktop/mobile images show the completed case and its readback, with no page, console, HTTP or request errors and no horizontal overflow. The Mule build explicitly selects 4.9.24, resolves the pinned connector artifacts and retains unresolved external configuration/TLS and stream-validation warnings. These observations do not validate an actual Salesforce org or running Mule server.
+
+The same continuation qualified the actual n8n 2.47.5 trigger: inactive export import, two separate local credentials bound outside the export, missing/wrong credential refusals, successful intake, duplicate delivery yielding one case, denied requester approval, distinct approval and Temporal completion with matching readback. The local runtime's initial registration and proxy-routing failures are retained. The versioned export remains inactive and contains no credential values or IDs.
+
+## Release status
+
+Prepared candidate on [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2); **not merged into main, not a public GitHub release and not full P06 acceptance**. GitHub jobs failed before runner allocation and any test step, so the reference-container and CI Chromium gates remain open. The successful local Firefox profile is identified separately. No version tag, paid resource or visibility change is implied by these release notes. The original project source was subsequently licensed under Apache-2.0 in PR #4, independently of the still-unissued release. Actual Salesforce/MuleSoft execution and the remaining qualification/publication decisions are tracked in [acceptance.md](acceptance.md).
+
+The maintainer subsequently authorized public source publication and retained the interface-only settings work. The last observed repository visibility is private. The README-only [PR #3](https://github.com/mehdisafer/crm-order-workflow-agent/pull/3) has been merged into `main`, providing a project overview, original screenshot and direct candidate/evidence links while the application remains in PR #2. [Publication status](publication.md) identifies the remaining settings, CI and application-merge steps. Historical manifests retain the visibility observed when they were recorded.
+
+The prepared release-notes identifier `0.1.0-rc.1` does not yet correspond to a tagged or built pre-release artifact: the project package metadata still declares `0.1.0`. Reconcile those identifiers and the lockfile before publishing an actual release candidate. No release artifact has been created by these notes.
+
+## Licence
+
+Original application source, documentation and synthetic fixtures are licensed under [Apache-2.0](../LICENSE), selected on 15 November 2026 and present on `main` through [PR #4](https://github.com/mehdisafer/crm-order-workflow-agent/pull/4). Third-party libraries and Salesforce/MuleSoft/n8n products remain under their respective terms. The release candidate is still not tagged or published.
+
+## Upgrade and rollback
+
+This is schema version 1 with no prior application release. Run the migration once, seed only the explicit demo profile and keep API/worker schema versions aligned. Future changes must preserve existing workflow histories and effect identities. Roll back compatible application code after stopping new intake and accounting for in-flight effects; do not delete the outbox or reset keys. Database and remote-state recovery follow [operations.md](operations.md).

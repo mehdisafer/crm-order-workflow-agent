@@ -1,0 +1,41 @@
+{
+  "distribution": "official npm n8n@2.47.5",
+  "registry": "https://registry.npmjs.org/n8n/-/n8n-2.47.5.tgz",
+  "npm_integrity": "sha512-Yyo6b32OWXrnuwAY+4MULCwD38j1U7CA66CktdY3mMrfQvnfJiXMFhHibe3h3lE2e3AfkYeQIBrMf2MY1wFo0g==",
+  "required_node": ">=24.0.0",
+  "observed_node": "v24.22.1",
+  "observed_npm": "11.9.0",
+  "install_command": "npm install --prefix .local/n8n-runtime --no-audit --no-fund --save-exact n8n@2.47.5",
+  "dependency_audit_executed": false,
+  "dependency_omissions_or_bypass_flags": false,
+  "attempts": [
+    {
+      "attempt": 1,
+      "exit_code": -9,
+      "elapsed_seconds": 165,
+      "outcome": "SIGKILL; cause unknown; no exposed cgroup memory counters",
+      "log": "n8n-qualification.install-first.log"
+    },
+    {
+      "attempt": 2,
+      "exit_code": 130,
+      "last_observed_elapsed_seconds": 15,
+      "outcome": "interrupted to coordinate with concurrent browser and Maven qualification",
+      "log": "n8n-qualification.install-interrupted.log"
+    },
+    {
+      "attempt": 3,
+      "captured_at": "2026-11-14T12:12:22.599020+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 15,
+      "maximum_child_rss_kib": 370712,
+      "node_heap_limit_mib": 768,
+      "native_make_jobs": 1,
+      "npm_maxsockets": 4,
+      "outcome": "normal npm install completed",
+      "log": "n8n-qualification.install-final.log"
+    }
+  ],
+  "local_lock_sha256": "e133802472c0698e1fad6c5be4f2d42b4258fd26a94aa03a432b77d144fda947",
+  "installed_package_version": "2.47.5"
+}

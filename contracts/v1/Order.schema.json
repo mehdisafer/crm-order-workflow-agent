@@ -1,0 +1,88 @@
+{
+  "$id": "urn:p06:v1:Order",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "crm_url": {
+      "maxLength": 500,
+      "title": "Crm Url",
+      "type": "string"
+    },
+    "customer_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "last_effect_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Effect Key"
+    },
+    "order_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Order Id",
+      "type": "string"
+    },
+    "quantity": {
+      "exclusiveMinimum": 0,
+      "maximum": 100000,
+      "title": "Quantity",
+      "type": "integer"
+    },
+    "reference": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Reference",
+      "type": "string"
+    },
+    "requested_date": {
+      "format": "date",
+      "title": "Requested Date",
+      "type": "string"
+    },
+    "revision": {
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "sku": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Sku",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "order_id",
+    "tenant_id",
+    "customer_id",
+    "reference",
+    "sku",
+    "quantity",
+    "requested_date",
+    "revision",
+    "crm_url"
+  ],
+  "title": "Order",
+  "type": "object"
+}

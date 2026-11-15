@@ -1,0 +1,685 @@
+{
+  "$defs": {
+    "ApprovalRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "approved_at": {
+          "format": "date-time",
+          "title": "Approved At",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "reject"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "plan_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Plan Hash",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "plan_hash",
+        "decision",
+        "actor_id",
+        "tenant_id",
+        "approved_at"
+      ],
+      "title": "ApprovalRecord",
+      "type": "object"
+    },
+    "Availability": {
+      "additionalProperties": false,
+      "properties": {
+        "available": {
+          "minimum": 0,
+          "title": "Available",
+          "type": "integer"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "sku": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Sku",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id",
+        "sku",
+        "available",
+        "revision"
+      ],
+      "title": "Availability",
+      "type": "object"
+    },
+    "CaseEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "event_type": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Event Type",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "case_id",
+        "event_type",
+        "payload",
+        "created_at"
+      ],
+      "title": "CaseEvent",
+      "type": "object"
+    },
+    "Customer": {
+      "additionalProperties": false,
+      "properties": {
+        "customer_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 200,
+          "title": "Name",
+          "type": "string"
+        },
+        "reference": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Reference",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "tenant_id",
+        "reference",
+        "name"
+      ],
+      "title": "Customer",
+      "type": "object"
+    },
+    "EffectEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "After"
+        },
+        "attempts": {
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Before"
+        },
+        "case_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "effect_key": {
+          "maxLength": 150,
+          "minLength": 1,
+          "title": "Effect Key",
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "change_delivery_date",
+            "compensate_delivery_date",
+            "reserve_stock"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "request": {
+          "additionalProperties": true,
+          "title": "Request",
+          "type": "object"
+        },
+        "request_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Request Hash",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "PREPARED",
+            "UNKNOWN",
+            "APPLIED",
+            "COMPENSATED",
+            "REJECTED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "system": {
+          "enum": [
+            "crm",
+            "erp"
+          ],
+          "title": "System",
+          "type": "string"
+        }
+      },
+      "required": [
+        "effect_key",
+        "case_id",
+        "system",
+        "operation",
+        "status",
+        "request_hash",
+        "request",
+        "attempts"
+      ],
+      "title": "EffectEvidence",
+      "type": "object"
+    },
+    "Order": {
+      "additionalProperties": false,
+      "properties": {
+        "crm_url": {
+          "maxLength": 500,
+          "title": "Crm Url",
+          "type": "string"
+        },
+        "customer_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "last_effect_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Effect Key"
+        },
+        "order_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Order Id",
+          "type": "string"
+        },
+        "quantity": {
+          "exclusiveMinimum": 0,
+          "maximum": 100000,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "reference": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Reference",
+          "type": "string"
+        },
+        "requested_date": {
+          "format": "date",
+          "title": "Requested Date",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "sku": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Sku",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "order_id",
+        "tenant_id",
+        "customer_id",
+        "reference",
+        "sku",
+        "quantity",
+        "requested_date",
+        "revision",
+        "crm_url"
+      ],
+      "title": "Order",
+      "type": "object"
+    },
+    "OrderRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "customer_reference": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Customer Reference"
+        },
+        "message": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Message",
+          "type": "string"
+        },
+        "message_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Message Id",
+          "type": "string"
+        },
+        "order_reference": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Order Reference"
+        },
+        "requested_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requested Date"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id"
+      ],
+      "title": "OrderRequest",
+      "type": "object"
+    },
+    "StoredPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "availability": {
+          "$ref": "#/$defs/Availability"
+        },
+        "case_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "compensation_allowed": {
+          "default": true,
+          "title": "Compensation Allowed",
+          "type": "boolean"
+        },
+        "customer": {
+          "$ref": "#/$defs/Customer"
+        },
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "fields": {
+          "items": {
+            "const": "requested_date",
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Hash",
+          "type": "string"
+        },
+        "operation": {
+          "const": "change_delivery_date",
+          "default": "change_delivery_date",
+          "title": "Operation",
+          "type": "string"
+        },
+        "order": {
+          "$ref": "#/$defs/Order"
+        },
+        "policy_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "requested_date": {
+          "format": "date",
+          "title": "Requested Date",
+          "type": "string"
+        },
+        "requester_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Requester Id",
+          "type": "string"
+        },
+        "risk": {
+          "const": "controlled_order_change",
+          "default": "controlled_order_change",
+          "title": "Risk",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Tenant Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "tenant_id",
+        "requester_id",
+        "customer",
+        "order",
+        "availability",
+        "requested_date",
+        "expires_at",
+        "hash"
+      ],
+      "title": "StoredPlan",
+      "type": "object"
+    }
+  },
+  "$id": "urn:p06:v1:CaseResponse",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "api_calls": {
+      "minimum": 0,
+      "title": "Api Calls",
+      "type": "integer"
+    },
+    "approval": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ApprovalRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "compensation_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Compensation Reason"
+    },
+    "correlation_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "effects": {
+      "items": {
+        "$ref": "#/$defs/EffectEvidence"
+      },
+      "title": "Effects",
+      "type": "array"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/CaseEvent"
+      },
+      "title": "Events",
+      "type": "array"
+    },
+    "id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "plan": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StoredPlan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "reconciliation": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reconciliation"
+    },
+    "request": {
+      "$ref": "#/$defs/OrderRequest"
+    },
+    "requester_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Requester Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "RECEIVED",
+        "AWAITING_APPROVAL",
+        "APPROVED",
+        "REJECTED",
+        "NEEDS_CLARIFICATION",
+        "ESCALATED",
+        "APPROVAL_INVALIDATED",
+        "CRM_APPLIED",
+        "STOCK_RESERVED",
+        "COMPLETED",
+        "COMPENSATED",
+        "RECONCILIATION_REQUIRED",
+        "FAILED",
+        "EXPIRED"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "tenant_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Tenant Id",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "correlation_id",
+    "tenant_id",
+    "requester_id",
+    "request",
+    "state",
+    "reason",
+    "created_at",
+    "updated_at",
+    "api_calls",
+    "effects",
+    "events"
+  ],
+  "title": "CaseResponse",
+  "type": "object"
+}

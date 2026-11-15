@@ -1,0 +1,84 @@
+### erp
+INFO:     Started server process [97]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:59967 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [97]
+
+
+### api
+INFO:     Started server process [98]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:40981 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [98]
+
+
+### worker
+{"timestamp": "2026-11-14T12:21:47.834464+00:00", "level": "INFO", "logger": "__main__", "event": "activity_started", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "prepare", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:47.874224+00:00", "level": "INFO", "logger": "httpx", "event": "HTTP Request: GET http://127.0.0.1:59967/v1/availability/SKU-001?tenant_id=demo-industrial \"HTTP/1.1 200 OK\""}
+{"timestamp": "2026-11-14T12:21:47.879443+00:00", "level": "INFO", "logger": "__main__", "event": "activity_completed", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "prepare", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.336076+00:00", "level": "INFO", "logger": "__main__", "event": "activity_started", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "prepare", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.337062+00:00", "level": "INFO", "logger": "__main__", "event": "activity_completed", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "prepare", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.360010+00:00", "level": "INFO", "logger": "__main__", "event": "activity_started", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "execute_crm", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.375077+00:00", "level": "INFO", "logger": "httpx", "event": "HTTP Request: GET http://127.0.0.1:59967/v1/availability/SKU-001?tenant_id=demo-industrial \"HTTP/1.1 200 OK\""}
+{"timestamp": "2026-11-14T12:21:48.387280+00:00", "level": "INFO", "logger": "__main__", "event": "activity_completed", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "execute_crm", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.412141+00:00", "level": "INFO", "logger": "__main__", "event": "activity_started", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "reserve_stock", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.420589+00:00", "level": "INFO", "logger": "httpx", "event": "HTTP Request: GET http://127.0.0.1:59967/v1/reservations/96833239-6820-4458-ad82-d3b95d98769e%3Astock?tenant_id=demo-industrial \"HTTP/1.1 404 Not Found\""}
+{"timestamp": "2026-11-14T12:21:48.432017+00:00", "level": "INFO", "logger": "httpx", "event": "HTTP Request: POST http://127.0.0.1:59967/v1/reservations \"HTTP/1.1 200 OK\""}
+{"timestamp": "2026-11-14T12:21:48.437081+00:00", "level": "INFO", "logger": "__main__", "event": "activity_completed", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "reserve_stock", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.460214+00:00", "level": "INFO", "logger": "__main__", "event": "activity_started", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "verify", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.469267+00:00", "level": "INFO", "logger": "httpx", "event": "HTTP Request: GET http://127.0.0.1:59967/v1/reservations/96833239-6820-4458-ad82-d3b95d98769e%3Astock?tenant_id=demo-industrial \"HTTP/1.1 200 OK\""}
+{"timestamp": "2026-11-14T12:21:48.473617+00:00", "level": "INFO", "logger": "__main__", "event": "activity_completed", "case_id": "96833239-6820-4458-ad82-d3b95d98769e", "operation": "verify", "attempt": 1}
+{"timestamp": "2026-11-14T12:21:48.779278+00:00", "level": "INFO", "logger": "temporalio.worker._worker", "event": "Beginning worker shutdown, will wait 0:00:25 before cancelling activities"}
+
+
+### n8n
+Initializing n8n process
+n8n ready on 127.0.0.1, port 41361
+n8n Task Broker ready on 127.0.0.1, port 46149
+Failed to start Python task runner in internal mode. because its virtual environment is missing from this system. Launching a Python runner in internal mode is intended only for debugging and is not recommended for production. Users are encouraged to deploy in external mode. See: https://docs.n8n.io/hosting/configuration/task-runners/#setting-up-external-mode
+
+There are deprecations related to your n8n setup. Please take the recommended actions to update your configuration:
+ - N8N_UNVERIFIED_PACKAGES_ENABLED -> The default for this variable will change to `false` in a future version. Set it to `true` explicitly to keep installing unverified community packages.
+ - N8N_RUNNERS_MODE -> Internal task runner mode is deprecated and will be removed in a future version. For isolation and scaling, run the task runner launcher as a separate process, set this variable to `external` and share `N8N_RUNNERS_AUTH_TOKEN` with the launcher. See https://docs.n8n.io/deploy/host-n8n/configure-n8n/set-up-task-runners
+ - N8N_RUNNERS_TASK_TIMEOUT -> The default for this variable will be reduced from 300 (5 minutes) to 60 (1 minute) in a future version. Set it explicitly to keep your current task timeout.
+ - N8N_COMPRESSION_NODE_MAX_DECOMPRESSED_SIZE_BYTES -> The default for this variable will be reduced from 2 GiB to 256 MiB in a future version. Set it explicitly to keep your current limit.
+ - N8N_COMPRESSION_NODE_MAX_ZIP_ENTRIES -> The default for this variable will be reduced from 5000 to 1000 in a future version. Set it explicitly to keep your current limit.
+ - Running n8n outside a container is deprecated. Future versions will require running n8n via the official Docker image. See https://docs.n8n.io/deploy/host-n8n
+
+Automatic license renewal is disabled. The license will not renew automatically, and access to licensed features may be lost!
+[license SDK] Skipping renewal on init: renewOnInit is disabled in config
+[license SDK] Skipping renewal on init: autoRenewEnabled is disabled in config
+[license SDK] Skipping renewal on init: license cert is not initialized
+Registered runner "JS Task Runner" (XeOUnMvr4SWjrd-VHG_E0) 
+Seeded the system trusted source
+Generated new OAuth access-token signing key
+Instance registered
+Cluster aligned on version 2.47.5
+Discovered 4 cluster checks
+Recorded version change: (none) -> 2.47.5
+Generated new instance OAuth JWE key pair
+Sandbox: enabled=false provider=n8n-sandbox (from env)
+Version: 2.47.5
+Building workflow dependency index...
+Scheduler started
+
+Editor is now accessible via:
+http://127.0.0.1:41361
+Finished building workflow dependency index. Processed 0 draft workflows, 1 published workflows, 0 unpublished workflows.
+Received request for unknown webhook: The requested webhook "POST p06-order-intake" is not registered.
+404 The requested webhook "POST p06-order-intake" is not registered.
+[runner:js] Received SIGTERM signal, shutting down...
+Received SIGTERM. Shutting down...
+Scheduler stopped
+[runner:js] Task runner stopped
+
+Stopping n8n...
+

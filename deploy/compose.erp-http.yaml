@@ -1,0 +1,12 @@
+# Add --profile erp-http to execute the original synthetic ERP over HTTP.
+services:
+  api:
+    environment:
+      P06_ERP_URL: http://erp:8001
+    depends_on:
+      erp: {condition: service_started}
+  worker:
+    environment:
+      P06_ERP_URL: http://erp:8001
+    depends_on:
+      erp: {condition: service_started}

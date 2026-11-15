@@ -1,0 +1,27 @@
+{
+  "source_head": "06ace725336bfd62e38bfb8cbb8f4a173c7652e0",
+  "workdir": "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/mule-attempt-1",
+  "argv": [
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/apache-maven-3.10.0/bin/mvn",
+    "--batch-mode",
+    "--no-transfer-progress",
+    "--errors",
+    "--settings",
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/isolated-settings.xml",
+    "--global-settings",
+    "/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/isolated-settings.xml",
+    "-Dmaven.repo.local=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/m2-repository",
+    "-DP06_RUNTIME_CONFIG=/workspace/scratch/d1e42abd55b0/p06-vendor-build-20261114/mule-attempt-1/runtime.yaml.example",
+    "-Dstyle.color=never",
+    "clean",
+    "package"
+  ],
+  "deadline_seconds": 480,
+  "configured_executor_proxy_used": true,
+  "system_java_truststore_used": true,
+  "deployed": false,
+  "provider_acceptance": "OPEN",
+  "status": "BUILD_SUCCEEDED",
+  "exit_code": 0,
+  "duration_seconds": 205.797
+}

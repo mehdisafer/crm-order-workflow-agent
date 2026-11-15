@@ -1,0 +1,50 @@
+{
+  "status": "PACKAGE_INSPECTED",
+  "artifact": "p06-crm-system-api-0.1.0-mule-application.jar",
+  "sha256": "b637c34e288209b0f18454c07069b8257a18d3e7d3a24dc858eba66847341b91",
+  "bytes": 3456304,
+  "zip_entries": 71,
+  "descriptor": {
+    "configs": [
+      "crm-system-api.xml"
+    ],
+    "secureProperties": [
+      "gateway.authToken",
+      "gateway.tlsKeyStorePassword",
+      "gateway.tlsKeyPassword",
+      "salesforce.clientId",
+      "salesforce.clientSecret"
+    ],
+    "supportedJavaVersions": [],
+    "redeploymentEnabled": true,
+    "name": "io.github.mehdisafer:p06-crm-system-api:0.1.0",
+    "minMuleVersion": "4.9.24",
+    "requiredProduct": "MULE",
+    "classLoaderModelLoaderDescriptor": {
+      "id": "mule",
+      "attributes": {
+        "exportedPackages": [],
+        "exportedResources": [
+          "crm-system-api.xml",
+          "log4j2.xml"
+        ]
+      }
+    },
+    "bundleDescriptorLoader": {
+      "id": "mule",
+      "attributes": {}
+    },
+    "javaSpecificationVersions": [
+      "17"
+    ]
+  },
+  "connector_jars": [
+    "repository/org/mule/connectors/mule-http-connector/1.12.2/mule-http-connector-1.12.2-mule-plugin.jar",
+    "repository/org/mule/modules/mule-oauth-module/1.1.30/mule-oauth-module-1.1.30-mule-plugin.jar"
+  ],
+  "bundled_jars": 12,
+  "embedded_mule_xml": true,
+  "runtime_target_artifacts": [],
+  "deployment_executed": false,
+  "provider_acceptance": "OPEN"
+}

@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-11-14T12:26:36.840Z",
+  "secret_scan": {
+    "command": "uv run --locked python deploy/check_secrets.py",
+    "exit_code": 0,
+    "result": {
+      "worktree_files": 217,
+      "history_blobs": 166,
+      "findings": []
+    }
+  },
+  "links_and_digests": {
+    "exit_code": 0,
+    "output": "{\n  \"markdown_files\": 18,\n  \"missing_links\": []\n}\n{\"documented_post_capture_helper_change\": \"deploy/qualify_operator.py\", \"captured_sha256\": \"26dd28455e2b0206cfb55687c4b09fa09ed2b8908b331ddfa6337ed90e88bd66\", \"delivered_sha256\": \"4578bc364991eea99d607c8b1484f09aebbde5add48fbef8bd53d4c3630debd6\"}\nFinal UI, screenshot, n8n export and reviewed helper digests match their stated scope.\n"
+  },
+  "full_staged_diff_check": {
+    "command": "git diff --cached --check",
+    "exit_code": 2,
+    "output": "docs/evidence/mule-build-20261114/maven-dependency-tree-attempt-2.log:20: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-dependency-tree-attempt-2.log:25: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-dependency-tree.log:60: trailing whitespace.\n+[ERROR] \ndocs/evidence/mule-build-20261114/maven-dependency-tree.log:62: trailing whitespace.\n+[ERROR] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:425: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:479: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:483: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:485: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:487: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:489: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:491: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:493: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:499: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:518: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:520: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:545: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:547: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:565: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:567: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:570: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:572: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:575: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:577: trailing whitespace.\n+[INFO] \ndocs/evidence/mule-build-20261114/maven-package-attempt-1.log:602: trailing whitespace.\n+[INFO] \n"
+  },
+  "staged_check_preserving_original_logs": {
+    "command": "git diff --cached --check -- . [exclude exactly the three original Maven logs listed below]",
+    "excluded_paths": [
+      "docs/evidence/mule-build-20261114/maven-dependency-tree-attempt-2.log",
+      "docs/evidence/mule-build-20261114/maven-dependency-tree.log",
+      "docs/evidence/mule-build-20261114/maven-package-attempt-1.log"
+    ],
+    "exit_code": 0,
+    "output": "",
+    "note": "The unfiltered check reports only trailing spaces on original Maven [INFO]/[ERROR] lines. Those raw logs are preserved byte-for-byte. No source or documentation whitespace exception was introduced."
+  }
+}

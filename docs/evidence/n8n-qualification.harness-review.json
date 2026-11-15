@@ -1,0 +1,17 @@
+{
+  "qualification_harness_sha256": "3316db787a12816ebda4bec52f9e595d8c0bcc1b49410600c8125c4e2a98a9b8",
+  "post_run_change": "Terminate a running CLI process group on global cancellation, then propagate cancellation.",
+  "actual_n8n_scenario_reexecuted_after_this_change": false,
+  "final_harness_sha256": "a33e7c8141a1aef8a9014df0f0295324b7f77b03e820ffc38daf5b130fd0e862",
+  "cancellation_regression": {
+    "command": ".venv/bin/pytest -q integrations/n8n/test_qualify_local.py",
+    "result": "1 passed in 0.67s",
+    "assertions": [
+      "global cancellation propagates",
+      "CLI and its real child process both exit",
+      "blocked cancellation report records the unchanged versioned export"
+    ],
+    "scope": "dedicated sleeping CLI fixture; not n8n business-runtime evidence",
+    "initial_collection_error": "ModuleNotFoundError: integrations; corrected to sibling module import before the passing run"
+  }
+}

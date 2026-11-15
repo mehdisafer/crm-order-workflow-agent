@@ -1,0 +1,291 @@
+{
+  "automatic_seconds": {
+    "max": 7.949573170999884,
+    "p50": 6.397049270499792,
+    "p95": 7.548965215999942
+  },
+  "cases": [
+    {
+      "api_calls": 12,
+      "case_id": "70ad4fa4-2411-49d1-8715-c7efa4781821",
+      "effect_count": 2,
+      "seconds": 5.2483291679996,
+      "simulated_human_wait_seconds": 0.05004292599960536,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "0f9fd9eb-9fee-4eee-b957-13a554de7b9b",
+      "effect_count": 2,
+      "seconds": 2.92878712799984,
+      "simulated_human_wait_seconds": 0.050542361000225355,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "039cca52-9840-460d-be7d-3d0d83ccd340",
+      "effect_count": 2,
+      "seconds": 7.1270399690001796,
+      "simulated_human_wait_seconds": 0.05026927600010822,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 13,
+      "case_id": "b371393e-c229-4b95-a3db-0e6565280bb3",
+      "effect_count": 2,
+      "seconds": 8.00099357099998,
+      "simulated_human_wait_seconds": 0.05142040000009729,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "b068c865-fc14-4ab1-9c03-0ec8320489b7",
+      "effect_count": 2,
+      "seconds": 4.329595587999847,
+      "simulated_human_wait_seconds": 0.05067321699971217,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "1d075bfb-bb40-42fa-88b0-baf8cda976b8",
+      "effect_count": 2,
+      "seconds": 7.871416130999933,
+      "simulated_human_wait_seconds": 0.050795369999832474,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "ca035b55-12a4-469d-b90d-66f416254fb7",
+      "effect_count": 2,
+      "seconds": 6.115212164999775,
+      "simulated_human_wait_seconds": 0.05621866700039391,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "686aa339-840f-4455-bbd6-c56660008b98",
+      "effect_count": 2,
+      "seconds": 6.413210714999877,
+      "simulated_human_wait_seconds": 0.05128016500020749,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "c0aca0c2-17d1-442d-a982-7e9047eb7d6f",
+      "effect_count": 2,
+      "seconds": 6.7122290299998895,
+      "simulated_human_wait_seconds": 0.059100075000060315,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "ca783572-a484-4be6-b6f5-fd7f444fd8ea",
+      "effect_count": 2,
+      "seconds": 3.31074923999995,
+      "simulated_human_wait_seconds": 0.05032161400004043,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "7fbd42a1-a3a2-4deb-a04d-ed2abd8b51e1",
+      "effect_count": 2,
+      "seconds": 7.117405384999984,
+      "simulated_human_wait_seconds": 0.06074944400006643,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "87f6dabc-018d-40ca-913f-c7acb89545d9",
+      "effect_count": 2,
+      "seconds": 5.6864053439999225,
+      "simulated_human_wait_seconds": 0.050534523999886005,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "2d246c44-8644-4b68-9c1c-50d6c606c544",
+      "effect_count": 2,
+      "seconds": 7.599803000000065,
+      "simulated_human_wait_seconds": 0.050837784000123065,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "df615b4a-1cec-4fdd-98da-e72af5a8bb4f",
+      "effect_count": 2,
+      "seconds": 6.898726762000024,
+      "simulated_human_wait_seconds": 0.06355375100019955,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "95206685-d054-48b3-9df8-3e9d37364047",
+      "effect_count": 2,
+      "seconds": 5.397802241000136,
+      "simulated_human_wait_seconds": 0.053349838000031014,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "4bd3a47f-a875-4b27-835d-862de8f59617",
+      "effect_count": 2,
+      "seconds": 5.402516231999925,
+      "simulated_human_wait_seconds": 0.05571077500007959,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "d0b492b2-b719-47b6-aac9-cb34ee3a67f0",
+      "effect_count": 2,
+      "seconds": 6.007780098000239,
+      "simulated_human_wait_seconds": 0.050218038000366505,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "1c51a94b-75b8-410b-b352-050da91f9925",
+      "effect_count": 2,
+      "seconds": 6.598772273999657,
+      "simulated_human_wait_seconds": 0.05080951699983416,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "48906406-685f-4f71-bcfa-c018b8302d7d",
+      "effect_count": 2,
+      "seconds": 5.668495507999978,
+      "simulated_human_wait_seconds": 0.0508174190003956,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "9d9e1d77-d46c-4040-8480-5d94f43d8098",
+      "effect_count": 2,
+      "seconds": 6.482690737000212,
+      "simulated_human_wait_seconds": 0.05052274600029705,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "425d4161-7582-42ef-a055-1457ecb8e953",
+      "effect_count": 2,
+      "seconds": 7.1917560039996715,
+      "simulated_human_wait_seconds": 0.050363131999802135,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "7419684d-b4fa-4a03-add8-84040b3ec189",
+      "effect_count": 2,
+      "seconds": 6.378042553999876,
+      "simulated_human_wait_seconds": 0.05147509700009323,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "3c01796e-7516-4b34-b7b4-5f114103fca3",
+      "effect_count": 2,
+      "seconds": 6.774895923000258,
+      "simulated_human_wait_seconds": 0.05100399399998423,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    },
+    {
+      "api_calls": 12,
+      "case_id": "13773560-1cc5-42f3-88fa-a06fc16acaa3",
+      "effect_count": 2,
+      "seconds": 7.2749849060001,
+      "simulated_human_wait_seconds": 0.050847278000219376,
+      "state": "COMPLETED",
+      "transient_failures": 0,
+      "write_attempts": 2
+    }
+  ],
+  "completed_cases_per_second": 2.9892093406356626,
+  "cost": {
+    "currency_cost": null,
+    "external_llm_tokens": 0,
+    "note": "Local compute cost is not metered; no currency amount is inferred",
+    "provider_requests": 0
+  },
+  "criteria_declared_before_run": {
+    "automatic_p95_seconds_max": 60,
+    "case_deadline_seconds": 120,
+    "completed_fraction": 1.0,
+    "duplicate_effects": 0,
+    "provider_requests": 0
+  },
+  "duplicate_effects": 0,
+  "executed_at": "2026-11-13T23:07:40.527686+00:00",
+  "limits": "SQLite in one isolated host; separate worker processes; synthetic systems; not vendor scale evidence",
+  "parameters": {
+    "approval_delay": 0.05,
+    "cases": 24,
+    "concurrency": 4,
+    "output": "docs/evidence/local-load.json",
+    "workers": 2
+  },
+  "profile": "isolated-synthetic-real-temporal",
+  "resources": {
+    "python_cpu_seconds": 0.740958,
+    "python_peak_rss_kib": 86728,
+    "temporal_process_resources": "not measured"
+  },
+  "saturation": {
+    "active": 0,
+    "peak_active": 24,
+    "peak_outbox_pending": 24
+  },
+  "simulated_human_wait_seconds": 1.261457408001661,
+  "states": {
+    "COMPLETED": 24
+  },
+  "thresholds_met": true,
+  "transient_failures": 0,
+  "wall_seconds": 8.028878965999866
+}

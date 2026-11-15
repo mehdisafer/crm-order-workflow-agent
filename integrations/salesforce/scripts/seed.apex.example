@@ -1,0 +1,15 @@
+// Review and copy outside Git before running in the explicitly authorized demo org.
+// Replace the exact integration username and retain only synthetic records.
+// Run as an administrator; the executor itself cannot create arbitrary CRM orders.
+User executor = [SELECT Id, P06_Tenant__c FROM User
+    WHERE Username = 'REPLACE_WITH_AUTHORIZED_EXECUTOR_USERNAME' LIMIT 1];
+System.assertEquals('demo-industrial', executor.P06_Tenant__c);
+System.assertEquals(0, [SELECT COUNT() FROM Account
+    WHERE P06_Tenant__c = 'demo-industrial' AND P06_Reference__c = 'CUST-001'],
+    'Seed already exists. Inspect it rather than inserting duplicate demo data.');
+Account customer = new Account(Name='Synthetic Alloy Works', P06_Reference__c='CUST-001',
+    P06_Tenant__c='demo-industrial', OwnerId=executor.Id);
+insert customer;
+insert new P06_Order__c(Tenant__c='demo-industrial', Customer__c=customer.Id,
+    Reference__c='ORD-1001', SKU__c='SKU-001', Quantity__c=10,
+    Requested_Date__c=Date.today().addDays(7), OwnerId=executor.Id);

@@ -1,0 +1,68 @@
+{
+  "archive_sha256": "b637c34e288209b0f18454c07069b8257a18d3e7d3a24dc858eba66847341b91",
+  "bundled_jars": [
+    {
+      "path": "repository/com/sun/activation/jakarta.activation/1.2.2/jakarta.activation-1.2.2.jar",
+      "bytes": 68453,
+      "sha256": "02156773e4ae9d048d14a56ad35d644bee9f1052a791d072df3ded3c656e6e1a"
+    },
+    {
+      "path": "repository/commons-codec/commons-codec/1.22.0/commons-codec-1.22.0.jar",
+      "bytes": 420480,
+      "sha256": "d164fe79f262c32d9b18a0b5b2d317d1c27653d5e98fd2b998c24bf901c72ce4"
+    },
+    {
+      "path": "repository/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar",
+      "bytes": 563971,
+      "sha256": "df90bba0fe3cb586b7f164e78fe8f8f4da3f2dd5c27fa645f888100ccc25dd72"
+    },
+    {
+      "path": "repository/commons-io/commons-io/2.22.0/commons-io-2.22.0.jar",
+      "bytes": 609182,
+      "sha256": "2b9a7b1f726fb86216dbd2c8321eabe0221dbd5b1be81c18e1cb53811b104758"
+    },
+    {
+      "path": "repository/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar",
+      "bytes": 702952,
+      "sha256": "4eeeae8d20c078abb64b015ec158add383ac581571cddc45c68f0c9ae0230720"
+    },
+    {
+      "path": "repository/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar",
+      "bytes": 713862,
+      "sha256": "69e5c9fa35da7a51a5fd2099dfe56a2d8d32cf233e2f6d770e796146440263f4"
+    },
+    {
+      "path": "repository/org/mule/connectors/mule-http-connector/1.12.2/mule-http-connector-1.12.2-mule-plugin.jar",
+      "bytes": 381348,
+      "sha256": "123e11dca10b190320914b63422d3489a57da08b4c4311b09fdd37a47f6ccc54"
+    },
+    {
+      "path": "repository/org/mule/connectors/mule-sockets-connector/1.2.9/mule-sockets-connector-1.2.9-mule-plugin.jar",
+      "bytes": 91381,
+      "sha256": "02f3fe0bb9ec420e0cfb61d012ee91e33e1a0e896a2099c275f5ccce2dce0be4"
+    },
+    {
+      "path": "repository/org/mule/modules/mule-module-cors-kernel/1.1.2/mule-module-cors-kernel-1.1.2.jar",
+      "bytes": 41578,
+      "sha256": "407e3ca28021600aa3d710e1e0fd37911bf69ea65a66930c991f457259ce7089"
+    },
+    {
+      "path": "repository/org/mule/modules/mule-oauth-module/1.1.30/mule-oauth-module-1.1.30-mule-plugin.jar",
+      "bytes": 42455,
+      "sha256": "22064486408587911cda64d43573873beee937ca0a5288e34fc9b3429f513bb4"
+    },
+    {
+      "path": "repository/org/mule/sdk/mule-sdk-api/1.0.0/mule-sdk-api-1.0.0.jar",
+      "bytes": 229038,
+      "sha256": "fe145fbeb1fc2b661d87323154342ddc188316921dfcf448b013de85a8089de7"
+    },
+    {
+      "path": "repository/org/mule/sdk/mule-sdk-compatibility-api/1.0.0/mule-sdk-compatibility-api-1.0.0.jar",
+      "bytes": 3851,
+      "sha256": "ffdd349e6f457f538eb737f988b069960a15156f7050588e7678900d69b2d902"
+    }
+  ],
+  "ast_bytes": 348947,
+  "provider_acceptance": "OPEN",
+  "scope": "Archive inventory only; not a vulnerability audit or license entitlement assessment"
+}

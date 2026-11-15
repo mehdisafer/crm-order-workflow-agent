@@ -1,0 +1,101 @@
+{
+  "$id": "urn:p06:v1:EffectEvidence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "after": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "After"
+    },
+    "attempts": {
+      "minimum": 0,
+      "title": "Attempts",
+      "type": "integer"
+    },
+    "before": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Before"
+    },
+    "case_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "effect_key": {
+      "maxLength": 150,
+      "minLength": 1,
+      "title": "Effect Key",
+      "type": "string"
+    },
+    "operation": {
+      "enum": [
+        "change_delivery_date",
+        "compensate_delivery_date",
+        "reserve_stock"
+      ],
+      "title": "Operation",
+      "type": "string"
+    },
+    "request": {
+      "additionalProperties": true,
+      "title": "Request",
+      "type": "object"
+    },
+    "request_hash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Request Hash",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PREPARED",
+        "UNKNOWN",
+        "APPLIED",
+        "COMPENSATED",
+        "REJECTED"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "system": {
+      "enum": [
+        "crm",
+        "erp"
+      ],
+      "title": "System",
+      "type": "string"
+    }
+  },
+  "required": [
+    "effect_key",
+    "case_id",
+    "system",
+    "operation",
+    "status",
+    "request_hash",
+    "request",
+    "attempts"
+  ],
+  "title": "EffectEvidence",
+  "type": "object"
+}

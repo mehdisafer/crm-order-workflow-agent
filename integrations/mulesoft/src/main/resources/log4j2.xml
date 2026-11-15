@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR">
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{ISO8601} %-5p %m%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <!-- Never enable wire logging: OAuth headers and CRM payloads must not enter evidence. -->
+    <Logger name="org.mule.service.http.impl.service.HttpMessageLogger" level="OFF"/>
+    <Logger name="org.mule.extension.http" level="WARN"/>
+    <Logger name="org.mule.extension.oauth" level="WARN"/>
+    <Root level="INFO"><AppenderRef ref="console"/></Root>
+  </Loggers>
+</Configuration>

@@ -1,0 +1,167 @@
+{
+  "record_version": 1,
+  "recorded_at": "2026-11-14T13:56:57.281712+00:00",
+  "repository": "mehdisafer/crm-order-workflow-agent",
+  "scope": "Publication preparation after local qualification. Source digests identify the exact subsequent changes; original runtime evidence is not rebound to this revision. This record is not a new business-runtime execution.",
+  "publication": {
+    "authorized": true,
+    "authorized_on": "2026-11-14",
+    "desired_visibility": "public",
+    "observed_visibility": "private",
+    "interface_operations_owner": "maintainer",
+    "automated_account_sign_in_required": false,
+    "about_settings_applied": false,
+    "branch_protection_applied": false,
+    "licence": "pending_explicit_maintainer_selection",
+    "anonymous_access_verified": false,
+    "release_or_version_tag_issued": false
+  },
+  "default_branch": {
+    "name": "main",
+    "overview_pr": 3,
+    "overview_pr_merged": true,
+    "observed_merge_commit": "53314f0fc1160992c04aba4f4be98c825ba976ef",
+    "tree": "8301e5f7905aded23040a6e630efda37563dff2b",
+    "changed_paths_from_prior_main": [
+      "README.md"
+    ],
+    "application_pr": 2,
+    "application_pr_merged": false,
+    "application_ci_gate": "open"
+  },
+  "source_binding": {
+    "continuation_manifest": "docs/evidence/continuation-manifest.json",
+    "qualified_source_commit": "ea0f914dcf3a6cbf9a7d2c941a2369644bbad932",
+    "feature_parent_commit": "c5b1fa9286775f47adc2dbfe94f710e4eb26afd9",
+    "main_parent_to_integrate": "53314f0fc1160992c04aba4f4be98c825ba976ef",
+    "baseline_source_entries": 127,
+    "unchanged_source_entries": 123,
+    "changed_source_entries": [
+      {
+        "path": ".github/repository-settings.json",
+        "continuation_sha256": "59691bce1c5ddf34c0769db65e1305c84b6582eca7752461a8487a306baf5980",
+        "publication_sha256": "d4b5b011d2f6d51b80c0d122bd1fef58f8d460d563ab80c221e07b2e593e8918",
+        "change": "Publication authorization and declarative settings; no GitHub setting applied by this file."
+      },
+      {
+        "path": "deploy/capture_operator.mjs",
+        "continuation_sha256": "b3edf585c6e9c1b2d62549564b68279e6dcb8b030a8d91261aa29467610b66cd",
+        "publication_sha256": "ebde23a72ab15802176975ea860827304527ea38cecbd1ff4deb5e5716daf599",
+        "change": "Default report directory moves to evidence-local; explicit --output and browser scenario are unchanged."
+      },
+      {
+        "path": "integrations/n8n/qualify_local.py",
+        "continuation_sha256": "a33e7c8141a1aef8a9014df0f0295324b7f77b03e820ffc38daf5b130fd0e862",
+        "publication_sha256": "4775b54f7a7b4930804f3323b93a5385853fe801459a0f445e9bb7a92033b3a9",
+        "change": "Default --output moves to evidence-local; workflow and business scenario are unchanged."
+      },
+      {
+        "path": "scripts/postgres_profile.py",
+        "continuation_sha256": "981e00dccbf9d1cb98e88cd639699f4a2318f573b5203fa79bd1168bdcde11d1",
+        "publication_sha256": "2d625790224d1784627cc0249bf3d31d62e4ef963249290ba446608df8391b8a",
+        "change": "Add --output with an evidence-local default; defer the optional pgserver import until after argument parsing so --help works without optional binaries."
+      }
+    ],
+    "documentation": "Publication instructions and evidence indices updated separately; no original runtime reports are edited."
+  },
+  "preservation": {
+    "baseline_evidence_entries": 76,
+    "non_markdown_evidence_entries_unchanged": 74,
+    "updated_markdown_entries": [
+      {
+        "path": "docs/evidence/firefox-ui/README.md",
+        "reason": "Update source/capture provenance after the default-output change; original reports and images are unchanged."
+      }
+    ],
+    "served_ui_files_unchanged": [
+      "src/crm_workflow/static/index.html",
+      "src/crm_workflow/static/styles.css",
+      "src/crm_workflow/static/app.js"
+    ],
+    "final_pngs_unchanged": 6,
+    "mule_build_inputs_unchanged": 6,
+    "mule_original_outputs_unchanged": 12,
+    "n8n_export_sha256": "44cb703071296ee4f20e16fcbd62178e5345baa4430dc4860cffd7d0e4534455",
+    "n8n_export_unchanged": true
+  },
+  "checks": [
+    {
+      "name": "python_lint",
+      "command": ".venv/bin/ruff check integrations/n8n/qualify_local.py scripts/postgres_profile.py",
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "name": "python_format",
+      "command": ".venv/bin/ruff format --check integrations/n8n/qualify_local.py scripts/postgres_profile.py",
+      "exit_code": 0,
+      "output": "2 files already formatted\n"
+    },
+    {
+      "name": "browser_capture_syntax",
+      "command": "node --check deploy/capture_operator.mjs",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "name": "postgres_help",
+      "command": ".venv/bin/python scripts/postgres_profile.py --help",
+      "exit_code": 0,
+      "output": "usage: postgres_profile.py [-h] [--output OUTPUT]\n\nExercise business invariants and logical restore on an isolated loopback\nPostgreSQL. Run with: uv run --locked --with pgserver==0.1.4 python\nscripts/postgres_profile.py The optional helper supplies test binaries only;\nit is not the deployment image.\n\noptions:\n  -h, --help       show this help message and exit\n  --output OUTPUT  Write this execution's JSON report (default: evidence-\n                   local/postgres-restore.json).\n"
+    },
+    {
+      "name": "n8n_help",
+      "command": ".venv/bin/python integrations/n8n/qualify_local.py --help",
+      "exit_code": 0,
+      "output": "usage: qualify_local.py [-h] [--n8n-binary N8N_BINARY] [--output OUTPUT]\n                        [--timeout TIMEOUT]\n\nQualify the real n8n trigger against isolated, synthetic business services.\nInstall the official n8n version separately. This script does not install\nsoftware, create an external account, accept a licence, or modify the\nversioned workflow.\n\noptions:\n  -h, --help            show this help message and exit\n  --n8n-binary N8N_BINARY\n  --output OUTPUT\n  --timeout TIMEOUT\n"
+    },
+    {
+      "name": "source_diff_whitespace",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "check_limits": {
+    "runtime_scenarios_reexecuted_for_output_changes": false,
+    "full_test_suite_reexecuted_for_output_changes": false,
+    "retained_full_suite_result": "91 passed, zero failures/errors/skips in 27.651s; see continuation-tests.xml and its source manifest.",
+    "prior_command_invocation_error": "Ruff was accidentally invoked with the .mjs file as a Python input. No source changed; the corrected commands use Ruff only for Python and node --check for JavaScript.",
+    "ci_output_path_inspection": "The container CI already passes --output evidence-local/browser explicitly and uploads evidence-local/. The output-default change does not alter that path."
+  },
+  "open_gates": [
+    "Public visibility setting and anonymous content verification",
+    "GitHub runner-start diagnosis and executed required CI jobs",
+    "Application PR #2 merge at the reviewed head after CI",
+    "Repository licence selection and supported protection settings",
+    "Salesforce/MuleSoft runtime and original actual-provider acceptance",
+    "Reference container/Chromium and chosen operational-platform recovery"
+  ],
+  "full_p06_acceptance": "OPEN",
+  "publication_review": {
+    "secret_scan": {
+      "command": ".venv/bin/python deploy/check_secrets.py",
+      "exit_code": 0,
+      "result": {
+        "worktree_files": 222,
+        "history_blobs": 249,
+        "findings": []
+      },
+      "scope": "Tracked/new nonignored worktree content and every reachable Git blob; a focused pattern scan, not a certification. PNG credential/OCR review is retained separately."
+    },
+    "local_markdown_links": {
+      "exit_code": 0,
+      "result": {
+        "markdown_files": 19,
+        "local_link_targets_checked": 85,
+        "missing_links": []
+      }
+    },
+    "main_readme_scope": {
+      "changed_paths": [
+        "README.md"
+      ],
+      "application_source_merged": false
+    }
+  }
+}

@@ -1,0 +1,693 @@
+{
+  "manifest_version": 1,
+  "recorded_at": "2026-11-13T23:21:13.825169+00:00",
+  "repository": "mehdisafer/crm-order-workflow-agent",
+  "source_commit": "7777b75497d840a97e53d6693d1ab60177cde0d5",
+  "source_tree": "032ee836d70b2e5b9f728ce57c17871378144fad",
+  "source_url": "https://github.com/mehdisafer/crm-order-workflow-agent/commit/7777b75497d840a97e53d6693d1ab60177cde0d5",
+  "pull_request": "https://github.com/mehdisafer/crm-order-workflow-agent/pull/2",
+  "runtime": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "uv": "uv 0.13.6 (x86_64-unknown-linux-gnu)",
+    "packages": {
+      "fastapi": "0.162.7",
+      "pydantic": "2.14.3",
+      "SQLAlchemy": "2.1.8",
+      "temporalio": "1.36.0",
+      "httpx": "0.28.1",
+      "psycopg": "3.3.9",
+      "uvicorn": "0.54.0",
+      "pytest": "9.2.0",
+      "ruff": "0.17.5",
+      "pip-audit": "2.10.1",
+      "pip-licenses": "5.5.5"
+    }
+  },
+  "execution_profiles": [
+    {
+      "name": "full_local_suite",
+      "command": "RUN_TEMPORAL_TESTS=1 uv run --locked pytest -q --junitxml=docs/evidence/tests.xml 2>&1 | tee docs/evidence/tests.log",
+      "result": {
+        "tests": 91,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "wall_seconds_observed": 43.51,
+      "status": "executed_passed",
+      "provider_validated": false
+    },
+    {
+      "name": "synthetic_temporal_smoke",
+      "command": "uv run --locked python -m crm_workflow.cli smoke --output docs/evidence/local-smoke.json",
+      "status": "executed_passed",
+      "provider_validated": false
+    },
+    {
+      "name": "synthetic_http_integration",
+      "command": "uv run --locked python deploy/reference_smoke.py",
+      "status": "executed_passed",
+      "processes": "Actual loopback API, ERP HTTP, Temporal and worker",
+      "provider_validated": false
+    },
+    {
+      "name": "bounded_local_load",
+      "command": "uv run --locked python scripts/load_profile.py --cases 24 --workers 2 --concurrency 4 --output docs/evidence/local-load.json",
+      "status": "executed_passed",
+      "provider_validated": false
+    },
+    {
+      "name": "postgresql_restore",
+      "command": "uv run --locked --with pgserver==0.1.4 python scripts/postgres_profile.py",
+      "status": "executed_passed",
+      "postgres_version": "16.2",
+      "provider_validated": false
+    },
+    {
+      "name": "vendor_source_invariants",
+      "command": "uv run --locked python integrations/vendor_validation/check_sources.py",
+      "status": "source_checks_passed",
+      "compilation": "not_executed",
+      "provider_validated": false
+    },
+    {
+      "name": "code_style",
+      "command": "uv run --locked ruff check . && uv run --locked ruff format --check .",
+      "status": "executed_passed"
+    },
+    {
+      "name": "secret_scan",
+      "command": "uv run --locked python deploy/check_secrets.py",
+      "status": "executed_no_findings",
+      "limitation": "Targeted patterns, not a certification; rerun after any history change"
+    },
+    {
+      "name": "runtime_dependencies",
+      "status": "executed_no_known_advisories",
+      "runtime_packages_audited": 26,
+      "reproduction_command": "uv export --locked --no-dev --no-emit-project --format requirements.txt --output-file /tmp/p06-runtime-requirements.txt && uv run --locked pip-audit --require-hashes --disable-pip -r /tmp/p06-runtime-requirements.txt --format=json --output=docs/evidence/dependency-audit.json"
+    },
+    {
+      "name": "licence_metadata",
+      "command": "uv run --locked python scripts/check_licenses.py docs/evidence/components.json --output docs/evidence/licence-check.json",
+      "status": "third_party_metadata_present",
+      "repository_licence": "pending_explicit_maintainer_decision"
+    },
+    {
+      "name": "wheel_static_assets",
+      "command": "uv build --wheel",
+      "status": "executed_present",
+      "verification": "Built wheel ZIP inspected for index.html, app.js, styles.css and favicon.svg"
+    },
+    {
+      "name": "github_ci",
+      "status": "failed_before_runner_execution",
+      "evidence": "docs/evidence/ci-observation.json"
+    },
+    {
+      "name": "operator_browser",
+      "status": "blocked_by_local_os; no_CI_runner",
+      "screenshots_observed": 0
+    },
+    {
+      "name": "salesforce_mulesoft_acceptance",
+      "status": "blocked_missing_authorized_environment",
+      "provider_validated": false
+    },
+    {
+      "name": "n8n_runtime_import",
+      "status": "not_executed"
+    },
+    {
+      "name": "optional_ollama_inference",
+      "status": "not_executed"
+    }
+  ],
+  "input_provenance": "Original synthetic industrial fixtures; no imported client/P01/personal data",
+  "scope": "Code/configuration/contract/test/CI/deployment digests match the source commit. Documentation and evidence are consolidated separately; content agreement is not certification.",
+  "source_files": {
+    ".dockerignore": {
+      "sha256": "b5c59bc6116afbad235211294481de72ebe0dac3348228b71ec44fc49bbb8372",
+      "bytes": 175
+    },
+    ".github/workflows/ci.yml": {
+      "sha256": "86417698235e8a7fa3d58b58e2bdef4c7f118a1847c404ea6e6d612151d6b10d",
+      "bytes": 5786
+    },
+    "Dockerfile": {
+      "sha256": "90cda682ed3c3179770e87f88968134c6e72ba4cf1b72197a90aa7a323cf3e13",
+      "bytes": 724
+    },
+    "config/demo.yaml": {
+      "sha256": "646d3e1a8157f62ee00dcc51f1b8984ea42ad11b7302c4b8e4c6409d8fc80095",
+      "bytes": 321
+    },
+    "config/salesforce.yaml": {
+      "sha256": "bf22f681a0abb33b740168987f8dc5449ba406963a660b12c96fcbaa66d656f5",
+      "bytes": 426
+    },
+    "contracts/v1/ActionPlan.schema.json": {
+      "sha256": "868eb825530340eeb85b62a7e052203b771c7152f076ddf4f9f8b6fa1451b6c7",
+      "bytes": 5969
+    },
+    "contracts/v1/ApprovalRequest.schema.json": {
+      "sha256": "cae58e527d93b9ca770195ec6c0d7e71b8bf0e0e85b6ca2a0504f078010bb878",
+      "bytes": 509
+    },
+    "contracts/v1/Availability.schema.json": {
+      "sha256": "07e92a2dd9f91b3d89abd079b2b3fb982f5851de8a78504a2a68531cc5a10997",
+      "bytes": 789
+    },
+    "contracts/v1/CaseEvent.schema.json": {
+      "sha256": "5af7bda4058d4679a4a461e7fb40f5c52c70117ec3103a036c718a67553c3151",
+      "bytes": 940
+    },
+    "contracts/v1/CaseResponse.schema.json": {
+      "sha256": "c6e11cd7adccd0b04b49b358e477633e444a8856e49bb59ce7fa8ed33c24d9fd",
+      "bytes": 15655
+    },
+    "contracts/v1/Customer.schema.json": {
+      "sha256": "bbc97bbbe4e60dcef6895f87537a47efc3f0adc29aed586ab7c0522542f0dbb9",
+      "bytes": 860
+    },
+    "contracts/v1/EffectEvidence.schema.json": {
+      "sha256": "0be96b4405847ccbcff9de52ee86ba487010c6dea47160b3c53f821ee99a9884",
+      "bytes": 1932
+    },
+    "contracts/v1/Order.schema.json": {
+      "sha256": "212a507f40342781baca39d90125b0972bdab75df40d8becf3dcfff5a5527096",
+      "bytes": 1798
+    },
+    "contracts/v1/OrderRequest.schema.json": {
+      "sha256": "01a2d34c1ec3d1f4e3e28cd2a82a8d6afd8bf89ab5ce811ee745dcf8e2e26152",
+      "bytes": 1503
+    },
+    "contracts/v1/ReservationRequest.schema.json": {
+      "sha256": "baad236ae6a6c7d8751b13c082d49f917735d132d05709f2c933cb05489aab8b",
+      "bytes": 1499
+    },
+    "contracts/v1/openapi.json": {
+      "sha256": "14b325ee27d36bff8dc1c74303f62e17833e2f7687cbf0a10756e8452c6ad60d",
+      "bytes": 10852
+    },
+    "deploy/alerts.yml": {
+      "sha256": "189cf13d479f5f0b58575f32c4983c48b04788a4b0159f711750b3af599e04f8",
+      "bytes": 1176
+    },
+    "deploy/browser/package-lock.json": {
+      "sha256": "47f910d1b0382ad1ed6ff815fcd1d7d2af244bfc67c1db51720100f1aa2bab0c",
+      "bytes": 1761
+    },
+    "deploy/browser/package.json": {
+      "sha256": "6a2e9fcb942e2f2a42fd3ce584a381f82f8826459bcc85601e7673e1d805ac6a",
+      "bytes": 228
+    },
+    "deploy/capture_operator.mjs": {
+      "sha256": "df45e0f31e973a0d77bb3da8bee3c04b5541ac1bbea4e2f8e2c754f43d7f78ad",
+      "bytes": 5400
+    },
+    "deploy/check_secrets.py": {
+      "sha256": "64e317f42aeddeac27ad9f8d4f30cb5f72796b773eb85cc720c76bb424a534d8",
+      "bytes": 3186
+    },
+    "deploy/compose.erp-http.yaml": {
+      "sha256": "397e5b539ef7934fbef931f7f2bc6265d89b361ee8ebcf47743f523a10f3792a",
+      "bytes": 317
+    },
+    "deploy/compose.salesforce.yaml": {
+      "sha256": "730984f651ceceda99a9b76fbfeb0b5c0df05061250e5049491c94ef758863af",
+      "bytes": 779
+    },
+    "deploy/compose.yaml": {
+      "sha256": "7a298ab6d6ff8be632b5bb5157e6c5f0ce413b6ecd931a60fc92d091745c022a",
+      "bytes": 5121
+    },
+    "deploy/postgres-init.sh": {
+      "sha256": "9e5779f68f584743d29d37e0f641703e0932b4fc2c9d83fdd98c22fe028e6931",
+      "bytes": 707
+    },
+    "deploy/prepare_reference.py": {
+      "sha256": "b035c9239eb2af8dd4fbe0d32e9a8fbae3c72a6ff0ab0845a84140c4a6018da9",
+      "bytes": 2337
+    },
+    "deploy/prometheus.yml": {
+      "sha256": "64e00a3ae63db5f440f3ea02da45abbcc82bebe19e4e4d958e6c44ad32a9b943",
+      "bytes": 309
+    },
+    "deploy/reference_smoke.py": {
+      "sha256": "4999c60d285d30b4cb9a583cea7833efa57fdfe1bc645c554c81b819d57ffdd6",
+      "bytes": 5373
+    },
+    "integrations/mulesoft/README.md": {
+      "sha256": "a2a51f3b3cfc4d53682b0b3ca6f943d40e1afe8b948fb1d9209a6c2a07536055",
+      "bytes": 943
+    },
+    "integrations/mulesoft/mule-artifact.json": {
+      "sha256": "bc7fae8fdea63687e6abd16743e791ab8106495ab3dcaa59d82191d47c673817",
+      "bytes": 248
+    },
+    "integrations/mulesoft/pom.xml": {
+      "sha256": "e23b2167fa261cd7c7cb78572c2464515deacf851f19d683dc572719e58b017c",
+      "bytes": 2173
+    },
+    "integrations/mulesoft/runtime.yaml.example": {
+      "sha256": "626f0b4cc72c5a0333174d02819ad3dc6ef9c44528ad7536dbc4f931f9aaa02d",
+      "bytes": 582
+    },
+    "integrations/mulesoft/scripts/launch.sh": {
+      "sha256": "59936c525e79c1e3290860e82f08a958150f0b044ce500bff26c5d02f470c262",
+      "bytes": 1392
+    },
+    "integrations/mulesoft/scripts/verify_runtime.py": {
+      "sha256": "a0680a051abd537534f965ec1335de3e05f38bbb30bd52b3f4de98acdb0319ec",
+      "bytes": 2903
+    },
+    "integrations/mulesoft/src/main/api/crm-system-api.raml": {
+      "sha256": "eefabb6ac8a671c97448f689143226dc2d18b92526d1090b2d89111edec661c2",
+      "bytes": 4355
+    },
+    "integrations/mulesoft/src/main/mule/crm-system-api.xml": {
+      "sha256": "6a0346ad3b0106234ebf5c0cb0552846d1966a3556b4371a7c9a24d35697d946",
+      "bytes": 7679
+    },
+    "integrations/mulesoft/src/main/resources/log4j2.xml": {
+      "sha256": "6a5b26064d0446837c22b2d4730e8f4d09777bec0568c86230c040764709a6c6",
+      "bytes": 618
+    },
+    "integrations/n8n/README.md": {
+      "sha256": "e3bc669d8ffe61d0e2b284c39b62036342084f1b909660ab7b63d75b8d67d5de",
+      "bytes": 595
+    },
+    "integrations/n8n/order-intake.workflow.json": {
+      "sha256": "44cb703071296ee4f20e16fcbd62178e5345baa4430dc4860cffd7d0e4534455",
+      "bytes": 3231
+    },
+    "integrations/n8n/version.json": {
+      "sha256": "0121edeb80e6818d690535d676d6caa36b232be981b3e6d2413892797e380a51",
+      "bytes": 187
+    },
+    "integrations/salesforce/README.md": {
+      "sha256": "a806ee0240886828da211dd509272f425405ee0bc0dc00d3015d54f35e88ca54",
+      "bytes": 882
+    },
+    "integrations/salesforce/config/project-scratch-def.json": {
+      "sha256": "7d02f53a6b8d64849f4087889e5ae207f27a6c6c0595c7c5dc89ca143feddb12",
+      "bytes": 169
+    },
+    "integrations/salesforce/external-client-app.requirements.json": {
+      "sha256": "289eff53a7140cb954e89607e71a6cda1b51d43fc321fe5f37815fd32b120036",
+      "bytes": 794
+    },
+    "integrations/salesforce/force-app/main/default/classes/P06OrderApi.cls": {
+      "sha256": "6c7be555eaeb937488b6772e6eaf3f411cddcf7329faf673097023b58d6aa7bf",
+      "bytes": 19248
+    },
+    "integrations/salesforce/force-app/main/default/classes/P06OrderApi.cls-meta.xml": {
+      "sha256": "356db61093648679fc9b3a801e41d51c94fa51e993380eac65b0bb076a20b6b0",
+      "bytes": 174
+    },
+    "integrations/salesforce/force-app/main/default/classes/P06OrderApiTest.cls": {
+      "sha256": "e2322d6e73f8e9cd6c565f29c6dad84f5deb713f28735abdfaa9c726582648fa",
+      "bytes": 12429
+    },
+    "integrations/salesforce/force-app/main/default/classes/P06OrderApiTest.cls-meta.xml": {
+      "sha256": "356db61093648679fc9b3a801e41d51c94fa51e993380eac65b0bb076a20b6b0",
+      "bytes": 174
+    },
+    "integrations/salesforce/force-app/main/default/classes/P06OrderGuard.cls": {
+      "sha256": "4bb418f6b2bab332770e6763fe83aee5965e88ca6e1fc26c56ddd3714b07cb8e",
+      "bytes": 1774
+    },
+    "integrations/salesforce/force-app/main/default/classes/P06OrderGuard.cls-meta.xml": {
+      "sha256": "356db61093648679fc9b3a801e41d51c94fa51e993380eac65b0bb076a20b6b0",
+      "bytes": 174
+    },
+    "integrations/salesforce/force-app/main/default/customPermissions/P06_Execute.customPermission-meta.xml": {
+      "sha256": "a75586b4fcae656fa9d2dd9e877be0d4b09f674978c51f8e10da070b871bece6",
+      "bytes": 275
+    },
+    "integrations/salesforce/force-app/main/default/objects/Account/fields/P06_Reference__c.field-meta.xml": {
+      "sha256": "019cf957a4cb1e4575e3500167b4945518c60b29c7a8db6c5961dfc8dc4a75d5",
+      "bytes": 273
+    },
+    "integrations/salesforce/force-app/main/default/objects/Account/fields/P06_Tenant__c.field-meta.xml": {
+      "sha256": "cde823c403b7c452baad1263dba9353e873c0898052e0b27ea090e92b1ba4c40",
+      "bytes": 257
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/P06_Effect__c.object-meta.xml": {
+      "sha256": "5b5bfd3b12510d885dcd925b53a93cafa398f5201276d789ef6a0b938a59d396",
+      "bytes": 758
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/After_JSON__c.field-meta.xml": {
+      "sha256": "90ba0105d572eec4a5ecd1ce43e6b1311fd4a9ccd77f9462f41d7e7a17a424dc",
+      "bytes": 277
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Before_JSON__c.field-meta.xml": {
+      "sha256": "0ab91f9953ca336f098905c0b1d86b13cc16341e88f70f8c65dae6f843e41960",
+      "bytes": 279
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Compensates_Key__c.field-meta.xml": {
+      "sha256": "cb4283eb3e7f7ce7f1d7afdb7d3684bfee186700f31255b5237a543fe9f51c7c",
+      "bytes": 279
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Correlation_ID__c.field-meta.xml": {
+      "sha256": "28c79ec0c65bfb88c96489b3a030897bf9756e6bb5140538b933a8b7da9350ac",
+      "bytes": 270
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Effect_Key__c.field-meta.xml": {
+      "sha256": "152039f2e355bc8786b89122e8416abe264e439b154f5a8313cf7e130613d158",
+      "bytes": 262
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Key__c.field-meta.xml": {
+      "sha256": "c82d38e582aea371e0d22fe150bd2138f7bf98f06754cba7ffbe69f4903936f6",
+      "bytes": 361
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Order__c.field-meta.xml": {
+      "sha256": "b2fc729047ff79148523a337e8477f90f7ceabdab0ab131cfa54a7a27767049c",
+      "bytes": 431
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Plan_Hash__c.field-meta.xml": {
+      "sha256": "6f19e251f5b517de26e93c25304e65dfbd3e976a7894b62c1cd3fb44d224483b",
+      "bytes": 259
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Request_Hash__c.field-meta.xml": {
+      "sha256": "ad0bd84a443b35ea263e08ae04d4fc7596090af44f132a2693c99749ae04295c",
+      "bytes": 265
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Response_JSON__c.field-meta.xml": {
+      "sha256": "f00e6da977e55be0043a5c64a040448d351349ebcb813ec064e9ad0f0b29c8c9",
+      "bytes": 286
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Effect__c/fields/Tenant__c.field-meta.xml": {
+      "sha256": "91a7baff9f225fada0c45881ed1fcd9452bd7bde5f399c09e87c795df132caa5",
+      "bytes": 253
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/P06_Order__c.object-meta.xml": {
+      "sha256": "11ba99e99d5ea27349c63d95d85bdbb8b5628fd678ab40f7195b21e179538f27",
+      "bytes": 740
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/Customer__c.field-meta.xml": {
+      "sha256": "9f7c1a05f5dca32d74c9341f246e6ee5135a6ff61f768a2c36ef6201da17f288",
+      "bytes": 430
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/Last_Effect_Key__c.field-meta.xml": {
+      "sha256": "1e9e669c8398ad7404a674b7f6566152be67a31d23f91afdb5961a36b49222d3",
+      "bytes": 272
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/Quantity__c.field-meta.xml": {
+      "sha256": "ee1cd8d5f8753376a6433796f3526e0d7ce46f8bae961243ce50c8973ff2d6f5",
+      "bytes": 285
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/Reference__c.field-meta.xml": {
+      "sha256": "9aa858e1a1f03d8285de1107530152ab1035d6c49314102629c26dd121f33252",
+      "bytes": 266
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/Requested_Date__c.field-meta.xml": {
+      "sha256": "b58b42676b6d76a0c9c76b2fa90eb8574cfead994b4f70eab541f6882297e74f",
+      "bytes": 245
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/Revision__c.field-meta.xml": {
+      "sha256": "2e4a046e5b804689b26fae2ed04167f528dd23b3c5a11bedd13574927d560902",
+      "bytes": 285
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/SKU__c.field-meta.xml": {
+      "sha256": "718de25d12973914333f1f669b3c5b53daf2fecaca4c0de119270a201a8c2481",
+      "bytes": 247
+    },
+    "integrations/salesforce/force-app/main/default/objects/P06_Order__c/fields/Tenant__c.field-meta.xml": {
+      "sha256": "91a7baff9f225fada0c45881ed1fcd9452bd7bde5f399c09e87c795df132caa5",
+      "bytes": 253
+    },
+    "integrations/salesforce/force-app/main/default/objects/User/fields/P06_Tenant__c.field-meta.xml": {
+      "sha256": "1bc0c58266e93cc31098ece40ed57a913616a67b5d365380e0c7d9b0706b8c02",
+      "bytes": 266
+    },
+    "integrations/salesforce/force-app/main/default/permissionsets/P06_Executor.permissionset-meta.xml": {
+      "sha256": "645de59850a63aee086c2db143e9b4b6a60ff570012cee30ab22ed4d30b8499e",
+      "bytes": 5310
+    },
+    "integrations/salesforce/force-app/main/default/permissionsets/P06_Reader.permissionset-meta.xml": {
+      "sha256": "e0fa7fefc54f4e6c0cc03d04a5e052dcb59ea956d73bb1db399ce8dd8d8aa5f7",
+      "bytes": 5209
+    },
+    "integrations/salesforce/force-app/main/default/triggers/P06EffectImmutable.trigger": {
+      "sha256": "ea12f2e9b903fd794650ba47def078a96b2792ca4f79d6900743271e58cc83e0",
+      "bytes": 609
+    },
+    "integrations/salesforce/force-app/main/default/triggers/P06EffectImmutable.trigger-meta.xml": {
+      "sha256": "adf36b535e9f1311b8362b5c35b9f62f0eee3e7511296d1e14bbf5a637255132",
+      "bytes": 178
+    },
+    "integrations/salesforce/force-app/main/default/triggers/P06OrderVersion.trigger": {
+      "sha256": "185f6bc18b756068d12e5673f5c285a0690ddc54d43c0564f191024b901c12f8",
+      "bytes": 158
+    },
+    "integrations/salesforce/force-app/main/default/triggers/P06OrderVersion.trigger-meta.xml": {
+      "sha256": "adf36b535e9f1311b8362b5c35b9f62f0eee3e7511296d1e14bbf5a637255132",
+      "bytes": 178
+    },
+    "integrations/salesforce/scripts/deploy.sh": {
+      "sha256": "f0d3b4b810970f4ff30698e1180cf733b6bcf9754b13a24ed9cdf61e1240d493",
+      "bytes": 1230
+    },
+    "integrations/salesforce/scripts/preflight.py": {
+      "sha256": "9fcf2d372fbaf7746766d4e5cf8f2dd6b2e02738f6a86200c95464d73f888bd8",
+      "bytes": 4056
+    },
+    "integrations/salesforce/scripts/seed.apex.example": {
+      "sha256": "e6d4f6c4a0eef68039e7383a93fd67ffa13721b1cd842196b29991112cf4872f",
+      "bytes": 1028
+    },
+    "integrations/salesforce/sfdx-project.json": {
+      "sha256": "00b27b095483916605a3d9094794b29af1ee6a1bfdfa85f1ea7d6d31947d7f73",
+      "bytes": 225
+    },
+    "integrations/vendor_validation/README.md": {
+      "sha256": "2d15ac06d89be9fdd895047f91b2ad1ed02279fd27ea8d22109dc58b0c230349",
+      "bytes": 1725
+    },
+    "integrations/vendor_validation/check_sources.py": {
+      "sha256": "8a9f566dd41e837abc7855b03de050171042bc209841624116299eb0a0fd8d43",
+      "bytes": 3528
+    },
+    "integrations/vendor_validation/fault_proxy.py": {
+      "sha256": "285a1c5722b5c2beb09f07ace46c3f9e22b384d3c7f8df509db82a2e7b0607ac",
+      "bytes": 9129
+    },
+    "integrations/vendor_validation/live_acceptance.py": {
+      "sha256": "4c9ff26ed510d96ca6eb0418dd2233c258172c970047f957ebc4b1db4042e6e6",
+      "bytes": 22046
+    },
+    "pyproject.toml": {
+      "sha256": "f0d1788acaa1c1e5616a683a14c40922777c72f6af2a232c583fdcdb74eda57c",
+      "bytes": 1151
+    },
+    "scripts/check_licenses.py": {
+      "sha256": "db629654cb595c03274be25c1971943ea898bff48bed073f304ef12d6df7c261",
+      "bytes": 1347
+    },
+    "scripts/load_profile.py": {
+      "sha256": "411e993f21038a885f80f0f25ea35c4396f800f167e368bbe57844910baf7a5c",
+      "bytes": 10905
+    },
+    "scripts/postgres_profile.py": {
+      "sha256": "981e00dccbf9d1cb98e88cd639699f4a2318f573b5203fa79bd1168bdcde11d1",
+      "bytes": 7702
+    },
+    "src/crm_workflow/__init__.py": {
+      "sha256": "93815b92ad957899970fc6cd164972ee42f0745b6c16b03a48a844dc069793e8",
+      "bytes": 98
+    },
+    "src/crm_workflow/api.py": {
+      "sha256": "8f2860691ac1401618aa1e34470063ff6aa221ae1c132291520e3906f657c160",
+      "bytes": 17750
+    },
+    "src/crm_workflow/auth.py": {
+      "sha256": "ca58552870cfd5ca3b11c9b28b413f0854c98e39dcb8fdae0238b789672a1f0d",
+      "bytes": 4442
+    },
+    "src/crm_workflow/cli.py": {
+      "sha256": "ef529e0ed4c8b981c43d3c14efaa65b576056a09173f59bf598d6fdd03af416c",
+      "bytes": 11182
+    },
+    "src/crm_workflow/config.py": {
+      "sha256": "445b45afa714d7b8c723081349db70e3be959544ebce1f1ffef4c5f7503acb2f",
+      "bytes": 3343
+    },
+    "src/crm_workflow/demo.py": {
+      "sha256": "2f344dfa95c9b557826765b4557df085870084c86e2b96afb0bd1f81d312c1ad",
+      "bytes": 14245
+    },
+    "src/crm_workflow/dispatcher.py": {
+      "sha256": "469dad276396a762bcb0e9651e90d56c74ad91ea0cfc6a9688ce8dfe872bc35d",
+      "bytes": 5343
+    },
+    "src/crm_workflow/erp.py": {
+      "sha256": "6649a9fc3f2d6add4846c0a89e25b7af049ab3e98d8084ddb1464f4084e954a7",
+      "bytes": 6196
+    },
+    "src/crm_workflow/errors.py": {
+      "sha256": "0cbe1fa32fe4719dfdfa56522cb2989fb25e624575c8660dbf4609f8bf33f25f",
+      "bytes": 612
+    },
+    "src/crm_workflow/gateways.py": {
+      "sha256": "f68af32937e7ed77015ebeeba5cfcb027587cddf7d417a7390f7894edb00084d",
+      "bytes": 6422
+    },
+    "src/crm_workflow/models.py": {
+      "sha256": "ddb434a518dcd95c0300638cf8bf7f849ff88039a48bc2e7ac3dd39ae056c8f9",
+      "bytes": 4800
+    },
+    "src/crm_workflow/proposer.py": {
+      "sha256": "f07129ae15881f2bc674da7084f1d71aeca5bc7f1e5a3ec92c85b37f8d5e42d1",
+      "bytes": 5222
+    },
+    "src/crm_workflow/runtime.py": {
+      "sha256": "bfa18b34549003387a8c930a531bc8cb5abdfd4538c4c8ef9e14dcfa0ed574fc",
+      "bytes": 1742
+    },
+    "src/crm_workflow/service.py": {
+      "sha256": "23c1da77a4280ffaa5484498cc8f282881176b758bff8b06e4ba11985766c996",
+      "bytes": 26950
+    },
+    "src/crm_workflow/static/app.js": {
+      "sha256": "44f1ca7c4ef89f25afc8ba175bf243bd6f747a72eac5462564642b33147eac95",
+      "bytes": 28452
+    },
+    "src/crm_workflow/static/favicon.svg": {
+      "sha256": "671bd3c16fadd5c8c8d1a1f77fdafb8435c570054000545ce26771a6960d02eb",
+      "bytes": 207
+    },
+    "src/crm_workflow/static/index.html": {
+      "sha256": "f4f5ab6fe7f5b03e46976ae29aad0c53effcf19aca0310fabf82e43f075c7f22",
+      "bytes": 12067
+    },
+    "src/crm_workflow/static/styles.css": {
+      "sha256": "cfa5a6f55e4c18ec31c38a29fdc189a5eac2dc8ae01e549d3e749b7de8077466",
+      "bytes": 19564
+    },
+    "src/crm_workflow/store.py": {
+      "sha256": "3d62487f94be23a8adcb4256c248bcb43a0c5851721649f027cd5bb4eb606396",
+      "bytes": 21845
+    },
+    "src/crm_workflow/temporal_workflow.py": {
+      "sha256": "bc85263331937988bc082936c414e4136780675a4ae3ea31574a5a64c0d7825b",
+      "bytes": 5310
+    },
+    "src/crm_workflow/worker.py": {
+      "sha256": "d72d318a617751feae09cf0469c9ab082418cf2fd4ce60df3d04feb8292354a1",
+      "bytes": 8140
+    },
+    "tests/test_api.py": {
+      "sha256": "1f9f32a3567c623ab3cd45d80b1aaa1b604a09496908e1129ea5a6341a79cd0d",
+      "bytes": 16520
+    },
+    "tests/test_contracts.py": {
+      "sha256": "43ed7e7de7c1e3fe60a0316d5458367b9f3db25fb6cc91ef2336a7a1384df7c9",
+      "bytes": 1233
+    },
+    "tests/test_core.py": {
+      "sha256": "b3edd66223e852da68a899426873fc370f4260a8dd4ff2d67c826e25b22c8b42",
+      "bytes": 15135
+    },
+    "tests/test_dispatcher.py": {
+      "sha256": "3745db007c989e9aacad41938d849a42523cf295499ea95a013cb649106fc7d5",
+      "bytes": 7549
+    },
+    "tests/test_erp.py": {
+      "sha256": "cf460a83dd5271875f5db4424852d0c907a75dc49a18854bea860dfca2ba33ca",
+      "bytes": 9148
+    },
+    "tests/test_http.py": {
+      "sha256": "7c05dc65ccb6782cca3864f6dfc1f2e2e0da592c002521b61e849d83cd845f3e",
+      "bytes": 2148
+    },
+    "tests/test_proposer.py": {
+      "sha256": "a4df841a9b5769348ac19454b8022b00a05d63dc28e0cf1b2f9f2cf0fa2279ca",
+      "bytes": 2010
+    },
+    "tests/test_reference_config.py": {
+      "sha256": "b5fddc47b3551dcf28a99b4be8856916123da6433979c25d859ec170977a432d",
+      "bytes": 2912
+    },
+    "tests/test_review_regressions.py": {
+      "sha256": "b38be424e295a24753d03b30581660294cb9e5f8a3ee4e2aee5bd31f35b332e3",
+      "bytes": 9190
+    },
+    "tests/test_temporal.py": {
+      "sha256": "ff8ddd5cd15ebf851da9166f8cadfbb0ba891da52cba5029f0a1d8ad749b3c1a",
+      "bytes": 10582
+    },
+    "tests/test_temporal_core.py": {
+      "sha256": "b3021f55a62aa430f838626c6b456cd1cf2ef011b008cebaa75b027fdc747781",
+      "bytes": 9713
+    },
+    "uv.lock": {
+      "sha256": "ac7726eac4325b1f42abe7f439e75c70ccf56996f3dde76fa1044ae2b123abf4",
+      "bytes": 139853
+    }
+  },
+  "evidence_files": {
+    "docs/evidence/ci-observation.json": {
+      "sha256": "b8a85ea4eb6209df38f4ae691623328b782dce76785dae9e7abcf37452782ff4",
+      "bytes": 2653
+    },
+    "docs/evidence/components.json": {
+      "sha256": "133eb57cf68a9dd2b59e0971c58c4b4197944edc78ba81c0d985abd62e5a3dbf",
+      "bytes": 12866
+    },
+    "docs/evidence/dependency-audit.json": {
+      "sha256": "b308b932f00456e2b41628ba241bebab6b22191f570569b92d9a03b3a835ea82",
+      "bytes": 1537
+    },
+    "docs/evidence/http-smoke.json": {
+      "sha256": "958993be9238ffcb317bd59c185169301bdad0194f34b62653a5a2d9e85522c0",
+      "bytes": 772
+    },
+    "docs/evidence/initial-suite-failure.log": {
+      "sha256": "2c64e4f8f18b2f6ef3f65e8df791163a1709bad0b25eae583950a8752ba76d3f",
+      "bytes": 12757
+    },
+    "docs/evidence/initial-suite-failure.xml": {
+      "sha256": "19df655d9c5f1394a5d38f94e7dd54ecf6c893a74207a49fbe5444df4a29660d",
+      "bytes": 21585
+    },
+    "docs/evidence/licence-check.json": {
+      "sha256": "41f1110a7eafd54ba5e7a1af5a249fa18673ada35195a9fdeab461447dfbe618",
+      "bytes": 313
+    },
+    "docs/evidence/local-load.json": {
+      "sha256": "63d4f67ec78659e630d4082c21c5bcad8e0e5ab6eb3f138ddde34c21911f1d74",
+      "bytes": 8542
+    },
+    "docs/evidence/local-smoke.json": {
+      "sha256": "fd4e9759f3007297c8782534da9131fded4590396d462590606ac402a1004510",
+      "bytes": 10916
+    },
+    "docs/evidence/operator-browser.json": {
+      "sha256": "904fe789f136360c8162937c4e046a251df50d3a7400e00b1c23a852b031a426",
+      "bytes": 490
+    },
+    "docs/evidence/postgres-restore.json": {
+      "sha256": "6c48eba588ef239312cddebdf7ec01071e32a051fea89658cc1f58b810f50d9b",
+      "bytes": 1025
+    },
+    "docs/evidence/tests.log": {
+      "sha256": "7c27f5ca953add4ad690f8592cb0be471da05a5c6f5e00228cf5f05864c77c83",
+      "bytes": 705
+    },
+    "docs/evidence/tests.xml": {
+      "sha256": "ae58e318b9eb1da423349e639fe1cb3166d42858067b3c2f3060ba6169530251",
+      "bytes": 11394
+    },
+    "docs/evidence/vendor-preflight.json": {
+      "sha256": "9beb6e8bc76063d0805ae4069b85d29c0b198766f1c456834e12fecfc9338b9c",
+      "bytes": 141
+    }
+  },
+  "full_p06_acceptance": "OPEN",
+  "merge_status": "PR_OPEN_CI_GATE_UNMET",
+  "repository_visibility": "private",
+  "licence": "pending_explicit_maintainer_decision"
+}

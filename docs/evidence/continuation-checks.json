@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-11-14T12:24:44.758Z",
+  "profile": "local-source-checks",
+  "checks": [
+    {
+      "command": "uv run --locked ruff check .",
+      "exit_code": 0,
+      "output": "All checks passed!\n",
+      "tool_wall_seconds": 0.117525895
+    },
+    {
+      "command": "uv run --locked ruff format --check .",
+      "exit_code": 0,
+      "output": "60 files already formatted\n",
+      "tool_wall_seconds": 0.117645386
+    },
+    {
+      "command": "uv run --locked python integrations/vendor_validation/check_sources.py",
+      "exit_code": 0,
+      "output": "{\n  \"status\": \"SOURCE_CHECKS_PASSED\",\n  \"xml_files_parsed\": 35,\n  \"json_files_parsed\": 6,\n  \"python_files_parsed\": 5,\n  \"n8n_credentials_in_export\": false,\n  \"mule_packaging_runtime_target\": \"4.9.24\",\n  \"vendor_compilation\": \"NOT_PERFORMED_BY_THIS_COMMAND\",\n  \"vendor_runtime_tests\": \"NOT_EXECUTED\",\n  \"provider_acceptance\": \"OPEN\",\n  \"mule_jvm_retry_properties\": \"NOT_OBSERVED\"\n}\n",
+      "tool_wall_seconds": 0.16983019
+    },
+    {
+      "command": "node --check deploy/capture_operator.mjs; node --check src/crm_workflow/static/app.js",
+      "exit_code": 0,
+      "output": "deploy/capture_operator.mjs 0  \nsrc/crm_workflow/static/app.js 0  \n",
+      "tool_wall_seconds": 0.232999369
+    },
+    {
+      "command": "uv run --locked python -m crm_workflow.cli export-contracts; git diff --exit-code -- contracts",
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "note": "Static/source checks are distinct from browser, n8n, Mule package, container and provider runtime qualification."
+}
