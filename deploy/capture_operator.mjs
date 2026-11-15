@@ -66,9 +66,11 @@ async function connect(page, role) {
   assert(response.status() === 200 && queue.status() === 200, "Identity or case list was refused");
   const session = await response.json();
   assert(session.profile === "demo", "Browser qualification refuses a non-demo profile");
+  const observedCases = (await queue.json()).items;
+  assert(Array.isArray(observedCases), "The authenticated case list has no items array");
   await page.waitForFunction(() => document.querySelector("#access-token").value === "");
   assert(await page.locator("#case-detail").isHidden(), "Switching identity did not clear the case view");
-  return session;
+  return { ...session, observed_cases: observedCases };
 }
 
 async function openCase(page, caseId) {
@@ -90,7 +92,19 @@ async function openCase(page, caseId) {
 async function exerciseWorkflow(page) {
   const started = Date.now();
   const requester = await connect(page, "requester");
-  const requestedDate = options["--requested-date"] || new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10);
+  // The API reference exercise may already have changed this synthetic order.
+  // Select a different bounded date from authenticated readback; every mutation
+  // below still comes from the actual form and separately approved workflow.
+  const observedDates = new Set(requester.observed_cases.flatMap((item) => {
+    const order = item.reconciliation?.crm_order;
+    return order?.reference === "ORD-1001" && typeof order.requested_date === "string"
+      ? [order.requested_date] : [];
+  }));
+  const candidateDates = Array.from({ length: 80 }, (_, index) =>
+    new Date(Date.now() + (10 + index) * 86400000).toISOString().slice(0, 10));
+  const requestedDate = options["--requested-date"] || candidateDates.find((value) => !observedDates.has(value));
+  assert(requestedDate && !observedDates.has(requestedDate), "Browser fixture must request a new delivery date");
+  report.fixture = { observed_delivery_dates: [...observedDates].sort(), requested_date: requestedDate };
   const messageId = `browser-${randomUUID()}`;
   await page.locator("#new-top").click();
   await page.locator("#customer-reference").fill("invalid reference with spaces");
@@ -109,7 +123,16 @@ async function exerciseWorkflow(page) {
   const created = await submitted.json();
   assert(created.request.message_id === messageId && created.requester_id === requester.actor.actor_id,
     "The accepted case does not match the requester form");
-  await page.locator("#case-state").filter({ hasText: /^Awaiting approval$/ }).waitFor({ state: "visible", timeout: 90000 });
+  report.submitted_case_id = created.id;
+  async function waitForState(label) {
+    try {
+      await page.locator("#case-state").filter({ hasText: new RegExp(`^${label}$`) }).waitFor({ state: "visible", timeout: 90000 });
+    } catch (error) {
+      report.last_observed_case_state = await page.locator("#case-state").textContent();
+      throw new Error(`Expected ${label}; observed ${report.last_observed_case_state}; ${error.message.split("\n")[0]}`);
+    }
+  }
+  await waitForState("Awaiting approval");
   const plan = JSON.parse(await page.locator("#plan-json").textContent());
   assert(plan.requested_date === requestedDate, "The displayed plan does not match the requested date");
   assert(await page.locator("#approve").isDisabled(), "The requester was offered self-approval");
@@ -125,7 +148,7 @@ async function exerciseWorkflow(page) {
   ]);
   assert(approved.status() === 202, "The browser approval was not accepted");
   assert(approved.request().postDataJSON().plan_hash === plan.hash, "The browser approved a different plan hash");
-  await page.locator("#case-state").filter({ hasText: /^Completed$/ }).waitFor({ state: "visible", timeout: 90000 });
+  await waitForState("Completed");
   const operator = await connect(page, "operator");
   await openCase(page, created.id);
   const [readback] = await Promise.all([
