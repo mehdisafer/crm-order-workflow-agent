@@ -8,9 +8,12 @@ replay and worker restart, not Salesforce/MuleSoft tenant acceptance.
 from __future__ import annotations
 
 import asyncio
+import json
 import os
+import time
 import uuid
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -236,8 +239,12 @@ async def test_retry_budget_exhaustion_is_visible(temporal_env):
     assert service.calls.count("fail") == 1
 
 
-async def test_worker_restart_recovers_durable_approval_wait(temporal_env):
-    service = SyntheticService(expires_in=30)
+@pytest.mark.parametrize("attempt", range(3))
+async def test_worker_restart_recovers_durable_approval_wait(temporal_env, attempt):
+    # Separate recovery timing from approval expiry; the expiry contract has
+    # its own unchanged test above. Ten seconds previously timed out in CI.
+    # Each parametrization is independent, not an automatic retry of a failure.
+    service = SyntheticService(expires_in=60)
     queue = f"p06-{uuid.uuid4()}"
     async with make_worker(temporal_env, queue, service):
         handle = await start(temporal_env, queue, service)
@@ -245,11 +252,30 @@ async def test_worker_restart_recovers_durable_approval_wait(temporal_env):
     # No worker is running when the approval signal is accepted by the server.
     service.current["state"] = "APPROVED"
     await handle.signal("decision")
-    async with make_worker(temporal_env, queue, service):
-        result = await asyncio.wait_for(handle.result(), timeout=10)
-    assert result["state"] == "COMPLETED"
-    assert service.crm_writes == service.erp_writes == 1
-    await Replayer(workflows=[OrderExceptionWorkflow]).replay_workflow(await handle.fetch_history())
+    started = time.monotonic()
+    report = {"attempt": attempt, "budget_seconds": 30, "passed": False, "workflow_id": handle.id}
+    output = Path("evidence-local")
+    output.mkdir(exist_ok=True)
+    try:
+        async with make_worker(temporal_env, queue, service):
+            result = await asyncio.wait_for(handle.result(), timeout=30)
+        report["recovery_seconds"] = time.monotonic() - started
+        assert result["state"] == "COMPLETED"
+        assert service.crm_writes == service.erp_writes == 1
+        history = await handle.fetch_history()
+        history_text = history.to_json()
+        assert "UNTRUSTED-CRM-NOTE" not in history_text
+        (output / f"temporal-recovery-{attempt}-history.json").write_text(history_text)
+        await Replayer(workflows=[OrderExceptionWorkflow]).replay_workflow(history)
+        report["passed"] = True
+    finally:
+        report.update(
+            elapsed_seconds=time.monotonic() - started,
+            observed_state=service.current["state"],
+            crm_writes=service.crm_writes,
+            erp_writes=service.erp_writes,
+        )
+        (output / f"temporal-recovery-{attempt}.json").write_text(json.dumps(report, indent=2) + "\n")
 
 
 async def test_cancellation_records_visible_case_outcome(temporal_env):
