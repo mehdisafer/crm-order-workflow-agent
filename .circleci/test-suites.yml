@@ -1,5 +1,5 @@
 name: python-core
-discover: git ls-files tests/test_api.py tests/test_contracts.py tests/test_core.py tests/test_dispatcher.py tests/test_erp.py tests/test_http.py tests/test_proposer.py tests/test_reference_config.py tests/test_review_regressions.py
+discover: git ls-files 'tests/test_*.py' ':!:tests/test_temporal.py' ':!:tests/test_temporal_core.py'
 run: uv run pytest -q -m 'not temporal and not vendor and not load' -o junit_family=xunit1 --junitxml="<< outputs.junit >>" << test.atoms >>
 outputs:
   junit: test-results/python-core.xml
