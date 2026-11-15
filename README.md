@@ -1,156 +1,78 @@
 # CRM Order Workflow Agent
 
-**An order exception should end with an observed business result, a safe compensation, or a clear escalation.**
+**An order exception should end with an observed business result, safe compensation, or explicit escalation.**
 
-I built this project around a fictional industrial customer-service team. An operator requests a delivery-date change, the workflow resolves the customer and order, checks stock, prepares an exact plan and waits for a separate approver. It then changes the CRM date, reserves inventory and rereads both systems. If the reservation fails, it can restore the original date only when no newer CRM change has occurred.
+This synthetic industrial customer-service application resolves a customer and order, checks inventory, prepares an exact delivery-date change and waits for a separate approver. Temporal executes the CRM change and reservation, then rereads both systems. Uncertain writes are reconciled using stable effect identities. Compensation must respect later human changes.
 
-The engineering focus is durable execution, trustworthy approvals and honest recovery from uncertain remote writes. No payments or real commercial commitments are in scope. All fixtures are synthetic.
+No payments, real customer orders or commercial commitments are in scope. Reference adapters and fixtures are deliberately synthetic; provider source packages are not represented as live Salesforce or MuleSoft acceptance.
 
-## What works, and what remains open
+## Delivery status — 15 November 2026
 
-| Area | Current evidence |
-| --- | --- |
-| Operator API and case view | Actual Firefox desktop form, separate approval, Temporal completion and readback exercised; completed-case desktop and narrow-viewport screenshots retained |
-| Temporal workflow | Real Temporal execution, history replay, process crash recovery and persistent server restart exercised |
-| Transactional store and outbox | SQLite local profile and isolated PostgreSQL business/restore exercises executed |
-| Local CRM and ERP | Explicitly synthetic implementations; duplicate messages, uncertain responses and compensation conflicts tested |
-| Salesforce through MuleSoft | Real adapter, Apex/metadata, permissions and live acceptance harness prepared; Mule package built for 4.9.24 with resolved dependencies and retained warnings; **no tenant/runtime execution yet** |
-| n8n | Actual 2.47.5 import and authenticated trigger exercised through Temporal completion; missing/wrong credentials refused, duplicate delivery produces one case |
-| Container reference | Source prepared; GitHub jobs failed before runner allocation, so container qualification remains open. The local Firefox observation is a separate profile; see [the evidence index](docs/evidence/README.md) |
-| Publication | Public source publication is authorized; the last observed GitHub visibility is still private, and PR #2 has not been merged. The project is licensed under [Apache-2.0](LICENSE); GitHub visibility remains private and PR #2 is not merged; see [publication status](docs/publication.md) |
+**The complete local reference now has an executed hosted qualification**, beyond the initial core-only CircleCI pipeline. The licence is [Apache-2.0](LICENSE), with attribution in [NOTICE](NOTICE). The candidate remains `0.1.0`; no full-provider or production V1 release is claimed.
 
-The local demonstration does **not** satisfy Salesforce/MuleSoft acceptance. [Issue #1](https://github.com/mehdisafer/crm-order-workflow-agent/issues/1) stays open for that milestone and the other documented gates. Detailed evidence and limits are in [acceptance.md](docs/acceptance.md).
+| Executed gate | Observed result |
+|---|---|
+| Core contracts, policy, API and licence regressions | 82 tests passed, zero failures/errors/skips |
+| Real Temporal profile | 12 tests passed, including independent restart trials and replay |
+| Reference deployment | Real application image, PostgreSQL, Temporal and HTTP ERP started and exercised |
+| Business effects | One applied CRM effect and one applied inventory effect; current readback matches |
+| Actual browser workflow | Form submission, requester self-approval refusal, separate approval and reconciliation executed |
+| Desktop/mobile view | Six captures; no document-level horizontal overflow at 390 px; no JavaScript or console errors |
+| Source/dependency checks | Lint, contracts, component/licence checks and dependency audit completed in the full workflow |
+| Salesforce / running Mule provider | Still requires authorized provider deployment and acceptance |
 
-## Run the smallest real workflow
+Qualified combined source: `4882add901422deeb2c374d5c98eaa273f30d2d7`. The Apache metadata changes from the application branch were merged into the independently qualified CircleCI candidate and tested again; they were not overwritten.
 
-Requirements: Python 3.12 and [uv](https://docs.astral.sh/uv/). The first smoke run downloads the official Temporal CLI test-server binary if it is not cached. The candidate is on the reviewed implementation branch in [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2), while the CI gate remains open.
+[Acceptance and proof](docs/acceptance.md) · [Hosted qualification](https://app.circleci.com/workflow/1cdf13f5-ded8-4ab3-857c-301fd44e8e8f) · [Architecture](docs/architecture.md) · [Operator guide](docs/operator-guide.md)
+
+## Run a local smoke
+
+Use Python 3.12 and uv. The lock defines the reviewed dependencies.
 
 ```bash
-git clone --branch feat/p06-controlled-order-workflow https://github.com/mehdisafer/crm-order-workflow-agent.git
+git clone https://github.com/mehdisafer/crm-order-workflow-agent.git
 cd crm-order-workflow-agent
 uv sync --locked
 uv run --locked python -m crm_workflow.cli smoke
 ```
 
-This starts an isolated real Temporal service, executes the full synthetic business saga, approves with a distinct identity, rereads both systems and writes `evidence-local/smoke.json`. It shuts down its temporary services. It does not start a vendor account or send a notification to anyone.
+The smoke uses an isolated real Temporal service and synthetic business state, with a distinct approver and both-state verification. It writes `evidence-local/smoke.json`. The first run may download the official Temporal test-server binary. It does not require Salesforce credentials, an external LLM or a paid provider account.
 
-## Use the operator view
+While the delivery PR is not yet merged, use the `circleci-project-setup` branch for this consolidated candidate. Do not assume that a presentation-only default branch contains the application.
 
-Initialize once:
+## Run and inspect the reference deployment
 
-```bash
-uv run --locked python -m crm_workflow.cli init-demo
-```
+The [operator guide](docs/operator-guide.md) contains role-based interactive operation. [Operations](docs/operations.md) covers state, recovery and restoration; [provider installation](docs/vendor-integration.md) describes the external boundaries.
 
-This creates a local database and random requester, approver and operator tokens in `.local/tokens.json`. Only token hashes are loaded by the API. The command refuses to overwrite existing identities.
-
-With the [Temporal CLI](https://docs.temporal.io/cli) installed, run these in three terminals:
+The CI deployment uses the repository's own commands, not replacement business mocks:
 
 ```bash
-temporal server start-dev --db-filename .local/temporal-history.db
+uv run python -m crm_workflow.cli init-demo
+uv run python deploy/prepare_reference.py
+docker compose --env-file .local/compose.env -f deploy/compose.yaml config --quiet
+docker compose --env-file .local/compose.env -f deploy/compose.yaml -f deploy/compose.erp-http.yaml --profile erp-http up --build --wait --wait-timeout 180
+uv run python deploy/reference_smoke.py
 ```
+
+These commands create local synthetic identities and start the explicit local stack. Keep `.local/` private. Do not commit its credentials or reuse them as production identities. Stop only this stack with the same Compose files and profile when finished.
+
+## Tests and CI
 
 ```bash
-uv run --locked python -m crm_workflow.worker
+uv run ruff check .
+uv run ruff format --check .
+uv run pytest -m 'not temporal and not vendor and not load'
+RUN_TEMPORAL_TESTS=1 uv run pytest -m temporal
 ```
 
-```bash
-uv run --locked uvicorn crm_workflow.api:create_app --factory --host 127.0.0.1 --port 8000 --no-access-log
-```
+`.circleci/config.yml` runs the fast core suite through Smarter Testing. Its discovery includes new core regression files and excludes the two Temporal-only files; filtering away every test in a discovered file is not reported as a pass. `.github/workflows/ci.yml` separately runs core, real Temporal and the complete container/browser deployment.
 
-Open `http://127.0.0.1:8000`. Sign in with the requester token, create a request for `CUST-001` / `ORD-1001`, and choose a future delivery date different from the order's current date. Switch to the separate approver token to inspect and approve the bound plan. Tokens stay in browser memory and disappear on refresh or sign-out.
+The browser qualification uses a fresh isolated Chromium instance with its sandbox retained. It creates the request through the actual form, changes to a different approver, executes the workflow, and reconciles through the rendered UI. It selects a new synthetic delivery date from observed state so that the preceding API exercise does not accidentally turn the browser scenario into a legitimate no-change request.
 
-The case view shows the proposal, decision, actual effect journal, CRM object link, event timeline and fresh reconciliation result. A later human change is shown as drift even if the historical workflow completed successfully. See the [operator guide](docs/operator-guide.md).
+Three independent restart trials are bounded to 30 seconds and retain timing and history. This does not weaken the separate approval-expiry test, activity retry budget or no-duplicate-effect assertions.
 
-![Actual Firefox capture of the completed synthetic order case, its approved delivery-date change and observed effects](docs/evidence/firefox-ui/final-run/operator-desktop-detail.png)
+## Boundaries and historical evidence
 
-This is an actual local Firefox capture, using fictional data. The browser submitted the request, switched to a distinct approver, waited for the real Temporal workflow and requested a fresh readback. [The browser evidence](docs/evidence/firefox-ui/README.md) includes the mobile view, original failures and exact limits. Automated fixture interactions do not measure real human response time.
+Current integration evidence is identified in [acceptance](docs/acceptance.md). Earlier Firefox/n8n/Maven/restore exercises and their original failures remain in [versioned evidence](docs/evidence/). Historical counts are not added to the current test run.
 
-For a container reference with PostgreSQL, persistent Temporal history and external secret files, follow [operations.md](docs/operations.md). Ports bind to loopback. Optional ERP HTTP, n8n and monitoring profiles are explicit.
-
-## Business and recovery guarantees in scope
-
-- **Resolve, never guess.** Unknown customers, ambiguous references, nonexistent orders, missing information and contradictory requests require clarification. Insufficient stock escalates.
-- **Approve an exact change.** The plan binds tenant, requester, customer, order, field, before-version, stock-version, target date, risk, policy version and expiry. A model cannot grant itself permissions or enlarge that scope.
-- **Check again before writing.** CRM and stock are reread immediately before the CRM mutation; each target atomically checks its own revision. A changed snapshot invalidates the approval.
-- **Reconcile an uncertain write.** The immutable effect key is looked up before any repeat. A missing receipt while a request may still be running does not prove failure.
-- **Compensate conditionally.** A later human edit prevents restoration. An unknown stock outcome blocks CRM compensation until the reservation is resolved. Original and compensating effects remain visible.
-- **Bound recovery work.** Durable API-call and write budgets, per-system shared concurrency leases, a circuit breaker, `Retry-After`, Temporal activity deadlines and an outbox failure queue limit repeated attempts.
-
-The local implementations prove these behaviours for their own transactions. The [provider acceptance procedure](docs/vendor-integration.md) separately verifies Salesforce/MuleSoft behaviour against actual APIs.
-
-## Architecture
-
-```mermaid
-flowchart TB
-  Operator["Operator / approver"] --> API["Authenticated case API"]
-  Trigger["n8n intake trigger"] --> API
-  API --> DB["PostgreSQL: cases, decisions, effects, outbox"]
-  DB --> Dispatch["Outbox dispatcher"]
-  Dispatch --> Temporal["Temporal workflow history"]
-  Temporal --> Worker["Business activities"]
-  Worker --> DB
-  Worker --> Proposer["Typed interpreter: rules or local Ollama"]
-  Worker --> Mule["MuleSoft system API"]
-  Mule --> SF["Salesforce: scoped order and effect ledger"]
-  Worker --> ERP["Synthetic inventory API"]
-  SF --> Readback["Observed state reconciliation"]
-  ERP --> Readback
-  Readback --> API
-```
-
-Temporal is the workflow authority. The database is the business record and durable dispatch boundary. MuleSoft owns a narrow Salesforce system API; n8n owns the peripheral trigger. There is no second saga in either. The optional local model only extracts typed intent from minimized request fields. The default profile requires no model download or external LLM API.
-
-[Architecture and decisions](docs/architecture.md) explain the transaction boundaries, retry owner, approval races, versioning and deployment limits.
-
-## Verification profiles
-
-```bash
-# Core policy, API, source-system and contract tests
-uv run --locked pytest -m "not temporal and not vendor and not load"
-
-# Real Temporal: durable approval, replay, killed worker and server restart
-RUN_TEMPORAL_TESTS=1 uv run --locked pytest -m temporal
-
-# Bounded isolated load, two actual worker processes, no provider calls
-uv run --locked python scripts/load_profile.py --cases 24 --workers 2 --concurrency 4
-
-# Optional isolated PostgreSQL transaction + logical restore exercise
-uv run --locked --with pgserver==0.1.4 python scripts/postgres_profile.py --output evidence-local/postgres-restore.json
-
-# Source invariants, separate from the recorded Maven package build
-uv run --locked python integrations/vendor_validation/check_sources.py
-```
-
-On PowerShell, set `$env:RUN_TEMPORAL_TESTS = '1'` before the Temporal command. `pgserver` is an optional test-binary helper, not a production dependency or the reference container version. The recorded load measured a small synthetic workload on one host; it is not a vendor scalability claim.
-
-## Salesforce, MuleSoft and n8n
-
-The Salesforce integration uses a dedicated `P06_Order__c` custom object and an immutable `P06_Effect__c` ledger, plus standard Account. It does not assume access to standard Order, Commerce, CPQ or any particular edition entitlement. An actual org preflight must confirm custom objects, Apex, API access, users and permissions.
-
-The repository includes deployment source, an HTTPS Mule system API, an inactive n8n export and a real-provider acceptance harness. That harness drives the running API and Temporal, deliberately loses a response **after a real successful upstream write**, checks the Salesforce ledger, exercises a real reader refusal and rejects a stale approval. It needs an explicitly authorized sandbox/Developer Edition, separate provider identities and an existing licensed Mule runtime. [Installation and qualification](docs/vendor-integration.md) provides the steps and effective version/permission checks.
-
-The [Mule package build](docs/evidence/mule-build-20261114/README.md) resolved the exact HTTP and OAuth connector artifacts and generated an application archive. External configuration, TLS and stream-validation warnings remain visible. Packaging does not establish deployed OAuth behavior, Salesforce permissions or the required real business result.
-
-The [n8n qualification](integrations/n8n/README.md) imported the exact inactive export into a disposable 2.47.5 instance, bound separate inbound and requester credentials outside Git, then observed the real webhook-to-case-to-Temporal path. Its final readback used the synthetic CRM and separate HTTP ERP. This qualifies the peripheral trigger in that local profile; it does not extend provider acceptance.
-
-## Repository map
-
-| Path | Purpose |
-| --- | --- |
-| `src/crm_workflow/` | Domain policy, transaction store, adapters, Temporal runtime, API and operator UI |
-| `contracts/v1/` | Versioned JSON schemas, OpenAPI and event/effect contracts |
-| `config/` | Validated profiles, fixed policy selection and environment overrides |
-| `integrations/` | Salesforce metadata/Apex, MuleSoft application, n8n export and real-provider checks |
-| `tests/` | Business, security, HTTP, concurrency and actual Temporal recovery tests |
-| `scripts/` | Bounded load, PostgreSQL restore and evidence utilities |
-| `deploy/` | Container reference, secret preparation, service limits, monitoring and source/history scan |
-| `docs/` | Architecture, operator guide, incident/restore procedures, acceptance, evidence and release notes |
-
-## Scope, sources and licence
-
-All application code and fixtures were created for this repository. No client code, customer records, P01 source or personal workstation data was imported. No real messages, payments, subscriptions, public service exposure or repository visibility change are part of the demo.
-
-Python dependencies are pinned with hashes in `uv.lock`. The [component inventory](docs/evidence/components.json) records observed package metadata; [vendor sources](docs/vendor-sources.md) identify vendor terms and version references. These are inventories, not security or legal certifications.
-
-Original application code, documentation and synthetic fixtures are licensed under the [Apache License, Version 2.0](LICENSE) (`Apache-2.0`). Copyright 2026 Mehdi Safer. This grant does not relicense any dependencies, provider services or their trademarks; see [component licences](docs/components-and-licences.md). Public GitHub visibility remains a separate owner-managed setting. [Publication status](docs/publication.md) separates this licence, visibility, delivery to `main` and actual-provider acceptance.
+A successful synthetic HTTP ERP deployment is not Salesforce tenant verification. A Maven-built Mule source package is not acceptance of a running Mule provider. The full acceptance issue remains open for those provider obligations and any target-specific operational acceptance. Publishing the source does not certify a production deployment.
