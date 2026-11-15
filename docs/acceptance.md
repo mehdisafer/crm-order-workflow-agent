@@ -55,7 +55,7 @@ Apache-2.0 selection and the root `LICENSE` on `main` were completed via PR #4 o
 | P1 | Qualify OAuth refresh, provider 429/timeouts and shared call budgets | Observed attempts and provider quota values, with the documented global bound respected |
 | P1 | Resolve the GitHub runner-start failure and qualify the reference container and its Chromium profile | Owner-visible run annotations, followed by actual image build, PostgreSQL/HTTP smoke and CI browser artifacts. Local Firefox already has separate evidence; no billing change is authorised implicitly |
 | P1 | Rehearse recovery on the chosen operational platform | PostgreSQL backup, compatible Temporal history, provider reconciliation and measured RPO/RTO |
-| P1 | Complete the authorized public publication, metadata/protections and anonymous access check | Public visibility observed, implementation delivered to the default branch after its merge gate, and direct anonymous content checks; no purchase implied |
+| P1 | Complete the authorized public publication, protections and anonymous access check | About description and 11 topics are configured, Apache-2.0 is selected; Public visibility and protection rules await the owner interface, while implementation delivery to `main` remains conditional on actual CI checks |
 | P2 | Evaluate an explicitly supplied local model | Structured extraction accuracy, abstention, latency and observed resources on a labelled synthetic set |
 | P2 | Extend to another approved business operation or source mapping | Versioned contract, reviewed field mapping, new policy and end-to-end evidence |
 
