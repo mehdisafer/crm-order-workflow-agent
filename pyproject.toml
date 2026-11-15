@@ -1,6 +1,6 @@
 [project]
 name = "crm-order-workflow-agent"
-version = "0.1.0"
+version = "0.1.0rc1"
 description = "Auditable order-exception workflows with Temporal, Salesforce and MuleSoft"
 license = "Apache-2.0"
 license-files = ["LICENSE"]

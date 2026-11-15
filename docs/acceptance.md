@@ -2,6 +2,8 @@
 
 ## Delivery boundary
 
+Local source delivery was merged to `main` through PR #2 after successful GitHub Actions PR CI run 43767041683 (attempt 2). The first post-merge run exposed a distinct browser-launch issue; see [CI evidence](evidence/ci-main-20261115.md). These facts are distinct from provider acceptance.
+
 `0.1.0-rc.1` is an implemented and exercised local vertical slice with prepared provider integration. The complete P06 project is **not accepted** until an authorized Salesforce/MuleSoft run satisfies the original provider criteria. Issue #1 remains open. No skipped test, source parse, mock response, image build or checksum is used to close that gate.
 
 ## Requirement-to-evidence map
@@ -25,11 +27,11 @@
 | Outbox, failure queue and controlled replay | Yes | Transaction rollback, duplicate dispatch, late failure-after-ACK and replay restrictions tested |
 | Load and additional workers | Yes | Bounded local load with two separate workers; no provider throughput or HA claim |
 | Restore | Yes for isolated data profile | Real PostgreSQL logical dump/restore and subsequent reconciliation; Temporal persistence restart tested separately |
-| Container deployment | Source and CI profile prepared | Local executor had no Docker; GitHub jobs failed with runner ID 0 and no executed steps. Container qualification remains open |
-| Operator browser rendering | Implemented and exercised in Firefox | Desktop form, distinct approval, Temporal completion and readback; completed-case desktop/narrow-viewport rendering, six final screenshots and zero relevant browser errors or horizontal overflow. Chromium remains blocked locally; CI browser profile remains unexecuted |
+| Container deployment | Reference Compose profile executed in GitHub Actions PR run | [PR run 43767041683 attempt 2](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43767041683/attempts/2) passed all three jobs, including Docker/HTTP smoke and Chrome. First `main` run 43768042601 passed Docker/smoke but failed Chromium launch; a corrected system-Chrome profile awaits new qualification. No real-provider deployment is implied |
+| Operator browser rendering | Firefox and GitHub-hosted Chrome journey exercised | Actual Firefox results plus [successful PR CI Chrome journey](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43767041683/attempts/2). The first merged-main Chromium executable choice failed; the main fix must pass independently. |
 | Monitoring and operational runbooks | Yes | Tenant-scoped API metrics tested; reference Prometheus/alerts prepared, on-call alert delivery unverified |
 | Dependency, secret and licence checks | Yes | Locked Python dependencies, audit output, component metadata and source/history scan; no certification |
-| Public source publication, licence and repository protections | Apache-2.0 selected, source LICENSE on `main`; visibility/protections still pending | The README, package metadata and licence checker declare Apache-2.0. No public release issued. The maintainer handles interface-only settings; the default-branch/CI gate remains open |
+| Public source publication, licence and repository protections | Public + Apache-2.0 + application on `main` | [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2) merged on 15 November. The release-candidate tag is gated on a successful current-main CI; branch protection remains an owner-interface task. Provider acceptance remains separately open. |
 
 ## Original execution evidence
 
@@ -53,9 +55,9 @@ Apache-2.0 selection and the root `LICENSE` on `main` were completed via PR #4 o
 | P0 | Compile Apex and deploy actual Salesforce/Mule components | Mule packaging is observed; remaining evidence is successful Apex tests, actual server startup/deployment and effective identity/scope output |
 | P0 | Execute complete real provider scenario and original acceptance faults | One real business result, correctly invalidated approval, actual permission denial, response-loss recovery without a duplicate |
 | P1 | Qualify OAuth refresh, provider 429/timeouts and shared call budgets | Observed attempts and provider quota values, with the documented global bound respected |
-| P1 | Resolve the GitHub runner-start failure and qualify the reference container and its Chromium profile | Owner-visible run annotations, followed by actual image build, PostgreSQL/HTTP smoke and CI browser artifacts. Local Firefox already has separate evidence; no billing change is authorised implicitly |
+| P1 | Finish merged-main Chrome CI regression qualification | PR run 43767041683 succeeded after public runner allocation; first main run 43768042601 failed at Chromium launch. Corrected system-Chrome + full UI exercise must pass on the release commit. |
 | P1 | Rehearse recovery on the chosen operational platform | PostgreSQL backup, compatible Temporal history, provider reconciliation and measured RPO/RTO |
-| P1 | Complete the authorized public publication, protections and anonymous access check | About description and 11 topics are configured, Apache-2.0 is selected; Public visibility and protection rules await the owner interface, while implementation delivery to `main` remains conditional on actual CI checks |
+| P1 | Finalize tagged local RC, branch protection and anonymous access check | Public, About and Apache-2.0 are observed; code merged into `main`. Create the prerelease only after passing current-main CI; protect `main` through owner interface and confirm anonymous access. |
 | P2 | Evaluate an explicitly supplied local model | Structured extraction accuracy, abstention, latency and observed resources on a labelled synthetic set |
 | P2 | Extend to another approved business operation or source mapping | Versioned contract, reviewed field mapping, new policy and end-to-end evidence |
 

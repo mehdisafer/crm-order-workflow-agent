@@ -16,17 +16,17 @@ The engineering focus is durable execution, trustworthy approvals and honest rec
 | Local CRM and ERP | Explicitly synthetic implementations; duplicate messages, uncertain responses and compensation conflicts tested |
 | Salesforce through MuleSoft | Real adapter, Apex/metadata, permissions and live acceptance harness prepared; Mule package built for 4.9.24 with resolved dependencies and retained warnings; **no tenant/runtime execution yet** |
 | n8n | Actual 2.47.5 import and authenticated trigger exercised through Temporal completion; missing/wrong credentials refused, duplicate delivery produces one case |
-| Container reference | Source prepared; GitHub jobs failed before runner allocation, so container qualification remains open. The local Firefox observation is a separate profile; see [the evidence index](docs/evidence/README.md) |
-| Publication | Public source publication is authorized; the last observed GitHub visibility is still private, and PR #2 has not been merged. The project is licensed under [Apache-2.0](LICENSE); GitHub visibility remains private and PR #2 is not merged; see [publication status](docs/publication.md) |
+| Reference container and browser | [GitHub Actions PR run 43767041683, attempt 2](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43767041683/attempts/2) executed the real Compose stack and six-screenshot Chrome operator journey successfully. The first post-merge `main` run exposed a different Chromium launch configuration, now corrected to match that successful run; see [CI evidence](docs/evidence/ci-main-20261115.md). |
+| Publication | Public GitHub repository. Application [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2) merged into `main` at `e37e007`. Original project source is licensed under [Apache-2.0](LICENSE). Provider acceptance remains open; see [publication status](docs/publication.md). |
 
 The local demonstration does **not** satisfy Salesforce/MuleSoft acceptance. [Issue #1](https://github.com/mehdisafer/crm-order-workflow-agent/issues/1) stays open for that milestone and the other documented gates. Detailed evidence and limits are in [acceptance.md](docs/acceptance.md).
 
 ## Run the smallest real workflow
 
-Requirements: Python 3.12 and [uv](https://docs.astral.sh/uv/). The first smoke run downloads the official Temporal CLI test-server binary if it is not cached. The candidate is on the reviewed implementation branch in [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2), while the CI gate remains open.
+Requirements: Python 3.12 and [uv](https://docs.astral.sh/uv/). The first smoke run downloads the official Temporal CLI test-server binary if it is not cached. The local release-candidate implementation is available directly on `main`; real Salesforce/MuleSoft provider acceptance is still tracked in [issue #1](https://github.com/mehdisafer/crm-order-workflow-agent/issues/1).
 
 ```bash
-git clone --branch feat/p06-controlled-order-workflow https://github.com/mehdisafer/crm-order-workflow-agent.git
+git clone https://github.com/mehdisafer/crm-order-workflow-agent.git
 cd crm-order-workflow-agent
 uv sync --locked
 uv run --locked python -m crm_workflow.cli smoke
@@ -153,4 +153,4 @@ All application code and fixtures were created for this repository. No client co
 
 Python dependencies are pinned with hashes in `uv.lock`. The [component inventory](docs/evidence/components.json) records observed package metadata; [vendor sources](docs/vendor-sources.md) identify vendor terms and version references. These are inventories, not security or legal certifications.
 
-Original application code, documentation and synthetic fixtures are licensed under the [Apache License, Version 2.0](LICENSE) (`Apache-2.0`). Copyright 2026 Mehdi Safer. This grant does not relicense any dependencies, provider services or their trademarks; see [component licences](docs/components-and-licences.md). Public GitHub visibility remains a separate owner-managed setting. [Publication status](docs/publication.md) separates this licence, visibility, delivery to `main` and actual-provider acceptance.
+Original application code, documentation and synthetic fixtures are licensed under the [Apache License, Version 2.0](LICENSE) (`Apache-2.0`). Copyright 2026 Mehdi Safer. This grant does not relicense any dependencies, provider services or their trademarks; see [component licences](docs/components-and-licences.md). The repository is publicly accessible as source code; no service or tenant is publicly deployed by that visibility change. [Publication and release status](docs/publication.md) separates this local release candidate from actual-provider acceptance.
