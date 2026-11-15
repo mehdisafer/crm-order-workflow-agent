@@ -17,7 +17,7 @@ The engineering focus is durable execution, trustworthy approvals and honest rec
 | Salesforce through MuleSoft | Real adapter, Apex/metadata, permissions and live acceptance harness prepared; Mule package built for 4.9.24 with resolved dependencies and retained warnings; **no tenant/runtime execution yet** |
 | n8n | Actual 2.47.5 import and authenticated trigger exercised through Temporal completion; missing/wrong credentials refused, duplicate delivery produces one case |
 | Container reference | Source prepared; GitHub jobs failed before runner allocation, so container qualification remains open. The local Firefox observation is a separate profile; see [the evidence index](docs/evidence/README.md) |
-| Publication | Public source publication is authorized; the last observed GitHub visibility is still private, and PR #2 has not been merged. The repository licence remains undecided; see [publication status](docs/publication.md) |
+| Publication | Public source publication is authorized; the last observed GitHub visibility is still private, and PR #2 has not been merged. The project is licensed under [Apache-2.0](LICENSE); GitHub visibility remains private and PR #2 is not merged; see [publication status](docs/publication.md) |
 
 The local demonstration does **not** satisfy Salesforce/MuleSoft acceptance. [Issue #1](https://github.com/mehdisafer/crm-order-workflow-agent/issues/1) stays open for that milestone and the other documented gates. Detailed evidence and limits are in [acceptance.md](docs/acceptance.md).
 
@@ -153,4 +153,4 @@ All application code and fixtures were created for this repository. No client co
 
 Python dependencies are pinned with hashes in `uv.lock`. The [component inventory](docs/evidence/components.json) records observed package metadata; [vendor sources](docs/vendor-sources.md) identify vendor terms and version references. These are inventories, not security or legal certifications.
 
-Public source publication is the intended distribution. The repository licence is **pending explicit maintainer selection**, so no open-source licence is inferred from dependency licences. Third-party software retains its own terms. [Publication status](docs/publication.md) separates the visibility setting, delivery to the default branch, licence decision and actual-provider acceptance.
+Original application code, documentation and synthetic fixtures are licensed under the [Apache License, Version 2.0](LICENSE) (`Apache-2.0`). Copyright 2026 Mehdi Safer. This grant does not relicense any dependencies, provider services or their trademarks; see [component licences](docs/components-and-licences.md). Public GitHub visibility remains a separate owner-managed setting. [Publication status](docs/publication.md) separates this licence, visibility, delivery to `main` and actual-provider acceptance.

@@ -1,6 +1,6 @@
 # Component inventory and licence status
 
-The repository's own licence is intentionally undecided and requires an explicit maintainer selection. Public source publication has been authorized; changing GitHub visibility does not itself select an open-source licence. Package metadata does not grant a licence to this project's source. The [publication record](publication.md) tracks the separate decisions and observed settings.
+The maintainer explicitly selected the [Apache License, Version 2.0](../LICENSE) (`Apache-2.0`) for original source, documentation and synthetic fixtures on 15 November 2026. Copyright 2026 Mehdi Safer. The unmodified standard licence was merged into `main` via [PR #4](https://github.com/mehdisafer/crm-order-workflow-agent/pull/4). The package declares its SPDX identifier and `LICENSE` file under PEP 639. Public GitHub visibility remains a separate owner-managed setting; the selected project licence does not change third-party or provider terms.
 
 `uv.lock` pins the Python dependency graph and distribution hashes. [components.json](evidence/components.json) records the observed installed development environment, including test/audit tooling, package versions, authors, URLs and declared licences. [dependency-audit.json](evidence/dependency-audit.json) separately audits the locked runtime subset. An inventory or a clean current advisory lookup is not a certification and does not cover deployed Salesforce/MuleSoft permissions.
 
@@ -19,4 +19,4 @@ The 14 November [Mule packaging record](evidence/mule-build-20261114/README.md) 
 
 The optional PostgreSQL qualification helper is outside the runtime dependency graph. Its version and embedded PostgreSQL version are recorded with the exercise. It is used only for a disposable loopback test and is not the reference deployment image.
 
-Before a dependency update or public binary release, rerun the locked audit, regenerate the inventory, investigate newly unknown/changed licences and retain the relevant upstream notices. Do not silently change the repository licence to make an inventory check pass.
+Before a dependency update or public binary release, rerun the locked audit, regenerate the inventory, investigate newly unknown/changed licences and retain the relevant upstream notices. The source-licence checker verifies Apache-2.0 declarations and third-party metadata presence; this is not legal certification. Historical evidence captured before the licence choice remains unchanged.
