@@ -119,7 +119,9 @@ jobs:
           PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
           DEBUG: pw:browser
         # Preserve chromiumSandbox=true. No --no-sandbox or host security change.
-        run: node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules --output evidence-local/browser --exercise
+        run: |
+          node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules --output evidence-local/browser --exercise true
+          node -e 'const r=require("./evidence-local/browser/operator-browser.json"); if(r.exercise_requested!==true || r.status!=="passed") throw new Error("The browser workflow must actually execute and pass")'
       - name: Capture reference logs
         if: always()
         run: |
