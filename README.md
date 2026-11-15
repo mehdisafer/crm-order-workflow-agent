@@ -44,4 +44,6 @@ For interactive operation, see the [operator guide](https://github.com/mehdisafe
 
 ## Publication and licence
 
-Public source publication is authorized. The repository licence remains undecided and requires the maintainer's selection; third-party software retains its own terms. The prepared 0.1.0-rc.1 candidate is not a production deployment or full Salesforce/MuleSoft acceptance. No public release or version tag is asserted here.
+The original application source, documentation and synthetic fixtures are licensed under the [Apache License, Version 2.0](LICENSE) (`Apache-2.0`). Copyright 2026 Mehdi Safer. Third-party dependencies, provider services, trademarks and runtime distributions retain their own applicable terms.
+
+Publication of the repository's source was authorized; the GitHub **Public** visibility setting is a separate owner-managed action. This licence does not represent a Salesforce/MuleSoft runtime certification. The prepared `0.1.0-rc.1` candidate is not a production deployment or full provider acceptance. No public release or version tag is asserted here.
