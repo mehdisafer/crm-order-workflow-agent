@@ -4,9 +4,9 @@
 
 The deployment target is one Linux host with Docker Compose: a PostgreSQL business database, one persistent Temporal development server, an API and one or more workers. Synthetic inventory can run through its HTTP API. n8n and Prometheus are optional profiles. No Salesforce tenant, MuleSoft runtime, cloud account, public listener or paid resource is created by this repository.
 
-The container configuration is prepared and YAML-checked. Docker was unavailable in the authoring environment, so an unexecuted image build is not reported as a successful deployment. The `Reference container build` CI job is configured to build the image and exercise the full Compose stack, including PostgreSQL and the HTTP ERP. The recorded GitHub runs failed before runner allocation, with no executed steps or job logs; [the CI observation](evidence/ci-observation.json) preserves that outcome. Read the owner-visible run annotations to establish the platform cause, without assuming a billing or runner-policy change is authorised. Actual build/deployment artifacts are still required.
+The original authoring executor had no Docker and early GitHub Actions attempts failed before runner assignment; their results remain in [historical CI evidence](evidence/ci-observation.json). Actual hosted qualification subsequently succeeded: [release-source main CI 43770254516](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43770254516) at `cdf3c0e` and [post-release main CI 43772725456](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43772725456) at `4dc6e2a` each passed Core, Temporal and Reference container jobs, including Docker build, PostgreSQL/HTTP ERP, synthetic business readback and Chrome desktop/mobile exercise. These are verified *reference* executions, not a running MuleSoft/Salesforce provider deployment.
 
-Python business-core and real Temporal recovery tests were executed separately; see [the runtime evidence](temporal-runtime.md). The local HTTP demonstration records its own actual result in [http-smoke.json](evidence/http-smoke.json). Neither proves a real Salesforce/MuleSoft path.
+The original isolated Python/Temporal and HTTP profiles remain in [historical evidence](temporal-runtime.md) and [HTTP smoke](evidence/http-smoke.json). Newer hosted CI executed the business reference alongside independent Core and real Temporal jobs. After post-release PR #9, the Temporal profile passed 12 cases including three separate bounded worker-restart trials; no provider acceptance is implied.
 
 ## Start the reference environment
 
@@ -45,7 +45,7 @@ The base profile uses the original synthetic CRM and ERP implementations in the 
 
 The script permits only loopback demo endpoints, uses normal headless browser launches, and records the selected engine, source hashes, screenshot hashes, page/console/network errors, horizontal overflow, credential-input clearing and empty browser storage. `--engine chromium` is the default; `--engine firefox` and `--engine webkit` explicitly select distinct rendering engines. An explicitly provided `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` selects an already installed Chromium. No sandbox-disabling launch flags are added.
 
-The [final Firefox run](evidence/firefox-ui/README.md) passed the recorded form/approval/readback scenario with Firefox 153.0 and Playwright 1.62.1. Six original screenshots and an independent Temporal/HTTP ERP observation are retained. The original Chromium attempt remains [blocked by the executor's socket policy](evidence/operator-browser.json). The deployment CI job still targets Chromium; its container and Chromium qualification remain open until an actual successful run. Firefox evidence does not change those gates or qualify a real vendor tenant.
+The [original Firefox run](evidence/firefox-ui/README.md) passed the synthetic form/approval/readback scenario and retained six screenshots; the first isolated Chromium launch was [blocked](evidence/operator-browser.json). Subsequently the [release-source hosted CI](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43770254516) and [post-release hosted CI](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43772725456) both passed actual Chrome reference journeys with desktop/mobile captures, separate approval, matching readback and no horizontal viewport overflow. These distinct evidence scopes do not qualify Salesforce/MuleSoft identities, permissions or effects.
 
 To reproduce the complete synthetic scenario without requiring a pre-existing stack:
 
@@ -67,7 +67,7 @@ node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules \
   --engine firefox --output evidence-local/browser-existing
 ```
 
-Add `--exercise true` only when a new synthetic request and automated separate approval are intended. The exercise uses `CUST-001` / `ORD-1001` and defaults to a date ten days ahead; `--requested-date YYYY-MM-DD` selects another permitted future date for an existing fixture. Playwright and browser binaries are development tools and are not included in the production Python image. The evidence index records the small harness-only environment filtering change made after the final captured UI run.
+Add `--exercise true` only when a new synthetic request with automated distinct approval is intended. The scenario uses `CUST-001` / `ORD-1001` and selects a future date **different from the currently observed order date**, to avoid a legitimate `NO_CHANGE_NEEDED` result after a prior reference smoke. An explicit `--requested-date YYYY-MM-DD` must also be a permitted, different date. Browser binaries are development-only, not part of the production Python image. Historical harness changes and failures are retained in [the evidence index](evidence/README.md).
 
 ## Secrets and privileges
 
