@@ -112,9 +112,15 @@ jobs:
           mkdir -p .local/browser-tools
           cp deploy/browser/package.json deploy/browser/package-lock.json .local/browser-tools/
           npm ci --prefix .local/browser-tools --ignore-scripts --no-audit --no-fund
-          .local/browser-tools/node_modules/.bin/playwright install --with-deps chromium
-      - name: Verify actual desktop and mobile operator view
-        run: node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules --output evidence-local/browser
+          test -x /usr/bin/google-chrome
+          /usr/bin/google-chrome --version
+      - name: Exercise intake, distinct approval and desktop/mobile operator view
+        env:
+          PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
+          DEBUG: pw:browser
+        run: |
+          node deploy/capture_operator.mjs --modules .local/browser-tools/node_modules --output evidence-local/browser --exercise true
+          node -e 'const r=require("./evidence-local/browser/operator-browser.json"); if(r.exercise_requested!==true || r.status!=="passed") throw new Error("The browser workflow must actually execute and pass")'
       - name: Capture reference logs
         if: always()
         run: |

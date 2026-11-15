@@ -68,7 +68,9 @@ async function connect(page, role) {
   assert(session.profile === "demo", "Browser qualification refuses a non-demo profile");
   await page.waitForFunction(() => document.querySelector("#access-token").value === "");
   assert(await page.locator("#case-detail").isHidden(), "Switching identity did not clear the case view");
-  return session;
+  const caseQueue = await queue.json();
+  assert(Array.isArray(caseQueue.items), "The authenticated case list is malformed");
+  return { ...session, cases: caseQueue.items };
 }
 
 async function openCase(page, caseId) {
@@ -90,7 +92,24 @@ async function openCase(page, caseId) {
 async function exerciseWorkflow(page) {
   const started = Date.now();
   const requester = await connect(page, "requester");
-  const requestedDate = options["--requested-date"] || new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10);
+  const previousDates = requester.cases
+    .map((item) => item.reconciliation?.crm_order)
+    .filter((order) => order?.reference === "ORD-1001")
+    .map((order) => order.requested_date)
+    .filter((value) => typeof value === "string");
+  // The HTTP reference smoke changes ORD-1001 first. A duplicate target is a valid
+  // NO_CHANGE_NEEDED decision, not a workflow eligible for an approval.
+  let requestedDate = options["--requested-date"];
+  if (!requestedDate) {
+    for (let days = 10; days <= 75; days += 1) {
+      const candidate = new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
+      if (!previousDates.includes(candidate)) {
+        requestedDate = candidate;
+        break;
+      }
+    }
+  }
+  assert(requestedDate, "No distinct future date was available for the synthetic browser case");
   const messageId = `browser-${randomUUID()}`;
   await page.locator("#new-top").click();
   await page.locator("#customer-reference").fill("invalid reference with spaces");
@@ -162,6 +181,8 @@ async function exerciseWorkflow(page) {
     approved_plan_hash: plan.hash,
     before_date: plan.order.requested_date,
     requested_date: requestedDate,
+    previously_observed_order_dates: previousDates,
+    default_date_avoids_existing_remote_state: !previousDates.includes(requestedDate),
     state: final.state,
     effects: final.effects.map(({ system, status, attempts }) => ({ system, status, attempts })),
     remote_readback_matches: final.reconciliation.matches,

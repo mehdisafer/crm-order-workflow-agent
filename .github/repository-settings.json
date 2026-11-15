@@ -1,5 +1,5 @@
 {
-  "status": "apache_2_0_and_about_applied_visibility_and_protection_pending",
+  "status": "public_apache_2_0_application_merged_branch_protection_pending",
   "repository": "mehdisafer/crm-order-workflow-agent",
   "description": "Auditable order-exception workflows with Temporal, scoped approvals, Salesforce/MuleSoft integration source and recovery evidence.",
   "topics": [
@@ -31,14 +31,21 @@
   },
   "note": "Public publication is authorized. This proposal does not change GitHub settings. The maintainer handles interface-only visibility, About and protection operations; code/PR work remains executable through the connected repository tools. Follow docs/publication.md and verify the resulting state. Apache-2.0 LICENSE was merged on main in PR #4; About description/topics are already observed on GitHub.",
   "desired_visibility": "public",
-  "last_observed_visibility": "private",
+  "last_observed_visibility": "public",
   "public_publication_authorized_on": "2026-11-14",
   "interface_operations_owner": "maintainer",
   "implementation_branch": "feat/p06-controlled-order-workflow",
   "implementation_pull_request": 2,
-  "default_branch_implementation_status": "reviewed_project_overview_on_main_application_pr_open",
+  "default_branch_implementation_status": "application_merged_main_e37e007",
   "default_branch_overview_pull_request": 3,
   "default_branch_overview_merge_commit": "53314f0fc1160992c04aba4f4be98c825ba976ef",
   "about_observed": true,
-  "about_observed_topic_count": 11
+  "about_observed_topic_count": 11,
+  "default_branch_application_merge_commit": "e37e00763254c2287117148e7050f27f6fc1c2c5",
+  "release_candidate": {
+    "tag": "v0.1.0-rc.1",
+    "python_version": "0.1.0rc1",
+    "publication": "gated_on_current_main_ci_success",
+    "provider_acceptance": "OPEN"
+  }
 }
