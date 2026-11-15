@@ -14,8 +14,8 @@ Evidence describes the system that actually ran. The source manifest identifies 
 | `local-load.json` | Parameters, predeclared thresholds, per-case measurements, two worker processes, resource scope and unmetered cost statement |
 | `postgres-restore.json` | PostgreSQL version, 16 concurrent duplicate deliveries yielding one case, logical restore and restored-state reconciliation |
 | `dependency-audit.json` | Original pip-audit output against locked runtime requirements |
-| `components.json` | Observed package versions, authors, URLs and declared licence metadata, including the repository's intentionally undecided licence |
-| `licence-check.json` | Third-party licence metadata presence check; project licence remains an explicit decision |
+| `components.json` | Observed package versions, authors, URLs and declared licence metadata, recorded before the project selected Apache-2.0 on 15 November 2026 |
+| `licence-check.json` | Third-party licence metadata presence check; historical project licence was undecided at the time |
 | `vendor-preflight.json` | Original blocked provider preflight; required environment was absent |
 | `operator-browser.json` | Historical Chromium attempt, blocked by the executor's socket policy; preserved unchanged |
 | [`firefox-ui/README.md`](firefox-ui/README.md) | Actual browser journey and independent Temporal/HTTP ERP observation; six final desktop/mobile screenshots, original failed runs and capture/source digests |

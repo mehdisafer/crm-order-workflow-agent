@@ -24,9 +24,13 @@ The same continuation qualified the actual n8n 2.47.5 trigger: inactive export i
 
 ## Release status
 
-Prepared candidate on [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2); **not merged into main, not a public GitHub release and not full P06 acceptance**. GitHub jobs failed before runner allocation and any test step, so the reference-container and CI Chromium gates remain open. The successful local Firefox profile is identified separately. No version tag, licence grant, paid resource or visibility change is implied by this file. Actual Salesforce/MuleSoft execution and the remaining qualification/publication decisions are tracked in [acceptance.md](acceptance.md).
+Prepared candidate on [PR #2](https://github.com/mehdisafer/crm-order-workflow-agent/pull/2); **not merged into main, not a public GitHub release and not full P06 acceptance**. GitHub jobs failed before runner allocation and any test step, so the reference-container and CI Chromium gates remain open. The successful local Firefox profile is identified separately. No version tag, paid resource or visibility change is implied by these release notes. The original project source was subsequently licensed under Apache-2.0 in PR #4, independently of the still-unissued release. Actual Salesforce/MuleSoft execution and the remaining qualification/publication decisions are tracked in [acceptance.md](acceptance.md).
 
 The maintainer subsequently authorized public source publication and retained the interface-only settings work. The last observed repository visibility is private. The README-only [PR #3](https://github.com/mehdisafer/crm-order-workflow-agent/pull/3) has been merged into `main`, providing a project overview, original screenshot and direct candidate/evidence links while the application remains in PR #2. [Publication status](publication.md) identifies the remaining settings, CI and application-merge steps. Historical manifests retain the visibility observed when they were recorded.
+
+## Licence
+
+Original application source, documentation and synthetic fixtures are licensed under [Apache-2.0](../LICENSE), selected on 15 November 2026 and present on `main` through [PR #4](https://github.com/mehdisafer/crm-order-workflow-agent/pull/4). Third-party libraries and Salesforce/MuleSoft/n8n products remain under their respective terms. The release candidate is still not tagged or published.
 
 ## Upgrade and rollback
 

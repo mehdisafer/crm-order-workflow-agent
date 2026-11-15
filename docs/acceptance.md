@@ -29,7 +29,7 @@
 | Operator browser rendering | Implemented and exercised in Firefox | Desktop form, distinct approval, Temporal completion and readback; completed-case desktop/narrow-viewport rendering, six final screenshots and zero relevant browser errors or horizontal overflow. Chromium remains blocked locally; CI browser profile remains unexecuted |
 | Monitoring and operational runbooks | Yes | Tenant-scoped API metrics tested; reference Prometheus/alerts prepared, on-call alert delivery unverified |
 | Dependency, secret and licence checks | Yes | Locked Python dependencies, audit output, component metadata and source/history scan; no certification |
-| Public source publication, licence and repository protections | Public distribution authorized; settings prepared | Last observed visibility remains private; no licence selected or public release issued. The maintainer handles interface-only settings, and the default-branch/CI gate remains open |
+| Public source publication, licence and repository protections | Apache-2.0 selected, source LICENSE on `main`; visibility/protections still pending | The README, package metadata and licence checker declare Apache-2.0. No public release issued. The maintainer handles interface-only settings; the default-branch/CI gate remains open |
 
 ## Original execution evidence
 
@@ -45,6 +45,9 @@ With those inputs, run the checked-in install/preflight and bounded [real accept
 
 ## Remaining qualification and publication backlog
 
+Apache-2.0 selection and the root `LICENSE` on `main` were completed via PR #4 on 15 November 2026. The original component and advisory inventories remain dated evidence; no current legal compatibility certification is implied.
+
+
 | Priority | Work | Completion evidence |
 | --- | --- | --- |
 | P0 | Compile Apex and deploy actual Salesforce/Mule components | Mule packaging is observed; remaining evidence is successful Apex tests, actual server startup/deployment and effective identity/scope output |
@@ -52,7 +55,6 @@ With those inputs, run the checked-in install/preflight and bounded [real accept
 | P1 | Qualify OAuth refresh, provider 429/timeouts and shared call budgets | Observed attempts and provider quota values, with the documented global bound respected |
 | P1 | Resolve the GitHub runner-start failure and qualify the reference container and its Chromium profile | Owner-visible run annotations, followed by actual image build, PostgreSQL/HTTP smoke and CI browser artifacts. Local Firefox already has separate evidence; no billing change is authorised implicitly |
 | P1 | Rehearse recovery on the chosen operational platform | PostgreSQL backup, compatible Temporal history, provider reconciliation and measured RPO/RTO |
-| P1 | Select the repository licence | Explicit maintainer choice of the actual licence; third-party obligations retained |
 | P1 | Complete the authorized public publication, metadata/protections and anonymous access check | Public visibility observed, implementation delivered to the default branch after its merge gate, and direct anonymous content checks; no purchase implied |
 | P2 | Evaluate an explicitly supplied local model | Structured extraction accuracy, abstention, latency and observed resources on a labelled synthetic set |
 | P2 | Extend to another approved business operation or source mapping | Versioned contract, reviewed field mapping, new policy and end-to-end evidence |

@@ -16,7 +16,7 @@
     "n8n",
     "portfolio"
   ],
-  "licence": "awaiting_explicit_maintainer_selection",
+  "licence": "Apache-2.0",
   "protection_proposal": {
     "default_branch": "main",
     "prevent_force_push": true,
@@ -30,7 +30,7 @@
     "independent_approval": "not_asserted",
     "availability": "Verify supported controls after the authorized public transition; no plan upgrade authorized."
   },
-  "note": "Public publication is authorized. This proposal does not change GitHub settings. The maintainer handles interface-only visibility, About and protection operations; code/PR work remains executable through the connected repository tools. Follow docs/publication.md and verify the resulting state. No repository licence has been selected.",
+  "note": "Public publication is authorized. This proposal does not change GitHub settings. The maintainer handles interface-only visibility, About and protection operations; code/PR work remains executable through the connected repository tools. Follow docs/publication.md and verify the resulting state. Apache-2.0 LICENSE was merged on main in PR #4; About description/topics are already observed on GitHub.",
   "desired_visibility": "public",
   "last_observed_visibility": "private",
   "public_publication_authorized_on": "2026-11-14",

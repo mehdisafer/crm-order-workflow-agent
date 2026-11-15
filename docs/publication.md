@@ -15,13 +15,13 @@ The available GitHub connector was inspected again on **15 November 2026**. The 
 | Operation | Available route |
 | --- | --- |
 | Update source, documentation, branches, issues and PRs | GitHub connector |
-| Add the repository's `LICENSE` and align package metadata | GitHub connector, once this repository's licence has been selected |
+| Select and commit the `Apache-2.0` licence to `main` | Completed in [PR #4](https://github.com/mehdisafer/crm-order-workflow-agent/pull/4); package metadata aligned on the application branch |
 | Re-run failed Actions jobs | GitHub connector; an actual rerun was accepted on 15 November |
 | Merge PR #2 after its execution gate is satisfied | GitHub connector; no browser sign-in is needed |
 | Change visibility, About description/topics or branch protections | Maintainer's GitHub interface; no administration mutation is exposed by this connector |
 | Read the startup failure annotation text | Maintainer's interface; the connector's allowed endpoints do not expose these check-run details |
 
-The following settings are prepared for the maintainer.
+The GitHub API now confirms that the description and eleven technology topics are present. The remaining visibility/protection operations below are prepared for the maintainer; these cannot be applied through this GitHub connector.
 
 ### 1. Make the exact repository public
 
@@ -57,9 +57,9 @@ Apply the available branch protections after checking their exact settings: requ
 
 ## Licence and release identity
 
-No licence has been selected for this repository. Public visibility and an open-source licence are separate matters in GitHub's [licensing guidance](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository). An actual licence grant requires the maintainer's choice; neither a licence used by another project nor dependency metadata determines it here.
+The maintainer selected **Apache-2.0** on 15 November 2026. The complete standard `LICENSE` was merged to `main` via [PR #4](https://github.com/mehdisafer/crm-order-workflow-agent/pull/4) at commit [`1892087`](https://github.com/mehdisafer/crm-order-workflow-agent/commit/18920871022446f6bf284e22d8b071c26c93572b). The application branch includes that licence and declares `license = "Apache-2.0"` with `license-files = ["LICENSE"]` in `pyproject.toml`, following [PEP 639](https://peps.python.org/pep-0639/). This is a grant for the original project source, not for vendor products.
 
-When selected, add the exact standard licence text and align the README, package metadata and licence checks. Until then, describe the project as public source, with its licence undecided. Third-party licences and vendor/runtime terms remain applicable.
+The licence text is unchanged from the [SPDX Apache-2.0 reference](https://github.com/spdx/license-list-data/blob/main/text/Apache-2.0.txt). Both READMEs and the package metadata identify Apache-2.0. Third-party dependencies, n8n and Salesforce/MuleSoft distribution/runtime terms remain applicable; historical audit files that predate selection are preserved rather than rewritten.
 
 The prepared `0.1.0-rc.1` notes describe a local candidate. No public release or tag has been issued. Any eventual release must state its actual source commit and retain the open provider qualification rather than imply a completed production deployment.
 
@@ -68,7 +68,7 @@ The prepared `0.1.0-rc.1` notes describe a local candidate. No public release or
 - GitHub reports public visibility for this exact repository.
 - Anonymous readers can open the default-branch overview and its direct links to the candidate source, evidence and actual screenshots.
 - The overview states where the runnable candidate lives and identifies the application PR's actual status.
-- The selected licence is consistent across files, or its undecided status remains explicit.
+- GitHub detects `Apache-2.0` on `main`, and the candidate package metadata and documentation declare the same licence.
 - The source/evidence identities and open provider acceptance issue remain accessible.
 
 Delivery of the application to `main` is a subsequent, separately observable milestone: the required CI jobs execute successfully, PR #2 is merged at its reviewed head, and source/guide/screenshot links work from the resulting default branch. Actual-provider acceptance remains open until its own scenarios run. Neither milestone is implied by the visibility setting or the README-only merge.

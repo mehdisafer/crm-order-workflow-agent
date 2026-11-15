@@ -182,7 +182,7 @@ For a code-only rollback compatible with schema and workflow histories: stop int
 
 CI uses the locked Python dependencies, checks Ruff and versioned-contract drift, runs meaningful core and actual Temporal tests, scans the worktree/reachable history for high-confidence credential patterns, audits runtime dependencies and records component licence metadata. The focused scanner does not prove the absence of every possible secret; the publication review also covers issue/PR text, logs and artifacts.
 
-Image tags and action commit SHAs are explicit. Registry digests and actual image pull/build outcomes must be recorded from the deployment environment; no unobserved digest is invented. The project licence remains a maintainer decision and does not replace third-party terms.
+Image tags and action commit SHAs are explicit. Registry digests and actual image pull/build outcomes must be recorded from the deployment environment; no unobserved digest is invented. The original project source is licensed under Apache-2.0 (see root `LICENSE`); this does not replace third-party terms or establish redistribution compliance for a built container.
 
 ## Official references used for the prepared deployment
 
