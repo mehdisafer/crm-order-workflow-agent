@@ -22,18 +22,53 @@ logger = logging.getLogger(__name__)
 
 
 class SafeJsonFormatter(logging.Formatter):
-    """Allowlisted structured context; no exception payloads or arbitrary extras."""
+    """Allowlisted application events; never expand untrusted logger messages."""
+
+    # Third-party SDKs use the root logger. Their interpolated messages and
+    # extras may include provider response text or credentials, so only the
+    # application's known static event names are admitted to structured output.
+    _EVENTS = frozenset(
+        {
+            "activity_started",
+            "activity_completed",
+            "activity_transient_failure",
+            "activity_refused",
+            "activity_internal_failure",
+            "result_notification",
+            "outbox_delivery_failed",
+            "unexpected_http_failure",
+            "unexpected_api_error",
+            "unexpected_erp_error",
+            "api_request",
+        }
+    )
+    _FIELDS = ("case_id", "outbox_id", "operation", "attempt", "error_code")
+    _APP_LOGGERS = frozenset(
+        {
+            "crm_workflow.worker",
+            "crm_workflow.dispatcher",
+            "crm_workflow.api",
+            "crm_workflow.erp",
+        }
+    )
 
     def format(self, record: logging.LogRecord) -> str:
+        trusted = (
+            record.name in self._APP_LOGGERS
+            and isinstance(record.msg, str)
+            and record.msg in self._EVENTS
+            and not record.args
+        )
         data = {
             "timestamp": datetime.fromtimestamp(record.created, UTC).isoformat(),
             "level": record.levelname,
-            "logger": record.name,
-            "event": record.getMessage(),
+            "logger": record.name if trusted else "external_or_unrecognized",
+            "event": record.msg if trusted else "untrusted_log_redacted",
         }
-        for field in ("case_id", "outbox_id", "operation", "attempt", "error_code"):
-            if hasattr(record, field):
-                data[field] = getattr(record, field)
+        if trusted:
+            for field in self._FIELDS:
+                if hasattr(record, field):
+                    data[field] = getattr(record, field)
         return json.dumps(data, ensure_ascii=True)
 
 
