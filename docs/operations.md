@@ -180,7 +180,7 @@ For a code-only rollback compatible with schema and workflow histories: stop int
 
 ## Build, dependency and publication gates
 
-CI uses the locked Python dependencies, checks Ruff and versioned-contract drift, runs meaningful core and actual Temporal tests, scans the worktree/reachable history for high-confidence credential patterns, audits runtime dependencies and records component licence metadata. The focused scanner does not prove the absence of every possible secret; the publication review also covers issue/PR text, logs and artifacts.
+CI uses the locked Python dependencies, checks Ruff and versioned-contract drift, runs meaningful core and actual Temporal tests, scans the worktree/reachable history for high-confidence credential patterns, audits runtime dependencies and records component licence metadata. Upstream HTTP Retry-After hints are bounded at 24 hours and nonfinite values are not forwarded into circuit/Temporal timers; this is a **local safety ceiling**, not a claim about live provider quota policies. Worker JSON logs preserve known static application events and allowlisted fields but redact unrecognized/external messages before formatting, without expanding third-party arguments. The focused scanner does not prove the absence of every possible secret; the publication review also covers issue/PR text, logs and artifacts.
 
 Image tags and action commit SHAs are explicit. Registry digests and actual image pull/build outcomes must be recorded from the deployment environment; no unobserved digest is invented. The original project source is licensed under Apache-2.0 (see root `LICENSE`); this does not replace third-party terms or establish redistribution compliance for a built container.
 

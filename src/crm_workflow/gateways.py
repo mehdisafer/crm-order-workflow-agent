@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import ssl
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
@@ -27,16 +28,26 @@ class ERP(Protocol):
     async def reserve(self, payload: dict, correlation_id: str) -> dict: ...
 
 
+# An untrusted upstream hint must not create an unbounded circuit deadline or
+# overflow Temporal's timedelta conversion. 24 hours is an explicit conservative
+# ceiling; the already bounded workflow generally expires before such a retry.
+MAX_RETRY_AFTER_SECONDS = 86400.0
+
+
 def retry_after_seconds(value: str | None) -> float | None:
     if not value:
         return None
     try:
-        return max(0, float(value))
+        seconds = float(value)
     except ValueError:
         try:
-            return max(0, (parsedate_to_datetime(value) - datetime.now(UTC)).total_seconds())
-        except (ValueError, TypeError):
+            seconds = (parsedate_to_datetime(value) - datetime.now(UTC)).total_seconds()
+        except (ValueError, TypeError, OverflowError):
             return None
+    if not math.isfinite(seconds):
+        # NaN/Infinity are not valid retry delays; use the normal bounded policy.
+        return None
+    return min(MAX_RETRY_AFTER_SECONDS, max(0.0, seconds))
 
 
 class HTTPSystem:
