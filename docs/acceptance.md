@@ -57,7 +57,7 @@ Apache-2.0 and the root `LICENSE` were completed through PR #4, and the public l
 | P1 | Qualify OAuth refresh, provider 429/timeouts and shared call budgets | Observed attempts and provider quota values, with the documented global bound respected |
 
 | P1 | Rehearse recovery on the chosen operational platform | PostgreSQL backup, compatible Temporal history, provider reconciliation and measured RPO/RTO |
-| P1 | Protect `main` and verify signed-out public access | Public licence/About/code/CI-qualified local prerelease are done. GitHub reports `main` unprotected; a separate signed-out web check could not reach the public host from the isolated environment and remains unverified. |
+| P1 | Verify signed-out public access, private reporting and continued check enforcement | **`main` protection is observed:** active `main-protection-v1` ruleset (16 Nov 2026), PR-only changes, deletion/force-push prohibited and four required CI contexts; zero approvals currently required. A separate signed-out HTTP/browser check remains unverified, and private vulnerability reporting must still be confirmed in owner settings. |
 | P2 | Evaluate an explicitly supplied local model | Structured extraction accuracy, abstention, latency and observed resources on a labelled synthetic set |
 | P2 | Extend to another approved business operation or source mapping | Versioned contract, reviewed field mapping, new policy and end-to-end evidence |
 
