@@ -147,6 +147,10 @@ The [n8n qualification](integrations/n8n/README.md) imported the exact inactive 
 | `deploy/` | Container reference, secret preparation, service limits, monitoring and source/history scan |
 | `docs/` | Architecture, operator guide, incident/restore procedures, acceptance, evidence and release notes |
 
+## Contributing and security
+
+Contributions are welcome when they include scoped changes and reproducible evidence. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report potential security vulnerabilities through the private process described in [SECURITY.md](SECURITY.md), **not** through a public issue containing sensitive details.
+
 ## Scope, sources and licence
 
 All application code and fixtures were created for this repository. No client code, customer records, P01 source or personal workstation data was imported. No real messages, payments, subscriptions, public service exposure or repository visibility change are part of the demo.
