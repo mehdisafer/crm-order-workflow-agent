@@ -1,10 +1,27 @@
 """Offline regression tests for the anonymous public-reachability validator."""
 
+import importlib.util
 import json
+from pathlib import Path
 
 import pytest
 
-from scripts.check_public_access import RELEASE_SHA, artifacts, validate_payload
+
+def load_public_checker():
+    # The project packages crm_workflow from src/, not the repository's scripts/
+    # directory. Load this exact script file rather than extending sys.path.
+    source = Path(__file__).resolve().parents[1] / "scripts" / "check_public_access.py"
+    spec = importlib.util.spec_from_file_location("public_access_checker", source)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+checker = load_public_checker()
+RELEASE_SHA = checker.RELEASE_SHA
+artifacts = checker.artifacts
+validate_payload = checker.validate_payload
 
 
 def test_all_public_resource_urls_are_expected_hosts():
