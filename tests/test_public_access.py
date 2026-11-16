@@ -35,7 +35,7 @@ def test_release_cannot_be_silently_retargeted():
 
 
 def test_screenshot_needs_real_png_bytes_not_a_success_page():
-    validate_payload("screenshot", b"\\x89PNG\\r\\n\\x1a\\n" + b"x" * 4096)
+    validate_payload("screenshot", b"\x89PNG\r\n\x1a\n" + b"x" * 4096)
     with pytest.raises(ValueError):
         validate_payload("screenshot", b"<html>please sign in</html>")
 
@@ -44,8 +44,8 @@ def test_screenshot_needs_real_png_bytes_not_a_success_page():
     ("kind", "payload"),
     [
         ("readme", b"# CRM Order Workflow Agent"),
-        ("license", b"Apache License\\nVersion 2.0"),
-        ("source", b"from crm_workflow.models import Actor\\ndef create_app(): pass"),
+        ("license", b"Apache License\nVersion 2.0"),
+        ("source", b"from crm_workflow.models import Actor\ndef create_app(): pass"),
         ("landing", b"<html>crm-order-workflow-agent</html>"),
         ("release_page", b"<html>crm-order-workflow-agent v0.1.0-rc.1</html>"),
     ],

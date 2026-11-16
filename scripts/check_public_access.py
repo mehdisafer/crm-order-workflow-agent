@@ -50,15 +50,15 @@ def validate_payload(kind: str, content: bytes) -> None:
         if b"# CRM Order Workflow Agent" not in content:
             raise ValueError("Public README is not the expected project")
     elif kind == "license":
-        if not content.startswith(b"Apache License\\nVersion 2.0") and not content.startswith(
-            b"Apache License\\r\\nVersion 2.0"
+        if not content.startswith(b"Apache License\nVersion 2.0") and not content.startswith(
+            b"Apache License\r\nVersion 2.0"
         ):
             raise ValueError("Apache-2.0 licence text not found")
     elif kind == "source":
         if b"def create_app(" not in content or b"crm_workflow" not in content:
             raise ValueError("Public Python source does not contain expected API")
     elif kind == "screenshot":
-        if not content.startswith(b"\\x89PNG\\r\\n\\x1a\\n") or len(content) < 4096:
+        if not content.startswith(b"\x89PNG\r\n\x1a\n") or len(content) < 4096:
             raise ValueError("Public screenshot is not a substantial PNG")
     elif kind in {"landing", "screenshot_page", "release_page"}:
         if b"crm-order-workflow-agent" not in content:
@@ -168,7 +168,7 @@ def main() -> None:
             result["http_status"] = exc.code
         raise
     finally:
-        destination.write_text(json.dumps(result, indent=2) + "\\n", encoding="utf-8")
+        destination.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
         print(json.dumps({"status": result["status"], "resources": len(result["resources"])}))
 
 
