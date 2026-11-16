@@ -10,8 +10,13 @@ from crm_workflow.worker import SafeJsonFormatter
 
 def record(logger: str, message: str, args=(), **extra):
     entry = logging.LogRecord(
-        name=logger, level=logging.WARNING, pathname=__file__, lineno=1,
-        msg=message, args=args, exc_info=None,
+        name=logger,
+        level=logging.WARNING,
+        pathname=__file__,
+        lineno=1,
+        msg=message,
+        args=args,
+        exc_info=None,
     )
     for key, value in extra.items():
         setattr(entry, key, value)
@@ -33,9 +38,11 @@ def test_untrusted_log_messages_and_extra_fields_are_redacted(logger):
 
 def test_known_worker_activity_preserves_allowlisted_diagnostics():
     observed = record(
-        "crm_workflow.worker", "activity_started",
+        "crm_workflow.worker",
+        "activity_started",
         case_id="a1c8bdb0-17af-45e0-8800-507ac8e3b763",
-        operation="execute_crm", attempt=2,
+        operation="execute_crm",
+        attempt=2,
     )
     decoded = json.loads(SafeJsonFormatter().format(observed))
     assert decoded["event"] == "activity_started"
