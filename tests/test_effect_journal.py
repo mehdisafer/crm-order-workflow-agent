@@ -40,7 +40,9 @@ def observed_events(store, case_id):
         ("crm", "change_delivery_date", {**REQUEST, "scope": "different"}),
     ],
 )
-def test_effect_key_cannot_be_rebound_to_different_operation_or_payload(journal, system, operation, candidate):
+def test_effect_key_cannot_be_rebound_to_different_operation_or_payload(
+    journal, system, operation, candidate
+):
     store, case = journal
     original = store.prepare_effect("stable-effect", case["id"], "crm", "change_delivery_date", REQUEST)
     before = store.get_case(case["id"])["events"]
