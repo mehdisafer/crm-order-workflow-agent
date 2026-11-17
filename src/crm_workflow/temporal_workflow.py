@@ -74,6 +74,14 @@ class OrderExceptionWorkflow:
         self._state = result["state"]
         return result
 
+    async def _expire_or_continue(self) -> dict[str, Any]:
+        current = await self._call("expire")
+        if current["state"] == "AWAITING_APPROVAL":
+            # A premature timer or clock skew cannot end the workflow while approval is valid.
+            # Avoid repeated immediate expiry activities if Temporal is ahead of store time.
+            await workflow.sleep(timedelta(seconds=1))
+        return current
+
     async def _await_decision(self, current: dict[str, Any]) -> dict[str, Any]:
         while current["state"] == "AWAITING_APPROVAL":
             raw_deadline = (current.get("plan") or {}).get("expires_at")
@@ -84,12 +92,14 @@ class OrderExceptionWorkflow:
                 return await self._call("fail", "INVALID_APPROVAL_DEADLINE")
             remaining = deadline.astimezone(UTC) - workflow.now()
             if remaining <= timedelta(0):
-                return await self._call("expire")
+                current = await self._expire_or_continue()
+                continue
             try:
                 await workflow.wait_condition(lambda: self._decision_received, timeout=remaining)
             except TimeoutError:
-                # expire() resolves approval/deadline races against the authoritative DB.
-                return await self._call("expire")
+                # The store deadline remains authoritative in an expiry/approval race.
+                current = await self._expire_or_continue()
+                continue
             self._decision_received = False
             current = await self._call("prepare")
         return current
