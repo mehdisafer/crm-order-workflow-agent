@@ -81,7 +81,7 @@ Local principal files retain mode 0600. Compose runs application processes with 
 
 Salesforce and MuleSoft require their own restricted service principals and verified server-side permission tests. Local bearer-token refusals do not prove provider permissions. See [vendor installation](vendor-integration.md).
 
-The explicit `deploy/compose.salesforce.yaml` overlay switches API and worker to the real MuleSoft gateway and leaves only inventory synthetic. After authorised vendor installation, put `P06_MULE_URL` and `P06_MULE_TOKEN` in an external local env file, bind the operator principals to the exact Salesforce tenant, and pass both env files to Compose:
+The explicit `deploy/compose.salesforce.yaml` overlay switches API and worker to the real MuleSoft gateway and leaves only inventory synthetic. It explicitly opts in to **plaintext `http://erp:8001` only for the internal synthetic Docker ERP**; an actual ERP deployment must instead use an HTTPS endpoint with verified certificates (optionally `P06_ERP_CA_FILE` for a reviewed private CA) and cannot use this HTTP exception. After authorised vendor installation, put `P06_MULE_URL` and `P06_MULE_TOKEN` in an external local env file, bind the operator principals to the exact Salesforce tenant, and pass both env files to Compose:
 
 ```bash
 docker compose --env-file .local/compose.env --env-file .local/vendor.env \

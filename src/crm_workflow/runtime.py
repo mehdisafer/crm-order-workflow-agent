@@ -40,7 +40,12 @@ def build_runtime(settings: Settings | None = None) -> Runtime:
         )
     )
     erp = (
-        HTTPERP(settings.erp_url, settings.erp_token.get_secret_value(), settings.request_timeout_seconds)
+        HTTPERP(
+            settings.erp_url,
+            settings.erp_token.get_secret_value(),
+            settings.request_timeout_seconds,
+            ca_file=settings.erp_ca_file or None,
+        )
         if settings.erp_url
         else DemoERP(store)
     )

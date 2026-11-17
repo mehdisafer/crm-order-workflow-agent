@@ -38,6 +38,8 @@ class Settings(StrictModel):
     mule_token: SecretStr = SecretStr("")
     erp_url: str = ""
     erp_token: SecretStr = SecretStr("")
+    erp_ca_file: str = ""
+    allow_insecure_synthetic_erp_http: bool = False
     proposer: Literal["rules", "ollama"] = "rules"
     llm_url: str = "http://127.0.0.1:11434"
     llm_model: str = "qwen3:4b"
@@ -46,12 +48,27 @@ class Settings(StrictModel):
 
     @model_validator(mode="after")
     def validate_deployment(self):
+        from urllib.parse import urlparse, urlsplit
+
         if self.profile == "salesforce":
             if not self.mule_url.startswith("https://") or not self.mule_token.get_secret_value():
                 raise ValueError("salesforce profile requires an HTTPS MuleSoft endpoint and external token")
             if not self.erp_url or not self.erp_token.get_secret_value():
                 raise ValueError("salesforce profile requires an explicit ERP endpoint and token")
-        from urllib.parse import urlparse
+            erp_target = urlsplit(self.erp_url)
+            tls_erp = (
+                erp_target.scheme == "https"
+                and bool(erp_target.hostname)
+                and erp_target.username is None
+                and erp_target.password is None
+                and not erp_target.query
+                and not erp_target.fragment
+            )
+            synthetic_erp = self.allow_insecure_synthetic_erp_http and self.erp_url == "http://erp:8001"
+            if not (tls_erp or synthetic_erp):
+                raise ValueError(
+                    "salesforce profile requires HTTPS ERP or explicitly opted-in synthetic Docker ERP"
+                )
 
         if self.proposer == "ollama" and not self.allow_external_llm:
             if urlparse(self.llm_url).hostname not in {"localhost", "127.0.0.1", "::1", "ollama"}:
