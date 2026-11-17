@@ -9,6 +9,7 @@ from __future__ import annotations
 import copy
 import time
 import uuid
+from datetime import datetime
 from pathlib import Path
 
 from sqlalchemy import (
@@ -265,6 +266,7 @@ class Store:
         event_type: str | None = None,
         outbox_kind: str | None = None,
         decision_expiry: float | None = None,
+        expiry_gate: str | None = None,
     ) -> dict:
         with self.engine.begin() as db:
             row = db.execute(select(cases).where(cases.c.id == case_id).with_for_update()).mappings().one()
@@ -272,6 +274,12 @@ class Store:
                 raise DomainError("STATE_CONFLICT", "Case state changed; reload the case before continuing")
             if decision_expiry is not None and time.time() >= decision_expiry:
                 raise DomainError("APPROVAL_EXPIRED", "The approval plan has expired")
+            if expiry_gate is not None:
+                current_deadline = (row["data"].get("plan") or {}).get("expires_at")
+                if current_deadline != expiry_gate:
+                    raise DomainError("STATE_CONFLICT", "Approval deadline changed; reload the case")
+                if time.time() < datetime.fromisoformat(expiry_gate).timestamp():
+                    raise DomainError("APPROVAL_NOT_EXPIRED", "The approval deadline has not passed")
             data = copy.deepcopy(row["data"])
             data.update(changes or {})
             data.update(state=state, reason=reason, updated_at=timestamp())

@@ -9,7 +9,7 @@ Temporal is the only component that advances the business saga. The API commits 
 The durable sequence is:
 
 1. `case.prepare` resolves identities and availability and stores a typed proposal.
-2. A durable timer waits until the proposal's absolute expiration. `decision` is a wakeup signal with no approval payload. The next `prepare` reloads the committed decision.
+2. A durable timer waits until the proposal's absolute expiration. `decision` is a wakeup signal with no approval payload. The next `prepare` reloads the committed decision. The expiry activity independently checks the validated deadline, then verifies it under the transactional case lock before expiring; a premature no-op leaves Temporal waiting with a bounded one-second delay.
 3. `case.execute_crm` checks approval, current CRM state and stock. It reconciles the stable remote effect key before issuing any new write.
 4. `case.reserve_stock` creates or observes the reservation with its own stable key.
 5. `case.verify` rereads both systems before marking the case complete.

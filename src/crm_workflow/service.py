@@ -243,11 +243,27 @@ class CaseService:
 
     async def expire(self, case_id: str) -> dict:
         case = self.store.get_case(case_id)
-        if case["state"] == "AWAITING_APPROVAL":
+        if case["state"] != "AWAITING_APPROVAL":
+            return case
+        plan = self._plan(case, require_approval=False, require_unexpired=False)
+        deadline = datetime.fromisoformat(plan["expires_at"])
+        if deadline.tzinfo is None:
+            raise DomainError("INVALID_PLAN", "Approval deadline must be timezone-aware")
+        if utcnow() < deadline:
+            # A premature activity invocation cannot shorten the approved waiting window.
+            return self.store.get_case(case_id)
+        try:
             return self._transition(
-                case, "EXPIRED", "No valid approval was committed before the plan expired"
+                case,
+                "EXPIRED",
+                "No valid approval was committed before the plan expired",
+                expiry_gate=plan["expires_at"],
             )
-        return case
+        except DomainError as exc:
+            if exc.code != "APPROVAL_NOT_EXPIRED":
+                raise
+            # A deadline race can resolve only after the transactional guard executes.
+            return self.store.get_case(case_id)
 
     @staticmethod
     def _crm_request(case, plan, *, compensation=False, original=None):
