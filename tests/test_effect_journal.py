@@ -29,11 +29,7 @@ def journal(tmp_path):
 
 
 def observed_events(store, case_id):
-    return [
-        event
-        for event in store.get_case(case_id)["events"]
-        if event["event_type"] == "effect.observed"
-    ]
+    return [event for event in store.get_case(case_id)["events"] if event["event_type"] == "effect.observed"]
 
 
 @pytest.mark.parametrize(
@@ -44,13 +40,9 @@ def observed_events(store, case_id):
         ("crm", "change_delivery_date", {**REQUEST, "scope": "different"}),
     ],
 )
-def test_effect_key_cannot_be_rebound_to_different_operation_or_payload(
-    journal, system, operation, request
-):
+def test_effect_key_cannot_be_rebound_to_different_operation_or_payload(journal, system, operation, request):
     store, case = journal
-    original = store.prepare_effect(
-        "stable-effect", case["id"], "crm", "change_delivery_date", REQUEST
-    )
+    original = store.prepare_effect("stable-effect", case["id"], "crm", "change_delivery_date", REQUEST)
     before = store.get_case(case["id"])["events"]
     with pytest.raises(DomainError) as failure:
         store.prepare_effect("stable-effect", case["id"], system, operation, request)
@@ -87,9 +79,7 @@ def test_repeated_identical_intent_and_remote_receipt_are_event_idempotent(journ
         (BEFORE, AFTER, "COMPENSATED"),
     ],
 )
-def test_conflicting_or_terminal_changing_receipt_cannot_overwrite_evidence(
-    journal, before, after, status
-):
+def test_conflicting_or_terminal_changing_receipt_cannot_overwrite_evidence(journal, before, after, status):
     store, case = journal
     key = "stable-effect"
     store.prepare_effect(key, case["id"], "crm", "change_delivery_date", REQUEST)
