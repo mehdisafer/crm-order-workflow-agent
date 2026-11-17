@@ -284,11 +284,16 @@ def main():
         init_demo()
     elif args.command in {"migrate", "seed-demo", "replay-outbox"}:
         settings = Settings.from_env()
-        store = Store(settings.database_url)
+        # Refuse forbidden fixture commands before Store's constructor can migrate
+        # a database. Replay may act only on an existing outbox/schema; migration
+        # remains an explicit administrator command.
+        if args.command == "seed-demo" and (
+            settings.profile != "demo" or not 1 <= args.count <= 1000
+        ):
+            raise SystemExit("Seeding requires demo profile and 1..1000 synthetic orders per tenant")
+        store = Store(settings.database_url, initialize=args.command != "replay-outbox")
         try:
             if args.command == "seed-demo":
-                if settings.profile != "demo" or not 1 <= args.count <= 1000:
-                    raise SystemExit("Seeding requires demo profile and 1..1000 synthetic orders per tenant")
                 seed_demo(store, count=args.count)
             elif args.command == "replay-outbox":
                 store.replay_outbox(args.event_id)
