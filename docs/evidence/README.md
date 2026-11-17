@@ -46,6 +46,10 @@ Post-release [PR #9](https://github.com/mehdisafer/crm-order-workflow-agent/pull
 
 Original failed runs and artefacts remain preserved. No hosted synthetic result verifies real Salesforce/MuleSoft rights, remote effect deduplication or target-platform recovery.
 
+## Anonymous public artifact availability — 16 November 2026
+
+[PR #15](https://github.com/mehdisafer/crm-order-workflow-agent/pull/15) added a separate GitHub Actions workflow with **no authenticated HTTP headers, tokens, cookies or inherited proxy credentials**. The [first merged-main run 43983714109](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43983714109) at `e0d20399e910c78be63a27a4bca6ccda97b8b844` verified **nine public URLs and their expected content**, including the real PNG screenshot and immutable RC1 release, and returned `status=passed`. [Original JSON artifact 14284167065](https://github.com/mehdisafer/crm-order-workflow-agent/actions/runs/43983714109/artifacts/14284167065) records each URL, byte count and SHA-256 rather than response bodies. This closes anonymous HTTP read availability only; no interactive signed-out browser rendering, real Salesforce/Mule access or alert-free security posture is implied.
+
 ## Continuation observations
 
 The continuation's full local suite completed **91 tests, zero failures and zero skips**, in **27.65 seconds**. This is a new execution with original XML/log output, including the real Temporal profiles. One existing Starlette TestClient deprecation warning remains visible; it is not a test failure or a claim about future dependency compatibility.
