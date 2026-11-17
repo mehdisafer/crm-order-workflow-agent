@@ -441,9 +441,7 @@ class Store:
         with self.engine.begin() as db:
             # Acquire the system write lock before touching leases, the same order
             # as acquire_slot. On SQLite, a no-op UPDATE also serializes writers.
-            db.execute(
-                update(systems).where(systems.c.name == system).values(version=systems.c.version)
-            )
+            db.execute(update(systems).where(systems.c.name == system).values(version=systems.c.version))
             lease_expiry = db.scalar(
                 select(leases.c.expires_at).where(and_(leases.c.id == key, leases.c.system == system))
             )
