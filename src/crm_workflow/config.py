@@ -64,9 +64,7 @@ class Settings(StrictModel):
                 and not erp_target.query
                 and not erp_target.fragment
             )
-            synthetic_erp = (
-                self.allow_insecure_synthetic_erp_http and self.erp_url == "http://erp:8001"
-            )
+            synthetic_erp = self.allow_insecure_synthetic_erp_http and self.erp_url == "http://erp:8001"
             if not (tls_erp or synthetic_erp):
                 raise ValueError(
                     "salesforce profile requires HTTPS ERP or explicitly opted-in synthetic Docker ERP"
