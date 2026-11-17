@@ -101,7 +101,7 @@ No Terraform resource is fabricated to satisfy a technology checklist. Compose e
 
 ## Limits and service objectives
 
-The reference defaults cap workers at eight concurrent activities, CRM and ERP at four concurrent calls each, and the Temporal task queue at twenty activities per second. Shared database leases enforce system limits across workers. All workers must keep the same queue rate configuration. The container limits bound each process's memory/CPU and the application PID count; these are reference limits, not capacity guarantees.
+The reference defaults cap workers at eight concurrent activities, CRM and ERP at four concurrent calls each, and the Temporal task queue at twenty activities per second. Shared database leases enforce system limits across workers. A lease can expire to admit a replacement worker; an expired, missing or already-released lease cannot subsequently mutate the shared circuit-breaker failure count or cooldown when its former worker finishes late. Locking the named system before inspecting the lease preserves the same acquisition/release order across stores. All workers must keep the same queue rate configuration. The container limits bound each process's memory/CPU and the application PID count; these are reference limits, not capacity guarantees.
 
 Operational objectives for this small demonstration are:
 
