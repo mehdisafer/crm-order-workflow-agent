@@ -47,9 +47,7 @@ def test_init_demo_rejects_unsafe_targets_before_creating_anything(
     assert not (tmp_path / ".local").exists()
 
 
-def test_init_demo_seeds_sqlite_and_exclusively_creates_private_credentials(
-    tmp_path, monkeypatch, capsys
-):
+def test_init_demo_seeds_sqlite_and_exclusively_creates_private_credentials(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     configured(monkeypatch, Settings(database_url="sqlite:///.local/workflow.db"))
     cli.init_demo()
@@ -112,6 +110,5 @@ def test_init_demo_closes_store_on_seed_failure_without_creating_secrets(tmp_pat
 
     assert store.closed is True
     assert not any(
-        (tmp_path / ".local" / name).exists()
-        for name in ("principals.json", "tokens.json", "demo.env")
+        (tmp_path / ".local" / name).exists() for name in ("principals.json", "tokens.json", "demo.env")
     )
