@@ -166,6 +166,7 @@ def test_concurrent_slot_release_preserves_shared_failure_counter(tmp_path):
     finally:
         store.close()
 
+
 def test_replaced_lease_cannot_mutate_circuit_or_release_new_owner(tmp_path):
     import time
 
