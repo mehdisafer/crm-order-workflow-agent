@@ -6,6 +6,7 @@ import argparse
 import asyncio
 import hashlib
 import json
+import os
 import secrets
 import sqlite3
 import tempfile
@@ -24,12 +25,37 @@ def write_json(path, value):
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n")
 
 
+def write_private(path: Path, content: str) -> None:
+    """Create a secret file exclusively with private permissions, never following a preexisting link."""
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+        stream.write(content)
+
+
 def init_demo():
+    settings = Settings.from_env()
+    if (
+        settings.profile != "demo"
+        or not settings.database_url.startswith("sqlite:///")
+        or settings.database_url == "sqlite:///:memory:"
+    ):
+        raise SystemExit("init-demo requires profile=demo with a persistent local SQLite database")
+
     target = Path(".local")
+    if target.is_symlink():
+        raise SystemExit("Demo directory cannot be a symbolic link")
     target.mkdir(mode=0o700, exist_ok=True)
     files = [target / p for p in ("principals.json", "tokens.json", "demo.env")]
-    if any(p.exists() for p in files):
+    if any(p.exists() or p.is_symlink() for p in files):
         raise SystemExit("Demo identities already exist; no credentials were overwritten")
+
+    # Seed before issuing credentials: a database failure must not leave half-created identities.
+    store = Store(settings.database_url)
+    try:
+        seed_demo(store)
+    finally:
+        store.close()
+
     tokens = {role: secrets.token_urlsafe(32) for role in ("requester", "approver", "operator")}
     principals = [
         {
@@ -40,23 +66,18 @@ def init_demo():
         }
         for role, token in tokens.items()
     ]
-    write_json(files[0], {"principals": principals})
-    write_json(files[1], tokens)
-    files[2].write_text(
+    write_private(files[0], json.dumps({"principals": principals}, indent=2, sort_keys=True) + "\n")
+    write_private(files[1], json.dumps(tokens, indent=2, sort_keys=True) + "\n")
+    write_private(
+        files[2],
         "P06_WEBHOOK_SECRET="
         + secrets.token_urlsafe(32)
         + "\nP06_ERP_TOKEN="
         + secrets.token_urlsafe(32)
         + "\nP06_POSTGRES_PASSWORD="
         + secrets.token_urlsafe(32)
-        + "\n"
+        + "\n",
     )
-    for path in files:
-        path.chmod(0o600)
-    settings = Settings.from_env()
-    store = Store(settings.database_url)
-    seed_demo(store)
-    store.close()
     print(
         "Created local identities and synthetic data. Tokens are in .local/tokens.json (never commit this file)."
     )
