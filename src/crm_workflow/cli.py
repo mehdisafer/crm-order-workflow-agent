@@ -10,6 +10,7 @@ import os
 import secrets
 import sqlite3
 import tempfile
+from contextlib import closing
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -216,8 +217,8 @@ def backup(source: str, destination: str):
         raise SystemExit("Backup destination already exists; choose a new path") from None
     os.close(descriptor)
     try:
-        with sqlite3.connect(f"file:{Path(source).resolve()}?mode=ro", uri=True) as origin:
-            with sqlite3.connect(destination_path) as target:
+        with closing(sqlite3.connect(f"file:{Path(source).resolve()}?mode=ro", uri=True)) as origin:
+            with closing(sqlite3.connect(destination_path)) as target:
                 origin.backup(target)
                 if target.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
                     raise RuntimeError("Backup integrity check failed")
@@ -231,7 +232,7 @@ def restore_check(source: str, output: str):
     with tempfile.TemporaryDirectory(prefix="p06-restore-") as directory:
         restored = Path(directory) / "restored.db"
         backup(source, str(restored))
-        with sqlite3.connect(restored) as db:
+        with closing(sqlite3.connect(restored)) as db:
             counts = {
                 table: db.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
                 for table in ("cases", "effects", "case_events", "outbox")
