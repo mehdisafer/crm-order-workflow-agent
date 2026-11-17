@@ -12,6 +12,8 @@ The nominal workflow is intake → normalization → customer/order lookup → a
 
 The source APIs have separate effect records: Salesforce's custom ledger is committed atomically with the order change; the original ERP's reservation is committed atomically with the stock decrement. A local effect-journal row does not prove that a remote write happened. `APPLIED` is assigned only after an effect receipt is validated. `UNKNOWN` remains visible across worker crashes.
 
+An effect key is bound to its original case, system, operation and canonical request hash. The local journal only promotes a `PREPARED` or `UNKNOWN` intent when a verified remote receipt arrives. An identical repeated observation is a no-op, including its audit event; an incompatible receipt or a callback trying to rewrite `APPLIED`, `COMPENSATED` or `REJECTED` is refused and must be reconciled instead. The guarded update prevents a stale local observation from silently replacing a newer journal state. These source-level protections do not substitute for the provider's own transactional idempotency guarantees.
+
 | Boundary | Atomic invariant | Failure outside the boundary |
 | --- | --- | --- |
 | Intake database transaction | Case plus accepted event plus `workflow.start` outbox | Dispatcher retries the same workflow ID |
