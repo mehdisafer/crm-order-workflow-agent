@@ -194,6 +194,28 @@ async def test_expired_approval_cannot_mutate(temporal_env):
     assert service.crm_writes == service.erp_writes == 0
 
 
+async def test_premature_expiry_activity_keeps_workflow_until_authoritative_expiry(temporal_env):
+    class EarlyExpiryService(SyntheticService):
+        first_expiry = True
+
+        async def expire(self, case_id):
+            if self.first_expiry:
+                self.first_expiry = False
+                self.calls.append("expire")
+                return self.value()
+            return await super().expire(case_id)
+
+    service = EarlyExpiryService(expires_in=0.15)
+    queue = f"p06-{uuid.uuid4()}"
+    async with make_worker(temporal_env, queue, service):
+        handle = await start(temporal_env, queue, service)
+        result = await asyncio.wait_for(handle.result(), timeout=10)
+    assert result["state"] == "EXPIRED"
+    assert service.calls.count("expire") == 2
+    assert service.crm_writes == service.erp_writes == 0
+    await Replayer(workflows=[OrderExceptionWorkflow]).replay_workflow(await handle.fetch_history())
+
+
 async def test_lost_remote_response_retries_activity_and_reconciles_once(temporal_env):
     service = SyntheticService(state="APPROVED")
     service.crm_lost_response = True
