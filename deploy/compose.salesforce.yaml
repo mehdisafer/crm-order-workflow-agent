@@ -7,6 +7,7 @@ services:
       P06_MULE_URL: ${P06_MULE_URL:?Supply the authorised HTTPS MuleSoft endpoint}
       P06_MULE_TOKEN: ${P06_MULE_TOKEN:?Supply the external MuleSoft API token}
       P06_ERP_URL: http://erp:8001
+      P06_ALLOW_INSECURE_SYNTHETIC_ERP_HTTP: "true"
     depends_on:
       erp: {condition: service_started}
   worker:
