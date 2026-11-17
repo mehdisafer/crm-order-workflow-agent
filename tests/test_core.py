@@ -209,8 +209,7 @@ async def test_premature_expiration_does_not_end_valid_approval(core):
     assert approved_case["state"] == "APPROVED"
     assert (await core.expire(case["id"]))["state"] == "APPROVED"
     assert not any(
-        event["event_type"] == "case.expired"
-        for event in core.store.get_case(case["id"])["events"]
+        event["event_type"] == "case.expired" for event in core.store.get_case(case["id"])["events"]
     )
 
 
