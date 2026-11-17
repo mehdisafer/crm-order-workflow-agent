@@ -170,7 +170,7 @@ uv run python -m crm_workflow.cli backup .local/workflow.db .local/workflow-back
 uv run python -m crm_workflow.cli restore-check .local/workflow-backup.db
 ```
 
-This local check is not a PostgreSQL disaster-recovery rehearsal. PostgreSQL restore and provider-state reconciliation must be executed and recorded on the authorised target before claiming an operational RPO/RTO. No numerical RPO/RTO has been validated for a provider deployment.
+The SQLite backup destination is exclusively created with mode `0600` before the backup API opens it; existing files and symbolic links are refused. If the new backup fails, its incomplete destination is removed without touching any prior backup. The restore report preserves the historical `source_sha256` field but explicitly labels it as a **raw SQLite main-file hash**, which excludes any active WAL and is *not* a consistent-snapshot checksum. `restored_snapshot_sha256` identifies the actual online-backup snapshot that passed integrity and relationship checks. Do not treat those two digests as interchangeable.\n\nThis local check is not a PostgreSQL disaster-recovery rehearsal. PostgreSQL restore and provider-state reconciliation must be executed and recorded on the authorised target before claiming an operational RPO/RTO. No numerical RPO/RTO has been validated for a provider deployment.
 
 ## Migration and rollback
 
