@@ -287,9 +287,7 @@ def main():
         # Refuse forbidden fixture commands before Store's constructor can migrate
         # a database. Replay may act only on an existing outbox/schema; migration
         # remains an explicit administrator command.
-        if args.command == "seed-demo" and (
-            settings.profile != "demo" or not 1 <= args.count <= 1000
-        ):
+        if args.command == "seed-demo" and (settings.profile != "demo" or not 1 <= args.count <= 1000):
             raise SystemExit("Seeding requires demo profile and 1..1000 synthetic orders per tenant")
         store = Store(settings.database_url, initialize=args.command != "replay-outbox")
         try:
