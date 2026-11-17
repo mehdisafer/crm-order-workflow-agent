@@ -85,7 +85,6 @@ def test_real_provider_requires_valid_tls_erp_endpoint(endpoint):
             erp_token="synthetic-erp-credential",
         )
 
-
 @pytest.mark.parametrize(
     "endpoint",
     ["http://public-erp.invalid", "http://127.0.0.1:8001", "http://erp:8001/"],
@@ -112,14 +111,9 @@ def test_real_provider_allows_verified_tls_and_explicit_synthetic_reference():
     secure = Settings(**base, erp_url="https://erp.example.invalid", erp_ca_file="/run/secrets/erp-ca.pem")
     assert secure.erp_ca_file == "/run/secrets/erp-ca.pem"
     assert secure.allow_insecure_synthetic_erp_http is False
-    synthetic = Settings(
-        **base, erp_url="http://erp:8001", allow_insecure_synthetic_erp_http=True
-    )
+    synthetic = Settings(**base, erp_url="http://erp:8001", allow_insecure_synthetic_erp_http=True)
     assert synthetic.erp_url == "http://erp:8001"
     overlay = yaml.safe_load((ROOT / "deploy/compose.salesforce.yaml").read_text())
     for service in ("api", "worker"):
         assert overlay["services"][service]["environment"]["P06_ERP_URL"] == "http://erp:8001"
-        assert (
-            overlay["services"][service]["environment"]["P06_ALLOW_INSECURE_SYNTHETIC_ERP_HTTP"]
-            == "true"
-        )
+        assert overlay["services"][service]["environment"]["P06_ALLOW_INSECURE_SYNTHETIC_ERP_HTTP"] == "true"
