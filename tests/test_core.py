@@ -183,6 +183,37 @@ async def test_expired_approval_never_writes(core):
     assert (await core.expire(case["id"]))["state"] == "EXPIRED"
 
 
+async def test_premature_expiration_does_not_end_valid_approval(core):
+    case = await core.create_case(request(), REQUESTER)
+    waiting = await core.prepare(case["id"])
+    assert waiting["state"] == "AWAITING_APPROVAL"
+    original_events = len(waiting["events"])
+
+    assert (await core.expire(case["id"]))["state"] == "AWAITING_APPROVAL"
+    with pytest.raises(DomainError) as refused:
+        core.store.transition(
+            case["id"],
+            {"AWAITING_APPROVAL"},
+            "EXPIRED",
+            "Injected premature expiration",
+            expiry_gate=waiting["plan"]["expires_at"],
+        )
+    assert refused.value.code == "APPROVAL_NOT_EXPIRED"
+    assert len(core.store.get_case(case["id"])["events"]) == original_events
+
+    approved_case = await core.approve(
+        case["id"],
+        ApprovalRequest(plan_hash=waiting["plan"]["hash"], decision="approve"),
+        APPROVER,
+    )
+    assert approved_case["state"] == "APPROVED"
+    assert (await core.expire(case["id"]))["state"] == "APPROVED"
+    assert not any(
+        event["event_type"] == "case.expired"
+        for event in core.store.get_case(case["id"])["events"]
+    )
+
+
 @pytest.mark.parametrize("which", ["crm", "stock"])
 async def test_immediate_precondition_recheck_invalidates_approval(core, which):
     case = await approved(core)
