@@ -190,7 +190,8 @@ def test_replaced_lease_cannot_mutate_circuit_or_release_new_owner(tmp_path):
         # A late failure for a discarded lease must not open the new worker's circuit.
         first.release_slot(stale, "crm", failed=True, threshold=1, reset=45, retry_after=40)
         with first.engine.connect() as db:
-            assert dict(db.execute(select(systems).where(systems.c.name == "crm")).mappings().one()) == snapshot
+            row = db.execute(select(systems).where(systems.c.name == "crm")).mappings().one()
+            assert dict(row) == snapshot
             assert db.scalar(select(leases.c.id).where(leases.c.id == active)) == active
         with pytest.raises(TransientError, match="concurrency limit"):
             first.acquire_slot("crm", 1, 60)
