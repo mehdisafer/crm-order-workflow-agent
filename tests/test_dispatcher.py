@@ -180,9 +180,7 @@ def test_replaced_lease_cannot_mutate_circuit_or_release_new_owner(tmp_path):
     try:
         stale = first.acquire_slot("crm", 1, 60)
         with first.engine.begin() as db:
-            db.execute(
-                update(leases).where(leases.c.id == stale).values(expires_at=time.time() - 1)
-            )
+            db.execute(update(leases).where(leases.c.id == stale).values(expires_at=time.time() - 1))
         active = second.acquire_slot("crm", 1, 60)
         with first.engine.connect() as db:
             snapshot = dict(db.execute(select(systems).where(systems.c.name == "crm")).mappings().one())
