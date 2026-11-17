@@ -143,7 +143,9 @@ python integrations/salesforce/scripts/preflight.py
 
 The command describes the actual objects and required fields and reads the Salesforce capability endpoint through MuleSoft. It emits only the required capability subset and effective create/update flags. Missing credentials return `BLOCKED` with exit code 2. Readable metadata is not evidence of a successful mutation or a successful rights refusal. This remote preflight cannot inspect a Mule JVM: it explicitly reports `mule_jvm_retry_properties: NOT_OBSERVED` until the separate runtime-properties evidence is captured and reviewed.
 
-Set the application's real profile with `P06_PROFILE=salesforce`, `P06_MULE_URL`, `P06_MULE_TOKEN`, and the configured synthetic ERP endpoint/token. `P06_MULE_CA_FILE` may reference a reviewed CA bundle for private HTTPS. Certificate verification must stay enabled. The adapter has no automatic fallback to synthetic CRM.
+Set the application's real profile with `P06_PROFILE=salesforce`, `P06_MULE_URL`, `P06_MULE_TOKEN`, and the configured ERP endpoint/token. `P06_MULE_CA_FILE` and `P06_ERP_CA_FILE` may reference independently reviewed CA bundles for private HTTPS. Certificate verification must stay enabled. For an actual external ERP, `P06_ERP_URL` must use HTTPS, without userinfo or query-string credentials. The adapter has no automatic fallback to synthetic CRM.
+
+The only permitted plaintext ERP URL in `salesforce` mode is the **explicitly synthetic Docker Compose endpoint** `http://erp:8001`, with `P06_ALLOW_INSECURE_SYNTHETIC_ERP_HTTP=true`. The opt-in is present only on the API/worker services in `deploy/compose.salesforce.yaml`. This narrow exception does not allow any other HTTP hostname, localhost URL or real ERP service; Docker bridge HTTP is not encrypted and must not be misrepresented as provider transport security.
 
 ### 5. Import the n8n trigger
 
