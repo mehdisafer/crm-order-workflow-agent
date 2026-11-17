@@ -33,19 +33,19 @@ def observed_events(store, case_id):
 
 
 @pytest.mark.parametrize(
-    ("system", "operation", "request"),
+    ("system", "operation", "candidate"),
     [
         ("erp", "change_delivery_date", REQUEST),
         ("crm", "compensate_delivery_date", REQUEST),
         ("crm", "change_delivery_date", {**REQUEST, "scope": "different"}),
     ],
 )
-def test_effect_key_cannot_be_rebound_to_different_operation_or_payload(journal, system, operation, request):
+def test_effect_key_cannot_be_rebound_to_different_operation_or_payload(journal, system, operation, candidate):
     store, case = journal
     original = store.prepare_effect("stable-effect", case["id"], "crm", "change_delivery_date", REQUEST)
     before = store.get_case(case["id"])["events"]
     with pytest.raises(DomainError) as failure:
-        store.prepare_effect("stable-effect", case["id"], system, operation, request)
+        store.prepare_effect("stable-effect", case["id"], system, operation, candidate)
     assert failure.value.code == "EFFECT_KEY_CONFLICT"
     assert store.effect("stable-effect") == original
     assert store.get_case(case["id"])["events"] == before
