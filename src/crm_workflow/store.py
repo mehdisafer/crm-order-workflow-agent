@@ -438,22 +438,37 @@ class Store:
     ):
         from sqlalchemy import case
 
-        # Atomic SQL expressions preserve counters across SQLite and PostgreSQL workers.
-        # Lock the system row before touching leases, matching acquire_slot's order.
-        failures = systems.c.failures + 1 if failed else 0
-        opened = systems.c.open_until
-        if failed:
-            now = time.time()
-            deadlines = [now + max(0, retry_after or 0), case((failures >= threshold, now + reset), else_=0)]
-            for deadline in deadlines:
-                opened = case((opened < deadline, deadline), else_=opened)
         with self.engine.begin() as db:
+            # Acquire the system write lock before touching leases, the same order
+            # as acquire_slot. On SQLite, a no-op UPDATE also serializes writers.
+            db.execute(
+                update(systems).where(systems.c.name == system).values(version=systems.c.version)
+            )
+            lease_expiry = db.scalar(
+                select(leases.c.expires_at).where(and_(leases.c.id == key, leases.c.system == system))
+            )
+            if lease_expiry is None:
+                # A duplicate or superseded worker must not change circuit state.
+                return
+            db.execute(delete(leases).where(and_(leases.c.id == key, leases.c.system == system)))
+            if lease_expiry <= time.time():
+                # Expired owners cannot reset newer failure counts or open a circuit.
+                return
+            failures = systems.c.failures + 1 if failed else 0
+            opened = systems.c.open_until
+            if failed:
+                now = time.time()
+                deadlines = [
+                    now + max(0, retry_after or 0),
+                    case((failures >= threshold, now + reset), else_=0),
+                ]
+                for deadline in deadlines:
+                    opened = case((opened < deadline, deadline), else_=opened)
             db.execute(
                 update(systems)
                 .where(systems.c.name == system)
                 .values(failures=failures, open_until=opened, version=systems.c.version + 1)
             )
-            db.execute(delete(leases).where(and_(leases.c.id == key, leases.c.system == system)))
 
     def pending_outbox(self, limit: int = 100) -> list[dict]:
         with self.engine.connect() as db:
