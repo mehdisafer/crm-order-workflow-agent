@@ -62,7 +62,8 @@ def test_init_demo_seeds_sqlite_and_exclusively_creates_private_credentials(
 
     tokens = json.loads((local / "tokens.json").read_text())
     assert set(tokens) == {"requester", "approver", "operator"}
-    assert all(token not in capsys.readouterr().out for token in tokens.values())
+    output = capsys.readouterr().out
+    assert all(token not in output for token in tokens.values())
     with sqlite3.connect(local / "workflow.db") as database:
         assert database.execute("SELECT COUNT(*) FROM demo_orders").fetchone()[0] == 6
 
@@ -110,4 +111,7 @@ def test_init_demo_closes_store_on_seed_failure_without_creating_secrets(tmp_pat
         cli.init_demo()
 
     assert store.closed is True
-    assert not any((tmp_path / ".local" / name).exists() for name in ("principals.json", "tokens.json", "demo.env"))
+    assert not any(
+        (tmp_path / ".local" / name).exists()
+        for name in ("principals.json", "tokens.json", "demo.env")
+    )
