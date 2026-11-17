@@ -262,7 +262,7 @@ class CaseService:
         except DomainError as exc:
             if exc.code != "APPROVAL_NOT_EXPIRED":
                 raise
-            # Store time is authoritative if worker and database clocks differ.
+            # A deadline race can resolve only after the transactional guard executes.
             return self.store.get_case(case_id)
 
     @staticmethod
