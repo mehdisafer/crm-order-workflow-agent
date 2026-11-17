@@ -64,6 +64,7 @@ def test_postgres_health_waits_for_tcp_after_bootstrap():
     assert "-h 127.0.0.1" in " ".join(health)
     assert config["services"]["migrate"]["depends_on"]["postgres"]["condition"] == "service_healthy"
 
+
 @pytest.mark.parametrize(
     "endpoint",
     [
@@ -84,6 +85,7 @@ def test_real_provider_requires_valid_tls_erp_endpoint(endpoint):
             erp_url=endpoint,
             erp_token="synthetic-erp-credential",
         )
+
 
 @pytest.mark.parametrize(
     "endpoint",
