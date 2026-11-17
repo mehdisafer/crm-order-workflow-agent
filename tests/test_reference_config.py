@@ -10,7 +10,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
+
+from crm_workflow.config import Settings
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -60,3 +63,63 @@ def test_postgres_health_waits_for_tcp_after_bootstrap():
     health = config["services"]["postgres"]["healthcheck"]["test"]
     assert "-h 127.0.0.1" in " ".join(health)
     assert config["services"]["migrate"]["depends_on"]["postgres"]["condition"] == "service_healthy"
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "http://erp:8001",
+        "http://public-erp.invalid",
+        "ftp://erp.invalid",
+        "https://",
+        "https://user:password@erp.invalid",
+        "https://erp.invalid?apikey=must-not-be-in-url",
+    ],
+)
+def test_real_provider_requires_valid_tls_erp_endpoint(endpoint):
+    with pytest.raises(ValueError, match="HTTPS ERP"):
+        Settings(
+            profile="salesforce",
+            mule_url="https://mule.example.invalid",
+            mule_token="synthetic-mule-credential",
+            erp_url=endpoint,
+            erp_token="synthetic-erp-credential",
+        )
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    ["http://public-erp.invalid", "http://127.0.0.1:8001", "http://erp:8001/"],
+)
+def test_insecure_synthetic_override_does_not_allow_other_http_endpoints(endpoint):
+    with pytest.raises(ValueError, match="HTTPS ERP"):
+        Settings(
+            profile="salesforce",
+            mule_url="https://mule.example.invalid",
+            mule_token="synthetic-mule-credential",
+            erp_url=endpoint,
+            erp_token="synthetic-erp-credential",
+            allow_insecure_synthetic_erp_http=True,
+        )
+
+
+def test_real_provider_allows_verified_tls_and_explicit_synthetic_reference():
+    base = {
+        "profile": "salesforce",
+        "mule_url": "https://mule.example.invalid",
+        "mule_token": "synthetic-mule-credential",
+        "erp_token": "synthetic-erp-credential",
+    }
+    secure = Settings(**base, erp_url="https://erp.example.invalid", erp_ca_file="/run/secrets/erp-ca.pem")
+    assert secure.erp_ca_file == "/run/secrets/erp-ca.pem"
+    assert secure.allow_insecure_synthetic_erp_http is False
+    synthetic = Settings(
+        **base, erp_url="http://erp:8001", allow_insecure_synthetic_erp_http=True
+    )
+    assert synthetic.erp_url == "http://erp:8001"
+    overlay = yaml.safe_load((ROOT / "deploy/compose.salesforce.yaml").read_text())
+    for service in ("api", "worker"):
+        assert overlay["services"][service]["environment"]["P06_ERP_URL"] == "http://erp:8001"
+        assert (
+            overlay["services"][service]["environment"]["P06_ALLOW_INSECURE_SYNTHETIC_ERP_HTTP"]
+            == "true"
+        )
