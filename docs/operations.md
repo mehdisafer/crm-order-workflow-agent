@@ -176,6 +176,8 @@ The SQLite backup destination is exclusively created with mode `0600` before the
 
 Schema version 1 is the initial migration. Run migrations once with the maintenance identity before consumers start. The application refuses an unsupported schema version. Do not use automatic `create_all` in each application process as an upgrade strategy.
 
+The `seed-demo` CLI command validates the `demo` profile and fixture count (1–1000) **before** constructing `Store`; a refused command cannot implicitly migrate or seed a configured provider database. An accepted demo command may initialize the synthetic schema, while `migrate` explicitly initializes the base schema. `replay-outbox` opens an **existing** schema with `initialize=False` and never bootstraps tables as a side effect; restore/migrate the intended database first if its schema is missing. Replaying a dead entry preserves the original event ID and payload.
+
 For a code-only rollback compatible with schema and workflow histories: stop intake, drain or stop workers, restore the previous immutable image, replay representative histories, then resume. For a future schema change, add a reviewed forward migration, data-preservation plan and explicit downgrade or restore procedure. Restoring a database does not undo Salesforce/ERP mutations; reconcile those effects separately.
 
 ## Build, dependency and publication gates
