@@ -186,6 +186,14 @@ def test_replaced_lease_cannot_mutate_circuit_or_release_new_owner(tmp_path):
         active = second.acquire_slot("crm", 1, 60)
         with first.engine.connect() as db:
             snapshot = dict(db.execute(select(systems).where(systems.c.name == "crm")).mappings().one())
+            other_system = dict(db.execute(select(systems).where(systems.c.name == "erp")).mappings().one())
+
+        # Releasing a CRM lease through the ERP system is not a valid circuit event.
+        first.release_slot(active, "erp", failed=True, threshold=1, reset=45)
+        with first.engine.connect() as db:
+            current = db.execute(select(systems).where(systems.c.name == "erp")).mappings().one()
+            assert dict(current) == other_system
+            assert db.scalar(select(leases.c.id).where(leases.c.id == active)) == active
 
         # A late failure for a discarded lease must not open the new worker's circuit.
         first.release_slot(stale, "crm", failed=True, threshold=1, reset=45, retry_after=40)
