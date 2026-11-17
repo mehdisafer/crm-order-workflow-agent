@@ -322,9 +322,15 @@ class Store:
                 self._event(db, case_id, "effect.prepared", {"effect_key": key, "system": system})
         except IntegrityError:
             existing = self.effect(key)
-            if existing is None or existing["request_hash"] != digest or existing["case_id"] != case_id:
+            if (
+                existing is None
+                or existing["request_hash"] != digest
+                or existing["case_id"] != case_id
+                or existing["system"] != system
+                or existing["operation"] != operation
+            ):
                 raise DomainError(
-                    "EFFECT_KEY_CONFLICT", "Effect key was reused with a different payload"
+                    "EFFECT_KEY_CONFLICT", "Effect key was reused with a different operation or payload"
                 ) from None
         return self.effect(key)
 
@@ -358,13 +364,36 @@ class Store:
                 )
 
     def record_effect(self, key: str, before: dict | None, after: dict, *, status: str = "APPLIED"):
+        if status not in {"APPLIED", "COMPENSATED"}:
+            raise DomainError("INVALID_EFFECT_STATUS", "Only verified remote outcomes can be observed")
         with self.engine.begin() as db:
-            row = db.execute(select(effects).where(effects.c.effect_key == key)).mappings().one()
-            db.execute(
+            row = (
+                db.execute(select(effects).where(effects.c.effect_key == key).with_for_update())
+                .mappings()
+                .one()
+            )
+            if row["status"] in {"APPLIED", "COMPENSATED"}:
+                if row["status"] == status and row["before"] == before and row["after"] == after:
+                    # Repeated remote receipts are idempotent, including their audit event.
+                    return
+                raise DomainError("EFFECT_EVIDENCE_CONFLICT", "Observed effect evidence is immutable")
+            if row["status"] not in {"PREPARED", "UNKNOWN"}:
+                raise DomainError(
+                    "EFFECT_EVIDENCE_CONFLICT", "A definitively refused effect cannot be overwritten"
+                )
+            changed = db.execute(
                 update(effects)
-                .where(effects.c.effect_key == key)
+                .where(
+                    and_(
+                        effects.c.effect_key == key,
+                        effects.c.status == row["status"],
+                        effects.c.attempts == row["attempts"],
+                    )
+                )
                 .values(status=status, before=before, after=after)
             )
+            if changed.rowcount != 1:
+                raise DomainError("EFFECT_EVIDENCE_CONFLICT", "Effect changed during observation")
             self._event(
                 db,
                 row["case_id"],
