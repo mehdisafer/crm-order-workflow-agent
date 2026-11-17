@@ -203,17 +203,28 @@ async def smoke(output: str):
 
 
 def backup(source: str, destination: str):
-    """Online SQLite backup API; copying a live WAL database is not a valid backup."""
+    """Online SQLite backup API; refuse overwrites and keep the backup private from creation."""
     destination_path = Path(destination)
-    if destination_path.exists():
+    if destination_path.exists() or destination_path.is_symlink():
         raise SystemExit("Backup destination already exists; choose a new path")
     destination_path.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(f"file:{Path(source).resolve()}?mode=ro", uri=True) as origin:
-        with sqlite3.connect(destination_path) as target:
-            origin.backup(target)
-            if target.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
-                raise RuntimeError("Backup integrity check failed")
-    destination_path.chmod(0o600)
+
+    try:
+        descriptor = os.open(destination_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
+        # Also fail closed if another process created the target after the initial check.
+        raise SystemExit("Backup destination already exists; choose a new path") from None
+    os.close(descriptor)
+    try:
+        with sqlite3.connect(f"file:{Path(source).resolve()}?mode=ro", uri=True) as origin:
+            with sqlite3.connect(destination_path) as target:
+                origin.backup(target)
+                if target.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
+                    raise RuntimeError("Backup integrity check failed")
+    except BaseException:
+        # Only this newly created, incomplete destination is removed; never touch a prior backup.
+        destination_path.unlink(missing_ok=True)
+        raise
 
 
 def restore_check(source: str, output: str):
@@ -237,6 +248,8 @@ def restore_check(source: str, output: str):
                 "executed_at": timestamp(),
                 "engine": "sqlite",
                 "source_sha256": hashlib.sha256(Path(source).read_bytes()).hexdigest(),
+                "source_sha256_scope": "raw SQLite main database file only; active WAL not included",
+                "restored_snapshot_sha256": hashlib.sha256(restored.read_bytes()).hexdigest(),
                 "restored_counts": counts,
                 "integrity": integrity,
                 "orphan_effects": orphan_effects,
