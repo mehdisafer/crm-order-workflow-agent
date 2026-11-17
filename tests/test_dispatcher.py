@@ -165,3 +165,74 @@ def test_concurrent_slot_release_preserves_shared_failure_counter(tmp_path):
         assert value["version"] == 17
     finally:
         store.close()
+
+def test_replaced_lease_cannot_mutate_circuit_or_release_new_owner(tmp_path):
+    import time
+
+    from sqlalchemy import select, update
+
+    from crm_workflow.errors import TransientError
+    from crm_workflow.store import Store, leases, systems
+
+    url = f"sqlite:///{tmp_path / 'stale-release.db'}"
+    first = Store(url)
+    second = Store(url, initialize=False)
+    try:
+        stale = first.acquire_slot("crm", 1, 60)
+        with first.engine.begin() as db:
+            db.execute(
+                update(leases).where(leases.c.id == stale).values(expires_at=time.time() - 1)
+            )
+        active = second.acquire_slot("crm", 1, 60)
+        with first.engine.connect() as db:
+            snapshot = dict(db.execute(select(systems).where(systems.c.name == "crm")).mappings().one())
+
+        # A late failure for a discarded lease must not open the new worker's circuit.
+        first.release_slot(stale, "crm", failed=True, threshold=1, reset=45, retry_after=40)
+        with first.engine.connect() as db:
+            assert dict(db.execute(select(systems).where(systems.c.name == "crm")).mappings().one()) == snapshot
+            assert db.scalar(select(leases.c.id).where(leases.c.id == active)) == active
+        with pytest.raises(TransientError, match="concurrency limit"):
+            first.acquire_slot("crm", 1, 60)
+
+        # Only the live lease records its own failure.
+        second.release_slot(active, "crm", failed=True, threshold=1, reset=45)
+        with second.engine.connect() as db:
+            failed = dict(db.execute(select(systems).where(systems.c.name == "crm")).mappings().one())
+        assert failed["failures"] == 1
+        assert failed["open_until"] > time.time()
+
+        # Duplicate successes from either old worker must not reset the new circuit.
+        first.release_slot(stale, "crm", failed=False, threshold=1, reset=45)
+        second.release_slot(active, "crm", failed=False, threshold=1, reset=45)
+        with first.engine.connect() as db:
+            assert dict(db.execute(select(systems).where(systems.c.name == "crm")).mappings().one()) == failed
+        with pytest.raises(TransientError, match="circuit is open"):
+            second.acquire_slot("crm", 1, 60)
+    finally:
+        second.close()
+        first.close()
+
+
+def test_expired_unclaimed_lease_is_retired_without_circuit_mutation(tmp_path):
+    import time
+
+    from sqlalchemy import select, update
+
+    from crm_workflow.store import Store, leases, systems
+
+    store = Store(f"sqlite:///{tmp_path / 'expired-lease.db'}")
+    try:
+        stale = store.acquire_slot("erp", 1, 60)
+        with store.engine.begin() as db:
+            db.execute(update(leases).where(leases.c.id == stale).values(expires_at=time.time() - 1))
+        with store.engine.connect() as db:
+            before = dict(db.execute(select(systems).where(systems.c.name == "erp")).mappings().one())
+        store.release_slot(stale, "erp", failed=True, threshold=1, reset=30)
+        with store.engine.connect() as db:
+            assert db.scalar(select(leases.c.id).where(leases.c.id == stale)) is None
+            assert dict(db.execute(select(systems).where(systems.c.name == "erp")).mappings().one()) == before
+        fresh = store.acquire_slot("erp", 1, 60)
+        store.release_slot(fresh, "erp", failed=False, threshold=1, reset=30)
+    finally:
+        store.close()
