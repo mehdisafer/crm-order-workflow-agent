@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import math
 import ssl
@@ -52,6 +53,7 @@ def retry_after_seconds(value: str | None) -> float | None:
 
 class HTTPSystem:
     def __init__(self, base_url, token, timeout=5, *, transport=None, ca_file=None):
+        self.request_timeout = timeout
         self.client = httpx.AsyncClient(
             base_url=base_url.rstrip("/"),
             timeout=timeout,
@@ -66,15 +68,18 @@ class HTTPSystem:
     async def request(self, method, path, *, missing_ok=False, **kwargs):
         writing = method not in {"GET", "HEAD"}
         try:
-            async with self.client.stream(method, path, **kwargs) as response:
-                content = bytearray()
-                if 200 <= response.status_code < 300:
-                    async for chunk in response.aiter_bytes(chunk_size=65536):
-                        if len(content) + len(chunk) > 1048576:
-                            error = UnknownOutcome if writing else TransientError
-                            raise error("Remote response exceeds the contract limit")
-                        content.extend(chunk)
-        except httpx.TransportError as exc:
+            # HTTPX's read timeout resets for every received chunk. A trickling
+            # body must not outlive the configured request/lease budget.
+            async with asyncio.timeout(self.request_timeout):
+                async with self.client.stream(method, path, **kwargs) as response:
+                    content = bytearray()
+                    if 200 <= response.status_code < 300:
+                        async for chunk in response.aiter_bytes(chunk_size=65536):
+                            if len(content) + len(chunk) > 1048576:
+                                error = UnknownOutcome if writing else TransientError
+                                raise error("Remote response exceeds the contract limit")
+                            content.extend(chunk)
+        except (httpx.TransportError, TimeoutError) as exc:
             error = UnknownOutcome if writing else TransientError
             raise error("Remote transport failed; reconcile writes before retry") from exc
         if response.status_code == 404 and missing_ok:

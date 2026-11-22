@@ -1,3 +1,4 @@
+import asyncio
 import json
 from datetime import UTC, datetime, timedelta
 from email.utils import format_datetime
@@ -6,7 +7,7 @@ import httpx
 import pytest
 
 from crm_workflow.errors import DomainError, TransientError, UnknownOutcome
-from crm_workflow.gateways import MuleCRM, retry_after_seconds
+from crm_workflow.gateways import HTTPSystem, MuleCRM, retry_after_seconds
 
 
 @pytest.mark.parametrize(
@@ -101,3 +102,112 @@ async def test_mocked_provider_429_never_returns_an_unbounded_retry_delay(header
         assert header not in str(raised.value)
     finally:
         await client.close()
+
+
+@pytest.mark.parametrize("method,error_type", [("GET", TransientError), ("POST", UnknownOutcome)])
+async def test_slow_http_stream_obeys_one_total_request_budget(method, error_type):
+    # Use a real loopback transport: every chunk arrives before HTTPX's per-read
+    # timeout, but their combined duration exceeds the total request budget.
+    attempts = []
+    finished = asyncio.Event()
+
+    async def upstream(reader, writer):
+        try:
+            headers = await reader.readuntil(b"\r\n\r\n")
+            content_length = next(
+                (
+                    int(line.partition(b":")[2].strip())
+                    for line in headers.split(b"\r\n")
+                    if line.lower().startswith(b"content-length:")
+                ),
+                0,
+            )
+            body = await reader.readexactly(content_length)
+            attempts.append((headers.split(b"\r\n", 1)[0], body))
+            parts = [b'{"ok":', b" ", b" ", b" ", b" ", b"true}"]
+            writer.write(
+                b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: "
+                + str(sum(map(len, parts))).encode()
+                + b"\r\nConnection: close\r\n\r\n"
+            )
+            await writer.drain()
+            for part in parts:
+                await asyncio.sleep(0.05)
+                writer.write(part)
+                await writer.drain()
+        except (ConnectionError, asyncio.IncompleteReadError):
+            pass  # The bounded client closes this unfinished response.
+        finally:
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except ConnectionError:
+                pass
+            finished.set()
+
+    server = await asyncio.start_server(upstream, "127.0.0.1", 0)
+    port = server.sockets[0].getsockname()[1]
+    client = HTTPSystem(f"http://127.0.0.1:{port}", "synthetic", timeout=0.2)
+    payload = {"effect_key": "slow-response-immutable-key"}
+    try:
+        async with asyncio.timeout(2):
+            with pytest.raises(error_type):
+                await client.request(method, "/slow", **({"json": payload} if method == "POST" else {}))
+            await finished.wait()
+        assert len(attempts) == 1
+        assert attempts[0][0] == f"{method} /slow HTTP/1.1".encode()
+        if method == "POST":
+            assert json.loads(attempts[0][1]) == payload
+    finally:
+        await client.close()
+        server.close()
+        await server.wait_closed()
+
+
+async def test_external_cancellation_propagates_and_closes_response_without_retry():
+    started = asyncio.Event()
+    closed = asyncio.Event()
+    attempts = []
+    peer_reads = []
+
+    async def upstream(reader, writer):
+        try:
+            headers = await reader.readuntil(b"\r\n\r\n")
+            content_length = next(
+                int(line.partition(b":")[2].strip())
+                for line in headers.split(b"\r\n")
+                if line.lower().startswith(b"content-length:")
+            )
+            attempts.append(await reader.readexactly(content_length))
+            writer.write(b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\n")
+            await writer.drain()
+            started.set()
+            # Keep the response incomplete. Cancellation must close this real
+            # connection, not turn an external worker stop into a transient error.
+            peer_reads.append(await reader.read())
+        finally:
+            writer.close()
+            await writer.wait_closed()
+            closed.set()
+
+    server = await asyncio.start_server(upstream, "127.0.0.1", 0)
+    port = server.sockets[0].getsockname()[1]
+    client = HTTPSystem(f"http://127.0.0.1:{port}", "synthetic")
+    payload = {"effect_key": "cancelled-write"}
+    task = asyncio.create_task(client.request("POST", "/effects", json=payload))
+    try:
+        async with asyncio.timeout(2):
+            await started.wait()
+            task.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+            await closed.wait()
+        assert len(attempts) == 1
+        assert json.loads(attempts[0]) == payload
+        assert peer_reads == [b""]
+    finally:
+        if not task.done():
+            task.cancel()
+        await client.close()
+        server.close()
+        await server.wait_closed()
