@@ -125,6 +125,8 @@ Temporal owns business retries. n8n and the Python HTTP adapter do not retry cal
 
 The application must count this possible additional callback when budgeting provider quotas. A retried POST preserves the exact immutable effect payload and key. It is safe only because the actual Apex endpoint implements the ledger and conditional write; the HTTP header or key alone proves nothing.
 
+The Python CRM and ERP adapters enforce `request_timeout_seconds` as one absolute transport deadline covering connection, response headers and the complete bounded response stream. Per-socket HTTPX timeouts remain active, but receiving another chunk cannot restart the total budget. Expiry is a transient read failure or an unknown write outcome; no adapter retry is issued, and the existing effect key must be reconciled before another write. Worker cancellation still propagates instead of becoming a retryable timeout. This local transport contract does not prove a provider-side transaction was cancelled.
+
 The sample permits four active Mule requests/connections and a ten-second API response timeout. OAuth 1.1.30 bounds token/refresh requests at sixty seconds. A shorter application timeout can therefore end while Mule is still acquiring credentials or waiting for Salesforce. Such a write is **uncertain**. The workflow must reconcile, and later attempts must retain the same key and approved payload. The live test must measure actual timeout behavior and quotas before changing limits.
 
 ### 4. Verify capabilities without mutation
